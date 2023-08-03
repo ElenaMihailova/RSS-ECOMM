@@ -5,14 +5,21 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "dev": "webpack serve --env develop"
+    "dev": "webpack serve --env develop",
+    "lint": "eslint src"
   },
   "keywords": [],
   "author": "Студия Соколы",
   "license": "ISC",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.60.0",
+    "@typescript-eslint/parser": "^5.60.0",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.8.1",
+    "eslint": "^8.43.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-webpack-plugin": "^4.0.1",
     "html-webpack-plugin": "^5.5.3",
     "mini-css-extract-plugin": "^2.7.6",
     "sass": "^1.64.2",

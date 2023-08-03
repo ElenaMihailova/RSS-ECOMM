@@ -2,6 +2,8 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { ESLint } = require('eslint');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 const devServer = (isDev) =>
   !isDev
@@ -12,6 +14,9 @@ const devServer = (isDev) =>
           port: 8080,
         },
       };
+
+const esLintPlugin = (isDev) =>
+isDev ? [] : [new ESLintPlugin({ extensions: ['ts', 'js'] })];
 
 module.exports = ({ develop }) => ({
   mode: develop ? 'development' : 'production',
@@ -63,6 +68,7 @@ module.exports = ({ develop }) => ({
       filename: 'index.css',
     }),
     new CleanWebpackPlugin(),
+    ...esLintPlugin(develop),
   ],
 
   ...devServer(develop),
