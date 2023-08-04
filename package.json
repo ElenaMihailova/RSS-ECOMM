@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack serve --env develop",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "prettier": "prettier --write src"
   },
   "keywords": [],
   "author": "Студия Соколы",
@@ -18,10 +19,13 @@
     "css-loader": "^6.8.1",
     "eslint": "^8.43.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^5.0.0",
     "eslint-webpack-plugin": "^4.0.1",
     "html-webpack-plugin": "^5.5.3",
     "mini-css-extract-plugin": "^2.7.6",
+    "prettier": "^3.0.1",
     "sass": "^1.64.2",
     "sass-loader": "^13.3.2",
     "style-loader": "^3.3.3",
