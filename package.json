@@ -7,7 +7,8 @@
     "build": "webpack",
     "dev": "webpack serve --env develop",
     "lint": "eslint src",
-    "prettier": "prettier --write src"
+    "prettier": "prettier --write src",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "Студия Соколы",
@@ -24,6 +25,7 @@
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-webpack-plugin": "^4.0.1",
     "html-webpack-plugin": "^5.5.3",
+    "husky": "^8.0.3",
     "mini-css-extract-plugin": "^2.7.6",
     "prettier": "^3.0.1",
     "sass": "^1.64.2",
