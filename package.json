@@ -7,6 +7,7 @@
     "build": "webpack",
     "dev": "webpack serve --env develop",
     "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
     "prettier": "prettier --write src",
     "prepare": "husky install",
     "test": "jest"
