@@ -20,7 +20,7 @@
   "root": true,
   "rules": {
     "no-debugger": "off",
-    "no-console": 0,
+    "no-console": "off",
     "class-methods-use-this": "off",
     "import/no-extraneous-dependencies": [
       "error",
@@ -48,8 +48,8 @@
     ],
     "@typescript-eslint/explicit-function-return-type": "error",
     "@typescript-eslint/no-unnecessary-type-assertion": "error",
-    "@typescript-eslint/type-annotation-spacing": "error"
-    // "prettier/prettier": "error"
+    "@typescript-eslint/type-annotation-spacing": "error",
+    "prettier/prettier": "error"
   },
   "ignorePatterns": ["*config.js"]
 }
