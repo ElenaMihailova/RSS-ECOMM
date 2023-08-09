@@ -1,0 +1,44 @@
+.button {
+  padding: 10px 24px;
+  cursor: pointer;
+  background-color: $color-on-primary;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  text-transform: uppercase;
+  border: 1px solid $color-primary;
+  width: 235px;
+  transition: background-color $trans-default;
+
+  &:hover,
+  &:active {
+    background-color: $color-primary-opacity;
+  }
+}
+
+.button--black {
+  background-color: $color-primary;
+  color: $color-on-primary;
+}
+
+.button--black {
+  background-color: $color-primary;
+  color: $color-on-primary;
+}
+
+.button--text {
+  border: none;
+  width: auto;
+  transition: color $trans-default;
+
+  &:hover {
+    color: $color-secondary;
+    background-color: inherit;
+  }
+
+  &:active {
+    color: $color-secondary;
+    background-color: inherit;
+  }
+}

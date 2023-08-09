@@ -1,0 +1,17 @@
+//Global
+@import './global/normalize';
+@import './global/fonts';
+@import './variables';
+@import './mixins';
+@import './global/common';
+
+//Blocks
+@import './blocks/header';
+@import './blocks/footer';
+@import './blocks/navigation';
+@import './blocks/title';
+@import './blocks/container';
+@import './blocks/button';
+@import './blocks/hamburger';
+@import './blocks/logo';
+@import './blocks/checkbox.scss';

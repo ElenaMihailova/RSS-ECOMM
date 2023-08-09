@@ -1,0 +1,34 @@
+// Colors
+
+// Default
+$color-transparent: rgba(255, 255, 255, 0);
+
+// Project palette
+$color-primary: #282828;
+$color-primary-opacity: rgba(40, 40, 40, 0.08);
+$color-on-primary: #ffffff;
+$color-secondary: #c3b212;
+$color-on-secondary: #000000;
+$color-background: #fefefe;
+$color-background-variant: #f4f4f4;
+$color-outline: #a0a0a0;
+
+// Gradient
+
+$black-to-right: linear-gradient(90deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 75%);
+
+// Shadow
+
+// Animation
+$tf-default: ease;
+$trans-default: 0.3s $tf-default;
+
+// Viewport
+$vp-320: 320px;
+$vp-375: 375px;
+$vp-768: 768px;
+$vp-1024: 1024px;
+$vp-1100: 1100px;
+$vp-1280: 1280px;
+$vp-1440: 1440px;
+$vp-1920: 1920px;
