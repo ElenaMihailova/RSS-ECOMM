@@ -1,0 +1,12 @@
+.input input {
+  padding: 16px;
+}
+
+input::placeholder {
+  font-family: $font-montserrat;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+  cursor: auto;
+}
