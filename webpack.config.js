@@ -15,8 +15,7 @@ const devServer=(isDev) =>
       },
     };
 
-const esLintPlugin=(isDev) =>
-  isDev? []:[new ESLintPlugin({extensions: ['ts', 'js']})];
+const esLintPlugin=(isDev) => (isDev? []:[new ESLintPlugin({extensions: ['ts', 'js']})]);
 
 module.exports=({develop}) => ({
   mode: develop? 'development':'production',
@@ -41,11 +40,7 @@ module.exports=({develop}) => ({
       },
       {
         test: /\.(scss|css)$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'sass-loader',
-        ],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
       },
     ],
   },
