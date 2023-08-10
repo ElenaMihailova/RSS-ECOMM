@@ -20,7 +20,7 @@ isDev ? [] : [new ESLintPlugin({ extensions: ['ts', 'js'] })];
 
 module.exports = ({ develop }) => ({
   mode: develop ? 'development' : 'production',
-  devtool: develop ? 'inline-source-map' : 'none',
+  devtool: 'inline-source-map',
   entry: {
     main: path.resolve(__dirname, './src/index.ts'),
   },
