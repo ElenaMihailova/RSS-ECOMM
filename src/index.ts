@@ -1,2 +1,4 @@
-const test = 'test';
-console.log(test);
+import App from './modules/app/app';
+
+const app = new App();
+app.run();
