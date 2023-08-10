@@ -1,26 +1,26 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { ESLint } = require('eslint');
-const ESLintPlugin = require('eslint-webpack-plugin');
+const path=require('path');
+const HtmlWebpackPlugin=require('html-webpack-plugin');
+const {CleanWebpackPlugin}=require('clean-webpack-plugin');
+const MiniCssExtractPlugin=require('mini-css-extract-plugin');
+const {ESLint}=require('eslint');
+const ESLintPlugin=require('eslint-webpack-plugin');
 
-const devServer = (isDev) =>
+const devServer=(isDev) =>
   !isDev
     ? {}
-    : {
-        devServer: {
-          open: true,
-          port: 8080,
-        },
-      };
+    :{
+      devServer: {
+        open: true,
+        port: 8080,
+      },
+    };
 
-const esLintPlugin = (isDev) =>
-isDev ? [] : [new ESLintPlugin({ extensions: ['ts', 'js'] })];
+const esLintPlugin=(isDev) =>
+  isDev? []:[new ESLintPlugin({extensions: ['ts', 'js']})];
 
-module.exports = ({ develop }) => ({
-  mode: develop ? 'development' : 'production',
-  devtool: develop ? 'inline-source-map' : 'none',
+module.exports=({develop}) => ({
+  mode: develop? 'development':'production',
+  devtool: 'inline-source-map',
   entry: {
     main: path.resolve(__dirname, './src/index.ts'),
   },
@@ -46,7 +46,7 @@ module.exports = ({ develop }) => ({
           'css-loader',
           'sass-loader',
         ],
-    },
+      },
     ],
   },
   resolve: {
@@ -60,8 +60,8 @@ module.exports = ({ develop }) => ({
   plugins: [
     new HtmlWebpackPlugin({
       title: 'webpack Boilerplate',
-      template: path.resolve(__dirname, './src/index.html'), 
-      filename: 'index.html', 
+      template: path.resolve(__dirname, './src/index.html'),
+      filename: 'index.html',
     }),
     new MiniCssExtractPlugin({
       filename: 'index.css',
