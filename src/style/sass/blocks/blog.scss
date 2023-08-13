@@ -1,0 +1,25 @@
+.blog {
+  background-color: $color-background-variant;
+  padding-top: 32px;
+  padding-bottom: 32px;
+
+  .button--blog {
+    @include vp-768 {
+      display: none;
+    }
+  }
+}
+
+.blog__list {
+  list-style: none;
+  padding: 0;
+  padding-top: 32px;
+
+  @include vp-768 {
+    display: flex;
+  }
+}
+
+.blog__item {
+  width: 100%;
+}

@@ -4,6 +4,7 @@ const {CleanWebpackPlugin}=require('clean-webpack-plugin');
 const MiniCssExtractPlugin=require('mini-css-extract-plugin');
 const {ESLint}=require('eslint');
 const ESLintPlugin=require('eslint-webpack-plugin');
+const CopyPlugin=require('copy-webpack-plugin');
 
 const devServer=(isDev) =>
   !isDev
@@ -15,8 +16,7 @@ const devServer=(isDev) =>
       },
     };
 
-const esLintPlugin=(isDev) =>
-  isDev? []:[new ESLintPlugin({extensions: ['ts', 'js']})];
+const esLintPlugin=(isDev) => (isDev? []:[new ESLintPlugin({extensions: ['ts', 'js']})]);
 
 module.exports=({develop}) => ({
   mode: develop? 'development':'production',
@@ -41,11 +41,11 @@ module.exports=({develop}) => ({
       },
       {
         test: /\.(scss|css)$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'sass-loader',
-        ],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-sprite-loader',
       },
     ],
   },
@@ -66,9 +66,14 @@ module.exports=({develop}) => ({
     new MiniCssExtractPlugin({
       filename: 'index.css',
     }),
+    new CopyPlugin({
+      patterns: [
+        {from: 'src/assets/image', to: 'image'},
+        {from: 'src/assets/fonts', to: 'fonts'},
+      ]
+    }),
     new CleanWebpackPlugin(),
     ...esLintPlugin(develop),
   ],
-
   ...devServer(develop),
 });

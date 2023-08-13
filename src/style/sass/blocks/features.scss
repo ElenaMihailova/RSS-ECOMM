@@ -1,0 +1,43 @@
+.features {
+  background-color: $color-background-variant;
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+.features__list {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  padding-bottom: 32px;
+
+  @include vp-768 {
+    gap: 35px;
+    padding-bottom: 40px;
+  }
+}
+
+.features__img {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+
+  @include vp-768 {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.features__item {
+  flex: 0 0 45%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  @include vp-768 {
+    padding: 10px;
+    flex-basis: auto;
+  }
+}

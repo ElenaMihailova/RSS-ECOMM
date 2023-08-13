@@ -1,0 +1,26 @@
+//Global
+@import './style/sass/global/normalize';
+@import './style/sass/global/fonts';
+@import './style/sass/variables';
+@import './style/sass/mixins';
+@import './style/sass/global/common';
+
+//Blocks
+@import './style/sass/blocks/header';
+@import './style/sass/blocks/footer';
+@import './style/sass/blocks/navigation';
+@import './style/sass/blocks/navbar';
+@import './style/sass/blocks/titleMonserrat';
+@import './style/sass/blocks/titleProstoOne';
+@import './style/sass/blocks/container';
+@import './style/sass/blocks/button';
+@import './style/sass/blocks/hamburger';
+@import './style/sass/blocks/logo';
+@import './style/sass/blocks/checkbox';
+@import './style/sass/blocks/input';
+@import './style/sass/blocks/intro';
+@import './style/sass/blocks/features';
+@import './style/sass/blocks/catalog';
+@import './style/sass/blocks/blog';
+@import './style/sass/blocks/article';
+@import './style/sass/blocks/order';

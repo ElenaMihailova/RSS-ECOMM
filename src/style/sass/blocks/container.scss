@@ -1,7 +1,13 @@
 .container {
   padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   @include vp-768 {
     padding: 30px 76px;
+    max-width: 1280px;
+    margin: 0 auto;
   }
 }

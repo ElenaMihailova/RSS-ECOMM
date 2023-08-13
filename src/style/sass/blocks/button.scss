@@ -1,15 +1,23 @@
 .button {
   padding: 10px 24px;
   cursor: pointer;
-  background-color: $color-on-primary;
+  background-color: $color-transparent;
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
   letter-spacing: 0.1px;
   text-transform: uppercase;
   border: 1px solid $color-primary;
-  width: 235px;
   transition: background-color $trans-default;
+  text-decoration: none;
+  color: $color-primary;
+  display: block;
+  width: 235px;
+  text-align: center;
+
+  &--noWidth {
+    width: fit-content;
+  }
 
   &:hover,
   &:active {
@@ -25,12 +33,16 @@
 .button--black {
   background-color: $color-primary;
   color: $color-on-primary;
+  width: fit-content;
 }
 
 .button--text {
   border: none;
   width: auto;
   transition: color $trans-default;
+  padding: 0;
+  text-align: left;
+  margin: 0;
 
   &:hover {
     color: $color-secondary;
