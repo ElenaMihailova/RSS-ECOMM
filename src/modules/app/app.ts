@@ -1,25 +1,23 @@
+import { PageUrls } from '../../constants';
 import Page from '../../templates/page';
+import { RouteAction } from '../../types';
 import Header from '../header/header';
 import ErrorPage from '../pages/error/error';
 import Login from '../pages/login/login';
 import Main from '../pages/main/main';
 import Registration from '../pages/registration/registration';
-import router from '../router/router';
-
-const enum PageIds {
-  MainPageId = 'main',
-  LoginPageId = 'login',
-  RegistrationPageId = 'registration',
-}
+import Router from '../router/router';
 
 class App {
   private static container: HTMLElement = document.body;
 
   private header: Header;
 
+  private router: Router;
+
   private static defaultPageId = 'current-page';
 
-  private static renderNewPage(id: string): void {
+  public static renderNewPage(id: string): void {
     const currentPage = document.querySelector(`#${this.defaultPageId}`);
 
     if (currentPage) {
@@ -27,11 +25,11 @@ class App {
     }
     let page: Page | null = null;
 
-    if (id === PageIds.MainPageId) {
+    if (id === PageUrls.MainPageUrl) {
       page = new Main();
-    } else if (id === PageIds.LoginPageId) {
+    } else if (id === PageUrls.LoginPageUrl) {
       page = new Login();
-    } else if (id === PageIds.RegistrationPageId) {
+    } else if (id === PageUrls.RegistrationPageUrl) {
       page = new Registration();
     } else {
       page = new ErrorPage();
@@ -44,38 +42,51 @@ class App {
     }
   }
 
-  private static route(): void {
-    router.add('main', () => {
-      App.renderNewPage(PageIds.MainPageId);
-    });
-
-    router.add('login', () => {
-      App.renderNewPage(PageIds.LoginPageId);
-    });
-
-    router.add('registration', () => {
-      App.renderNewPage(PageIds.RegistrationPageId);
-    });
-
-    router.addUriListener();
-  }
-
-  private enableRouteChange(): void {
-    window.addEventListener('popstate', () => {
-      const path = window.location.pathname.slice(1);
-      App.renderNewPage(path);
-    });
-  }
-
   constructor() {
-    this.header = new Header();
+    const routes = this.createRoutes();
+    this.router = new Router(routes);
+    this.header = new Header(this.router);
+    this.createView();
   }
 
-  public run(): void {
+  private createView(): void {
     App.container.append(this.header.render());
-    App.renderNewPage(PageIds.MainPageId);
-    App.route();
-    this.enableRouteChange();
+    App.renderNewPage(PageUrls.MainPageUrl);
+  }
+
+  public createRoutes(): RouteAction[] {
+    return [
+      {
+        path: ``,
+        callback: async (res: string): Promise<void> => {
+          await App.renderNewPage(res);
+        },
+      },
+      {
+        path: `${PageUrls.MainPageUrl}`,
+        callback: async (res: string): Promise<void> => {
+          await App.renderNewPage(res);
+        },
+      },
+      {
+        path: `${PageUrls.RegistrationPageUrl}`,
+        callback: async (res: string): Promise<void> => {
+          await App.renderNewPage(res);
+        },
+      },
+      {
+        path: `${PageUrls.LoginPageUrl}`,
+        callback: async (res: string): Promise<void> => {
+          await App.renderNewPage(res);
+        },
+      },
+      {
+        path: `${PageUrls.ErrorPageUrl}`,
+        callback: async (res: string): Promise<void> => {
+          await App.renderNewPage(res);
+        },
+      },
+    ];
   }
 }
 
