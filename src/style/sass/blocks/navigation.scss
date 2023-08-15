@@ -8,6 +8,8 @@
   @include vp-768 {
     display: flex;
     justify-content: space-between;
+    width: 100%;
+    gap: 24px;
   }
 }
 

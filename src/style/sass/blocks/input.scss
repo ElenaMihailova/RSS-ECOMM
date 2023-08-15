@@ -1,5 +1,5 @@
-.input input {
-  padding: 16px;
+input {
+  padding: 8px;
 }
 
 input::placeholder {
@@ -9,4 +9,28 @@ input::placeholder {
   line-height: 1.5;
   letter-spacing: 0.5px;
   cursor: auto;
+  padding-left: 10px;
+}
+
+.input {
+  position: relative;
+  width: 235px;
+}
+
+.input input {
+  padding-left: 25px;
+  width: 100%;
+}
+
+.input label {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.input--icon label svg {
+  width: 24px;
+  height: 24px;
 }

@@ -1,21 +1,26 @@
-.navbar .navbar__container li {
-  list-style: none;
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @include vp-768 {
+    display: none;
+  }
 }
 
-.navbar .navbar__container a {
-  text-decoration: none;
-  color: #0e2431;
-  font-weight: 500;
-  font-size: 1.2rem;
-  padding: 0.7rem;
+.navbar .navbar__container li {
+  list-style: none;
 }
 
 .navbar__container {
   display: block;
   position: relative;
   height: 40px;
+  position: relative;
 }
 
-.navbar__menu {
-  display: none;
+.navbar__wrapper {
+  position: absolute;
+  right: 0;
+  top: 70%;
 }
