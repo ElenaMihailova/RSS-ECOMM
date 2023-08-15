@@ -66,3 +66,24 @@
   padding: 12px;
   display: block;
 }
+
+.menu--desktop {
+  flex-direction: row;
+  width: auto;
+  padding-right: 0;
+}
+
+.menu__nav--desktop {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.menu__user--desktop {
+  display: flex;
+  width: fit-content;
+  flex-shrink: 0;
+
+  a {
+    padding: 12px;
+  }
+}

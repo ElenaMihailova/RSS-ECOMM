@@ -3,8 +3,7 @@ import { NavLink, FooterLinksType } from '../../types/nav.types';
 
 const createMobilMenu = (linksHtml: string): string => {
   return `
-    <nav>
-      <div class="navbar">
+      <div class="navbar__mobil">
         <div class="navbar__container">
           <input id='hamburger' class="hamburger" type="checkbox"/>
           <div class="hamburger-lines">
@@ -46,7 +45,39 @@ const createMobilMenu = (linksHtml: string): string => {
           </div>
         </div>
       </div>
-    </nav>
+  `;
+};
+
+const createMenu = (linksHtml: string): string => {
+  return `
+  <div class="navbar__menu menu menu--desktop">
+  <ul class="menu__nav menu__nav--desktop">
+    ${linksHtml}        
+  </ul>
+    <ul class="menu__user menu__user--desktop">
+      <li>
+        <a href="#" class="search">
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+            <use xlink:href="./image/sprite.svg#search"></use>
+          </svg>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="login">
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+            <use xlink:href="./image/sprite.svg#person"></use>
+          </svg>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="corb">
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+            <use xlink:href="./image/sprite.svg#corb"></use>
+          </svg>
+        </a>
+      </li>
+    </ul>
+  </div>
   `;
 };
 
@@ -56,6 +87,7 @@ export const createHeader = (navLinks: NavLink[]): string => {
     .join('');
 
   const mobilMenuHtml = createMobilMenu(linksHtml);
+  const desktopMenu = createMenu(linksHtml);
 
   const html = `
       <div class="header__wrapper">
@@ -67,7 +99,10 @@ export const createHeader = (navLinks: NavLink[]): string => {
             <span>Brand Name</span>
           </a>
         </div>
-        ${mobilMenuHtml}        
+        <nav class="navbar">
+          ${mobilMenuHtml}
+          ${desktopMenu}
+        </nav>        
       </div>
     `;
 

@@ -1,4 +1,10 @@
 .navbar {
+  @include vp-768 {
+    flex-basis: 100%;
+  }
+}
+
+.navbar__mobil {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -23,4 +29,12 @@
   position: absolute;
   right: 0;
   top: 70%;
+}
+
+.navbar__menu.menu--desktop {
+  display: none;
+
+  @include vp-768 {
+    display: flex;
+  }
 }
