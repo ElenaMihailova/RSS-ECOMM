@@ -3,7 +3,7 @@ export default function setupMenuToggle(menuButtonId: string, menuId: string): v
   const menu = document.getElementById(menuId);
 
   if (menuButton && menu) {
-    menuButton.addEventListener('click', function () {
+    menuButton.addEventListener('click', () => {
       if (menu.style.display === 'none' || menu.style.display === '') {
         menu.style.display = 'flex';
       } else {
