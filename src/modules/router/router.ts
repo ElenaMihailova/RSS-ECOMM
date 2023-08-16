@@ -7,20 +7,31 @@ class Router {
   constructor(routes: RouteAction[]) {
     this.routes = routes;
 
-    document.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', (): void => {
       const path = window.location.pathname.slice(1);
-      this.navigateTo(path);
+      this.browserNavigateTo(path);
     });
 
-    window.addEventListener('popstate', () => {
+    window.addEventListener('popstate', (): void => {
       const path = window.location.pathname.slice(1);
-      this.navigateTo(path);
+      this.browserNavigateTo(path);
     });
   }
 
   public navigateTo(url: string): void {
-    window.history.pushState({}, '', `${window.location.origin}/${url}`);
+    window.history.pushState({}, '', `/${url}`);
 
+    const urlString = window.location.pathname.slice(1);
+
+    const res = { path: '', resource: '' };
+
+    const path = urlString.split('/');
+    [res.path = '', res.resource = ''] = path;
+
+    this.urlHandler(res);
+  }
+
+  public browserNavigateTo(url: string): void {
     const urlString = window.location.pathname.slice(1);
 
     const res = { path: '', resource: '' };
@@ -35,7 +46,7 @@ class Router {
     const routeNotFound: RouteAction | undefined = this.routes.find((item) => item.path === PageUrls.ErrorPageUrl);
 
     if (routeNotFound) {
-      this.navigateTo(routeNotFound.path);
+      routeNotFound.callback();
     }
   }
 
