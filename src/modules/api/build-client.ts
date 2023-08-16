@@ -7,8 +7,6 @@ import {
   type HttpMiddlewareOptions, // Required for sending HTTP requests
 } from '@commercetools/sdk-client-v2';
 
-console.log(process.env.CTP_PROJECT_KEY);
-
 const projectKey = process.env.CTP_PROJECT_KEY as string;
 const scopes = process.env.CTP_SCOPES?.split(' ');
 

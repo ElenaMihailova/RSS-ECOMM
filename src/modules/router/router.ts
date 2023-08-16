@@ -19,11 +19,8 @@ class Router {
   }
 
   public navigateTo(url: string): void {
-    if (typeof url === 'string') {
-      this.setHistory(url);
-    }
+    window.history.pushState({}, '', `${window.location.origin}/${url}`);
 
-    console.log(url);
     const urlString = window.location.pathname.slice(1);
 
     const res = { path: '', resource: '' };
@@ -34,7 +31,7 @@ class Router {
     this.urlHandler(res);
   }
 
-  private redirectToErrorPage(): void {
+  public redirectToErrorPage(): void {
     const routeNotFound: RouteAction | undefined = this.routes.find((item) => item.path === PageUrls.ErrorPageUrl);
 
     if (routeNotFound) {
@@ -42,11 +39,7 @@ class Router {
     }
   }
 
-  private setHistory(url: string): void {
-    window.history.pushState({}, '', `/${url}`);
-  }
-
-  private urlHandler(request: UserRequest): void {
+  public urlHandler(request: UserRequest): void {
     const pathForFind = request.resource === '' ? request.path : `${request.path}/${request.resource}`;
     const route = this.routes.find((item) => item.path === pathForFind);
 
@@ -55,7 +48,7 @@ class Router {
       return;
     }
 
-    route.callback(pathForFind);
+    route.callback();
   }
 }
 

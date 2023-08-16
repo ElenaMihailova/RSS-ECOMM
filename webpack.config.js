@@ -4,7 +4,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { ESLint } = require('eslint');
 const ESLintPlugin = require('eslint-webpack-plugin');
-const dotenv = require('dotenv').config({ path: __dirname + '/.github/.env' });
+const dotenv = require('dotenv').config({ path: __dirname + '/.env' });
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const webpack = require('webpack');
 const devServer = (isDev) =>
@@ -14,6 +14,7 @@ const devServer = (isDev) =>
         devServer: {
           open: true,
           port: 8080,
+          historyApiFallback: true,
         },
       };
 
@@ -22,7 +23,7 @@ isDev ? [] : [new ESLintPlugin({ extensions: ['ts', 'js'] })];
 
 module.exports = ({ develop }) => ({
   mode: develop ? 'development' : 'production',
-  devtool: develop ? 'inline-source-map' : 'none',
+  // devtool: develop ? 'inline-source-map' : 'none',
   entry: {
     main: path.resolve(__dirname, './src/index.ts'),
   },

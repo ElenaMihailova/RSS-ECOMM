@@ -1,6 +1,6 @@
-import Page from '../../../templates/page';
+import ComponentView from '../../../helpers/component-view';
 
-class RegistrationPage extends Page {
+class RegistrationView extends ComponentView {
   constructor() {
     super();
     this.container.textContent = 'REGISTRATION PAGE';
@@ -11,4 +11,4 @@ class RegistrationPage extends Page {
   }
 }
 
-export default RegistrationPage;
+export default RegistrationView;

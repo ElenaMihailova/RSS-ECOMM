@@ -1,6 +1,6 @@
-import Page from '../../../templates/page';
+import ComponentView from '../../../helpers/component-view';
 
-class ErrorPage extends Page {
+class ErrorView extends ComponentView {
   constructor() {
     super();
     this.container.textContent = `'404': 'Error! The page was not found.'`;
@@ -11,4 +11,4 @@ class ErrorPage extends Page {
   }
 }
 
-export default ErrorPage;
+export default ErrorView;

@@ -8,6 +8,7 @@ class Header {
 
   constructor(router: Router) {
     this.container = document.createElement('div');
+    this.container.classList.add('header');
     this.router = router;
   }
 

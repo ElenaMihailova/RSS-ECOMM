@@ -1,9 +1,9 @@
-export interface RouteAction {
+export type RouteAction = {
   path: string;
-  callback: (res: string) => void;
-}
+  callback: () => void;
+};
 
-export interface UserRequest {
+export type UserRequest = {
   path: string;
   resource?: string;
-}
+};

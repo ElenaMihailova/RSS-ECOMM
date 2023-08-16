@@ -1,89 +1,76 @@
 import { PageUrls } from '../../constants';
-import Page from '../../templates/page';
 import { RouteAction } from '../../types';
 import Header from '../header/header';
-import ErrorPage from '../pages/error/error';
-import Login from '../pages/login/login';
-import Main from '../pages/main/main';
-import Registration from '../pages/registration/registration';
 import Router from '../router/router';
+import Main from '../main/main';
+import IndexView from '../components/index/index-view';
+import RegistrationView from '../components/registration/registration-view';
+import LoginView from '../components/login/login-view';
+import ErrorView from '../components/error/error-view';
 
 class App {
   private static container: HTMLElement = document.body;
 
-  private header: Header;
+  public router: Router;
 
-  private router: Router;
+  public header: Header | null;
 
-  private static defaultPageId = 'current-page';
-
-  public static renderNewPage(id: string): void {
-    const currentPage = document.querySelector(`#${this.defaultPageId}`);
-
-    if (currentPage) {
-      currentPage.remove();
-    }
-    let page: Page | null = null;
-
-    if (id === PageUrls.MainPageUrl) {
-      page = new Main();
-    } else if (id === PageUrls.LoginPageUrl) {
-      page = new Login();
-    } else if (id === PageUrls.RegistrationPageUrl) {
-      page = new Registration();
-    } else {
-      page = new ErrorPage();
-    }
-
-    if (page) {
-      const pageHTML = page.render();
-      pageHTML.id = App.defaultPageId;
-      App.container.append(pageHTML);
-    }
-  }
+  public main: Main | null;
 
   constructor() {
+    this.header = null;
+    this.main = null;
     const routes = this.createRoutes();
     this.router = new Router(routes);
-    this.header = new Header(this.router);
     this.createView();
   }
 
   private createView(): void {
-    App.container.append(this.header.render());
-    App.renderNewPage(PageUrls.MainPageUrl);
+    this.header = new Header(this.router);
+    this.main = new Main();
+    App.container.append(this.header.render(), this.main.render());
   }
 
-  public createRoutes(): RouteAction[] {
+  private createRoutes(): RouteAction[] {
     return [
       {
         path: ``,
-        callback: async (res: string): Promise<void> => {
-          await App.renderNewPage(res);
+        callback: (): void => {
+          if (this.main) {
+            this.main.setContent(new IndexView());
+          }
         },
       },
       {
-        path: `${PageUrls.MainPageUrl}`,
-        callback: async (res: string): Promise<void> => {
-          await App.renderNewPage(res);
+        path: `${PageUrls.IndexPageUrl}`,
+        callback: (): void => {
+          if (this.main) {
+            this.main.setContent(new IndexView());
+          }
         },
       },
       {
         path: `${PageUrls.RegistrationPageUrl}`,
-        callback: async (res: string): Promise<void> => {
-          await App.renderNewPage(res);
+        callback: (): void => {
+          if (this.main) {
+            this.main.setContent(new RegistrationView());
+          }
         },
       },
       {
         path: `${PageUrls.LoginPageUrl}`,
-        callback: async (res: string): Promise<void> => {
-          await App.renderNewPage(res);
+        callback: (): void => {
+          if (this.main) {
+            this.main.setContent(new LoginView());
+          }
         },
       },
       {
         path: `${PageUrls.ErrorPageUrl}`,
-        callback: async (res: string): Promise<void> => {
-          await App.renderNewPage(res);
+        callback: (): void => {
+          if (this.main) {
+            this.main.setContent(new ErrorView());
+          }
         },
       },
     ];

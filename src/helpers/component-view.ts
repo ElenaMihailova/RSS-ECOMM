@@ -1,4 +1,4 @@
-abstract class Page {
+abstract class ComponentView {
   protected container: HTMLElement;
 
   constructor() {
@@ -10,4 +10,4 @@ abstract class Page {
   }
 }
 
-export default Page;
+export default ComponentView;
