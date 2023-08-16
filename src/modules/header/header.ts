@@ -18,7 +18,7 @@ class Header {
       const [name, url] = btn;
       pageBtn.textContent = name;
       pageBtn.onclick = (): void => {
-        this.router.navigateTo(url);
+        this.router.navigateFromButton(url);
       };
       container.append(pageBtn);
     });

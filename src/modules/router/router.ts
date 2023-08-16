@@ -9,18 +9,26 @@ class Router {
 
     window.addEventListener('DOMContentLoaded', (): void => {
       const path = window.location.pathname.slice(1);
-      this.browserNavigateTo(path);
+      this.navigateFromBrowser(path);
     });
 
     window.addEventListener('popstate', (): void => {
       const path = window.location.pathname.slice(1);
-      this.browserNavigateTo(path);
+      this.navigateFromBrowser(path);
     });
   }
 
-  public navigateTo(url: string): void {
+  public navigateFromButton(url: string): void {
     window.history.pushState({}, '', `/${url}`);
 
+    this.navigate(url);
+  }
+
+  private navigateFromBrowser(url: string): void {
+    this.navigate(url);
+  }
+
+  private navigate(url: string): void {
     const urlString = window.location.pathname.slice(1);
 
     const res = { path: '', resource: '' };
@@ -31,18 +39,7 @@ class Router {
     this.urlHandler(res);
   }
 
-  public browserNavigateTo(url: string): void {
-    const urlString = window.location.pathname.slice(1);
-
-    const res = { path: '', resource: '' };
-
-    const path = urlString.split('/');
-    [res.path = '', res.resource = ''] = path;
-
-    this.urlHandler(res);
-  }
-
-  public redirectToErrorPage(): void {
+  private redirectToErrorPage(): void {
     const routeNotFound: RouteAction | undefined = this.routes.find((item) => item.path === PageUrls.ErrorPageUrl);
 
     if (routeNotFound) {
@@ -50,8 +47,9 @@ class Router {
     }
   }
 
-  public urlHandler(request: UserRequest): void {
+  private urlHandler(request: UserRequest): void {
     const pathForFind = request.resource === '' ? request.path : `${request.path}/${request.resource}`;
+
     const route = this.routes.find((item) => item.path === pathForFind);
 
     if (!route) {
