@@ -1,0 +1,29 @@
+.error__description {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.error__404 {
+  font-size: 44px;
+}
+
+.error__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  text-align: center;
+}
+
+.error__text span {
+  text-align: center;
+}
+
+.error__description a {
+  font-size: 24px;
+  width: fit-content;
+  padding: 20px;
+}
