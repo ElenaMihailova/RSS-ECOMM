@@ -1,0 +1,139 @@
+
+@import '../../../style/sass/variables.scss';
+$color-error: #ff0000;
+$font-Montserrat: Montserrat;
+
+.registration-container {
+  background-color: $color-background-variant;
+  border: 1px solid $color-primary;
+  max-width: 568px;
+  height: auto;
+  font-family: Montserrat;
+  color: $color-primary;
+}
+
+.registration-content {
+  padding: 20px 40px;
+}
+
+
+.form-title {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  .title {
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: 0.11px;
+  }
+
+  .form-description {
+    font-weight: 400;
+  }
+}
+
+.form-description {
+  font-size: 16px;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+}
+
+.adresses-container {
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form,
+.adress-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+}
+
+.form {
+  padding-top: 19px;
+}
+
+.adress-form-content__description {
+  font-weight: 500;
+}
+
+.registration-form__input::placeholder {
+  padding: 0px;
+}
+
+.registration-form__input,
+select {
+  width: 488px;
+  height: 56px;
+  padding-left: 16px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+  cursor: auto;
+}
+
+.registration-form__input[hasIcon=true] {
+  padding-left: 48px;
+}
+
+.form-item {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+
+  .input-icon {
+    position: absolute;
+    z-index: 2;
+    width: 32px;
+    height: 32px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 70%;
+  }
+
+  .input-icon[position=start]{
+    left: 10px;
+    top: 12px;
+  }
+
+  .input-icon[position=end]{
+    right: 10px;
+    top: 12px;
+  }
+}
+
+.name-input-icon,
+.surname-input-icon {
+  background: url(../../../assets/image/person-icon.svg);
+}
+
+.age-input-icon {
+  background: url(../../../assets/image/calendar-icon.svg);
+}
+
+.email-input-icon {
+  background: url(../../../assets/image/test/mail.svg);
+}
+
+.password-input-icon {
+  background: url(../../../assets/image/password-icon.svg);
+}
+
+.registration-form__button {
+  width: 100%;
+  max-width: 488px;
+  height: 66px;
+}
+
+input[type=checkbox]:disabled {
+  cursor: default;
+}
+

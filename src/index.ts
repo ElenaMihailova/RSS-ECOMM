@@ -1,2 +1,5 @@
-const test = 'test';
-console.log(test);
+import './index.scss';
+
+import App from './modules/app/app';
+
+const app = new App();
