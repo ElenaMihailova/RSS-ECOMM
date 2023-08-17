@@ -1,0 +1,16 @@
+.titleProstoOne {
+  font-family: 'Prosto One';
+  text-align: center;
+}
+
+.titleProstoOne--big {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: start;
+
+  @include vp-768 {
+    font-size: 36px;
+    line-height: 44px;
+  }
+}

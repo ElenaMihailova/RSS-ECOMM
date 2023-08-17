@@ -1,0 +1,37 @@
+.titleMonserrat {
+  font-family: 'Montserrat' sans-serif;
+}
+
+.titleMonserrat--medium {
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.15px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.titleMonserrat--small {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+
+  @include vp-768 {
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0.5px;
+  }
+}
+
+.titleMonserrat--big {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.4;
+  text-transform: uppercase;
+
+  @include vp-768 {
+    font-size: 22px;
+    line-height: 28px;
+  }
+}

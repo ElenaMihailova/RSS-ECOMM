@@ -1,0 +1,31 @@
+.order {
+  padding-bottom: 32px;
+
+  @include vp-768 {
+    display: flex;
+    flex-direction: row-reverse;
+    padding-top: 72px;
+    padding-bottom: 72px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+}
+
+.order__img {
+  aspect-ratio: 393/393;
+  object-fit: cover;
+  height: auto;
+  width: 100%;
+  display: block;
+}
+
+.order__description {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @include vp-768 {
+    align-items: start;
+    gap: 30px;
+  }
+}
