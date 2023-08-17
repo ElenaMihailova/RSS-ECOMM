@@ -1,6 +1,6 @@
-import { NavLink, FooterLinksType } from '../../types/nav.types';
-import { addHTML } from '../helpers/renderHelpers';
-import { createFooter, createHeader } from './generateHtml';
+import { NavLink, FooterLinksType } from '../../../types/nav.types';
+import { addHTML } from '../../helpers/renderHelpers';
+import { createFooter, createHeader } from '../../components/generateHtml';
 
 const createLayout = (headerData: NavLink[], footerData: FooterLinksType): void => {
   const headerHtml = createHeader(headerData);
