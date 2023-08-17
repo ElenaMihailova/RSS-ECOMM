@@ -7,16 +7,15 @@ const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
   projectKey: process.env.CTP_PROJECT_KEY as string,
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getEndpoint = (): Promise<void> => {
-  return apiRoot
-    .customers()
-    .get()
-    .execute()
-    .then(({ body }) => {
-      console.log(JSON.stringify(body));
-    })
-    .catch(console.error);
-};
+async function getEndpoint(): Promise<CustomersFromApi> {
+  let resData: CustomersFromApi = {};
+  try {
+    const res = await apiRoot.customers().get().execute();
+    resData = await res.body;
+  } catch (err) {
+    console.log(err);
+  }
+  return resData;
+}
 
 export default getEndpoint;

@@ -3,4 +3,6 @@ import App from './modules/app/app';
 
 const app = new App();
 
-getEndpoint();
+console.log(getEndpoint());
+
+// getEndpointt();
