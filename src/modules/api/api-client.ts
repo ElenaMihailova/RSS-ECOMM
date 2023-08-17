@@ -1,4 +1,5 @@
-import { ApiRoot, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { CustomersFromApi } from '../../types';
 import ctpClient from './build-client';
 
 // Create apiRoot from the imported ClientBuilder and include your Project key
@@ -7,7 +8,7 @@ const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getEndpoint = (): any => {
+const getEndpoint = (): Promise<void> => {
   return apiRoot
     .customers()
     .get()
