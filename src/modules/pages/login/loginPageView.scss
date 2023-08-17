@@ -1,0 +1,127 @@
+@import '../../../style/sass/variables.scss';
+
+.login-page {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 76px 0;
+}
+
+.login__container {
+  max-width: 552px;
+  width: 100%;
+  background-color: $color-background-variant;
+  padding: 43px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.login__title {
+  font-family: Montserrat;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+  margin-bottom: 12px;
+}
+
+.login__text {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  margin-bottom: 26px;
+}
+
+.login__email-input {
+  height: 56px;
+  width: 100%;
+  margin-bottom: 46px;
+  padding-left: 40px;
+}
+
+.login__email-icon {
+  background: url(../../../assets/svg/mail.svg);
+  position: absolute;
+  width: 20px;
+  height: 16px;
+  top: 152px;
+  left: 53px;
+  z-index: 2;
+}
+
+.login__password-input {
+  height: 56px;
+  margin-bottom: 46px;
+  padding-left: 40px;
+}
+
+.login__password-icon {
+  background: url(../../../assets/svg/redeem.svg);
+  position: absolute;
+  width: 20px;
+  height: 19px;
+  top: 252px;
+  left: 53px;
+  z-index: 2;
+}
+
+.login__button {
+  height: 56px;
+  width: 100%;
+  background-color: $color-primary;
+  color: $color-on-primary;
+  border: none;
+  cursor: pointer;
+}
+
+.registration__container {
+  max-width: 456px;
+  width: 100%;
+  background-color: $color-background-variant;
+  padding: 36px 36px 51px;
+  display: flex;
+  flex-direction: column;
+}
+
+.registration__title {
+  font-family: Montserrat;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 28px;
+  margin-bottom: 12px;
+}
+
+.registration__advantages-title {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  padding: 0;
+  margin-bottom: 40px;
+}
+
+.registration__advantages-option {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  margin-top: 20px;
+  list-style-type: none;
+}
+
+.registration__advantages-option:before {
+  content: url(../../../assets/svg/expand_more.svg);
+  padding: 0 10px;
+}
+
+
+.registration__button {
+  height: 56px;
+  width: 100%;
+  cursor: pointer;
+}

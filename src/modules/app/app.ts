@@ -1,12 +1,12 @@
-import { PageUrls } from '../../constants';
-import { RouteAction } from '../../types';
+import { RouteAction } from '../types';
 import Header from '../header/header';
 import Router from '../router/router';
 import Main from '../main/main';
-import IndexView from '../components/index/index-view';
-import RegistrationView from '../components/registration/registration-view';
-import LoginView from '../components/login/login-view';
-import ErrorView from '../components/error/error-view';
+import IndexView from '../pages/index/indexPageView';
+import RegistrationView from '../pages/registration/registrationPageView';
+import LoginView from '../pages/login/loginPageView';
+import ErrorView from '../pages/error/errorPageView';
+import { PageUrls } from '../constants';
 
 class App {
   private static container: HTMLElement = document.body;

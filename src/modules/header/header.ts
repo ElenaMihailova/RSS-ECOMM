@@ -1,4 +1,4 @@
-import { ButtonsNamesAndUrls } from '../../constants';
+import { ButtonsNamesAndUrls } from '../constants';
 import Router from '../router/router';
 
 class Header {

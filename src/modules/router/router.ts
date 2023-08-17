@@ -1,5 +1,5 @@
-import { PageUrls } from '../../constants';
-import { RouteAction, UserRequest } from '../../types';
+import { PageUrls } from '../constants';
+import { RouteAction, UserRequest } from '../types';
 
 class Router {
   public routes: RouteAction[];
