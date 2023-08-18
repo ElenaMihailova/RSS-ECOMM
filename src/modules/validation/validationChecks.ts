@@ -24,6 +24,7 @@ export const isDateFormat = (string: string): boolean => Boolean(string.match(da
 export const dateFormatLength = 10;
 
 export const isPasswordFormat = (string: string): boolean => Boolean(string.match(passwordFormat));
+export const passwordFormatLength = 8;
 
 export const isEmailFormat = (string: string): boolean => Boolean(string.match(emailFormat));
 

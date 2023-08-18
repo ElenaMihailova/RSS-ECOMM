@@ -1,65 +1,18 @@
 import PageView from '../../core/pageView';
-import { createAdressFormItems, createElement, getElementCollection } from '../../helpers/functions';
+import { createElement, getElement, getElementCollection } from '../../helpers/functions';
 import { FormItems } from '../../../types/interfaces';
 import { AdressCategories } from '../../../types/enums';
 import './registrationPageView.scss';
-import Validate from '../../validation/validator';
+import Validator from '../../validation/validator';
 import { removeError } from '../../validation/validationHelpers';
-
-const registrationFormInputItems: FormItems[] = [
-  {
-    tagName: 'input',
-    attributes: [{ 'data-type': 'name' }, { type: 'text' }, { placeholder: 'Name' }, { 'has-icon': 'true' }],
-    classNames: ['registration-form__input', 'input'],
-    icon: {
-      className: 'name-input-icon',
-      attributes: [{ position: 'start' }],
-    },
-  },
-  {
-    tagName: 'input',
-    attributes: [{ 'data-type': 'surname' }, { type: 'text' }, { placeholder: 'Surname' }, { 'has-icon': 'true' }],
-    classNames: ['registration-form__input', 'input'],
-    icon: {
-      className: 'surname-input-icon',
-      attributes: [{ position: 'start' }],
-    },
-  },
-  {
-    tagName: 'input',
-    attributes: [{ 'data-type': 'age' }, { type: 'text' }, { placeholder: 'Date of Birth' }, { 'has-icon': 'true' }],
-    classNames: ['registration-form__input', 'input'],
-    icon: {
-      className: 'age-input-icon',
-      attributes: [{ position: 'start' }],
-    },
-  },
-  {
-    tagName: 'input',
-    attributes: [{ 'data-type': 'email' }, { type: 'text' }, { placeholder: 'Email Adress' }, { 'has-icon': 'true' }],
-    classNames: ['registration-form__input', 'input'],
-    icon: {
-      className: 'email-input-icon',
-      attributes: [{ position: 'start' }],
-    },
-  },
-  {
-    tagName: 'input',
-    attributes: [{ 'data-type': 'password' }, { type: 'text' }, { placeholder: 'Enter your password' }],
-    classNames: ['registration-form__input', 'input', 'password-input'],
-    icon: {
-      className: 'password-input-icon',
-      attributes: [{ position: 'end' }],
-    },
-  },
-];
+import { commonDataInputItems } from './registrationItemsData';
 
 class RegistrationView extends PageView {
-  private validate: Validate;
+  private validator: Validator;
 
   constructor() {
     super();
-    this.validate = new Validate();
+    this.validator = new Validator();
   }
 
   public render(): HTMLElement {
@@ -102,7 +55,13 @@ class RegistrationView extends PageView {
       parent: registrationPageContent,
     });
 
-    this.renderFormItems(registrationForm, registrationFormInputItems);
+    const commonDataContainer = createElement({
+      tagName: 'div',
+      classNames: ['common-data-container'],
+      parent: registrationForm,
+    });
+
+    this.renderFormItems(commonDataContainer, commonDataInputItems);
 
     const adressesContainer = createElement({
       tagName: 'div',
@@ -117,13 +76,13 @@ class RegistrationView extends PageView {
       tagName: 'button',
       classNames: ['registration-form__button', 'button', 'button--black'],
       text: 'SIGN UP',
-      attributes: [{ type: 'submit' }],
+      attributes: [{ type: 'button' }],
       parent: registrationForm,
     });
 
     submitFormButton.addEventListener('click', (e: Event) => {
       e.preventDefault();
-      this.validate.validateSubmit();
+      this.validator.validateSubmit();
     });
 
     return this.container;
@@ -149,18 +108,21 @@ class RegistrationView extends PageView {
       if (item.tagName === 'input') {
         formItemElement.addEventListener('input', (e: Event) => {
           e.preventDefault();
-          this.validate.validateRealTime(formItemElement as HTMLInputElement);
+          this.validator.validateRealTime(formItemElement as HTMLInputElement);
         });
+
         formItemElement.addEventListener('focusout', (e: Event) => {
           e.preventDefault();
-          this.validate.validateFocusOut(formItemElement as HTMLInputElement);
+          this.validator.validateFocusOut(formItemElement as HTMLInputElement);
         });
       }
 
       if (item.tagName === 'select') {
         const adressCategory = formItemElement.getAttribute('category');
+
         formItemElement.addEventListener('change', () => {
           const adressInputs = getElementCollection(`.${adressCategory}-adress__input`);
+
           adressInputs.forEach((input) => {
             const inputElement = input as HTMLInputElement;
             removeError(inputElement);
@@ -168,9 +130,10 @@ class RegistrationView extends PageView {
             inputElement.disabled = false;
           });
         });
+
         formItemElement.addEventListener('focusout', () => {
           const selectElement = formItemElement as HTMLSelectElement;
-          this.validate.setCountryFromSelectValue(adressCategory, selectElement);
+          this.validator.setCountryFromSelectValue(adressCategory, selectElement);
         });
       }
 
@@ -186,33 +149,51 @@ class RegistrationView extends PageView {
       }
 
       if (item.icon) {
-        createElement({
+        const icon = createElement({
           tagName: 'div',
           classNames: ['input-icon', `${item.icon.className}`],
           attributes: item.icon.attributes,
           parent: formItem,
         });
+
+        if (icon.classList.contains('password-input-icon')) {
+          icon.addEventListener('click', () => {
+            this.togglePasswordView();
+          });
+        }
       }
     });
 
     return container;
   }
 
+  private togglePasswordView(): void {
+    const passwordInput: HTMLInputElement = getElement('.password-input');
+    if (passwordInput.getAttribute('type') === 'password') {
+      passwordInput.removeAttribute('type');
+      passwordInput.setAttribute('type', 'text');
+    } else {
+      passwordInput.removeAttribute('type');
+      passwordInput.setAttribute('type', 'password');
+    }
+  }
+
   private renderAdressContainer(container: HTMLElement, category: AdressCategories): HTMLElement {
     const adressContent = createElement({
       tagName: 'div',
-      classNames: ['adresses-container__adress-form-content', 'adress-form-content', `${category}-adress`],
+      attributes: [{ category: `${category}` }],
+      classNames: ['adresses-container__adress-container', 'adress-container', `${category}-adress`],
       parent: container,
     });
 
     createElement({
       tagName: 'span',
-      classNames: ['adress-form-content__description', 'form-description'],
+      classNames: ['adress-container__description', 'form-description'],
       text: `Enter your ${category} adress : `,
       parent: adressContent,
     });
 
-    this.renderFormItems(adressContent, createAdressFormItems(category));
+    this.renderFormItems(adressContent, this.createAdressFormItems(category));
 
     const adressChekboxLabel = createElement({
       tagName: 'label',
@@ -234,6 +215,67 @@ class RegistrationView extends PageView {
     });
 
     return container;
+  }
+
+  private createAdressFormItems(category: AdressCategories): FormItems[] {
+    return [
+      {
+        tagName: 'select',
+        attributes: [{ 'data-type': 'country' }, { name: 'country' }, { category: `${category}` }],
+        classNames: [`${category}-adress__select`, 'select'],
+        options: [
+          {
+            text: 'Select your country',
+            attributes: [{ value: '' }, { selected: 'true' }, { disabled: 'true' }],
+          },
+          {
+            text: 'Belarus',
+            attributes: [{ value: 'Belarus' }],
+          },
+          {
+            text: 'Spain',
+            attributes: [{ value: 'Spain' }],
+          },
+          {
+            text: 'Netherlands',
+            attributes: [{ value: 'Netherlands' }],
+          },
+        ],
+      },
+      {
+        tagName: 'input',
+        attributes: [
+          { 'data-type': 'city' },
+          { category: `${category}` },
+          { type: 'text' },
+          { placeholder: 'City' },
+          { disabled: 'true' },
+        ],
+        classNames: ['registration-form__input', `${category}-adress__input`, 'input'],
+      },
+      {
+        tagName: 'input',
+        attributes: [
+          { 'data-type': 'street' },
+          { category: `${category}` },
+          { type: 'text' },
+          { placeholder: 'Street' },
+          { disabled: 'true' },
+        ],
+        classNames: ['registration-form__input', `${category}-adress__input`, 'input'],
+      },
+      {
+        tagName: 'input',
+        attributes: [
+          { 'data-type': 'postal-code' },
+          { category: `${category}` },
+          { type: 'text' },
+          { placeholder: 'Postal Code' },
+          { disabled: 'true' },
+        ],
+        classNames: ['registration-form__input', `${category}-adress__input`, 'input'],
+      },
+    ];
   }
 }
 

@@ -1,4 +1,5 @@
 import { AdressCategories, PostalCodes } from '../../types/enums';
+import { Data } from '../../types/interfaces';
 import { getElementCollection } from '../helpers/functions';
 import { removeError, removeHelp, createError, createHelp } from './validationHelpers';
 import {
@@ -16,7 +17,8 @@ import {
   hasUpperLetters,
   isEmailFormat,
   isLessLengthLimit,
-} from './validationRules';
+  passwordFormatLength,
+} from './validationChecks';
 
 class Validator {
   private billingCountry: string | null;
@@ -28,8 +30,6 @@ class Validator {
   private postalCodeLength: number | null;
 
   private readonly minAge = 16;
-
-  private readonly passwordLength = 8;
 
   constructor() {
     this.postalCodeLength = null;
@@ -47,9 +47,7 @@ class Validator {
     this.removeLabels(element);
     const { value } = element;
 
-    if (value === '') {
-      this.removeLabels(element);
-    } else {
+    if (value) {
       switch (element.dataset.type) {
         case 'name':
         case 'surname':
@@ -60,6 +58,7 @@ class Validator {
           break;
         case 'age':
           createHelp(element, 'Please enter your date of birth in the format: DD.MM.YYYY');
+
           if (!hasNumbersAndDots(value)) {
             createError(element, 'You should enter only numbers and dots');
           } else if (isMaxLength(value, dateFormatLength) && !isDateFormat(value)) {
@@ -69,18 +68,22 @@ class Validator {
           } else if (isOverMaxLength(value, dateFormatLength)) {
             createError(element, 'The date does not match the required format. Too many characters');
           }
+
           break;
         case 'password':
-          if (isOverMaxLength(value, this.passwordLength)) {
+          if (isOverMaxLength(value, passwordFormatLength)) {
             if (!isPasswordFormat(value)) {
               removeError(element);
               const passwordErors = [];
+
               if (!hasNumbers(value)) {
                 passwordErors.push('1 number');
               }
+
               if (!hasLowerLetters(value)) {
                 passwordErors.push('1 lowercase letter');
               }
+
               if (!hasUpperLetters(value)) {
                 passwordErors.push('1 uppercase letter');
               }
@@ -101,6 +104,7 @@ class Validator {
             removeError(element);
             createError(element, 'Postal code must have numeric characters only');
           }
+
           if (this.postalCodeLength && isOverMaxLength(value, this.postalCodeLength)) {
             removeError(element);
             createError(
@@ -116,6 +120,7 @@ class Validator {
 
   public setCountryFromSelectValue(category: string | null, element: HTMLSelectElement): void {
     removeError(element);
+
     if (category === AdressCategories.billing) {
       this.billingCountry = element.value;
     } else if (category === AdressCategories.shipping) {
@@ -137,35 +142,12 @@ class Validator {
     }
   }
 
-  public isValidForm(): boolean {
-    let isValid = true;
-    const formElements = getElementCollection('.form-item-element');
-    formElements.forEach((element) => {
-      const formElement = element as HTMLInputElement | HTMLSelectElement;
-      if (formElement.value === '') {
-        if (formElement.classList.contains('select')) {
-          createError(formElement, 'Please, select your country');
-        }
-        if (!formElement.getAttribute('disabled')) {
-          createError(formElement, 'Please, fill out this field');
-        }
-      }
-      if (formElement.closest('.form-item')?.classList.contains('.form-item--error') || formElement.value === '') {
-        isValid = false;
-      }
-    });
-    return isValid;
-  }
-
-  public validateSubmit(): void {}
-
   public validateFocusOut(element: HTMLInputElement): void {
+    removeHelp(element);
     const { value } = element;
     const parent: HTMLElement | null = element.closest('.form-item');
 
-    if (element.value === '') {
-      this.removeLabels(element);
-    } else {
+    if (value) {
       switch (element.dataset.type) {
         case 'email':
           if (!isEmailFormat(value)) {
@@ -173,16 +155,12 @@ class Validator {
           }
           break;
         case 'age':
-          if (
-            isWithinLengthLimit(value, this.passwordLength) &&
-            parent &&
-            !parent.classList.contains('form-item--error')
-          ) {
+          if (isLessLengthLimit(value, dateFormatLength) && parent && !parent.classList.contains('form-item--error')) {
             createError(element, 'Please enter your date of birth in the format: DD.MM.YYYY');
           }
           break;
         case 'password':
-          if (isWithinLengthLimit(value, this.passwordLength)) {
+          if (isWithinLengthLimit(value, passwordFormatLength)) {
             removeError(element);
             createError(element, 'Must contain at least 8 characters');
           }
@@ -205,7 +183,59 @@ class Validator {
           break;
         default:
       }
+    } else {
+      this.removeLabels(element);
     }
+  }
+
+  public isValidForm(): boolean {
+    let isValid = true;
+
+    const formElements = getElementCollection('.form-item-element');
+
+    formElements.forEach((element) => {
+      const formElement = element as HTMLInputElement | HTMLSelectElement;
+
+      if (formElement.value === '') {
+        if (!formElement.getAttribute('disabled')) {
+          createError(formElement, 'Please, fill out this field');
+        }
+        if (formElement.classList.contains('select')) {
+          createError(formElement, 'Please, select your country');
+        }
+      }
+
+      if (formElement.closest('.form-item')?.classList.contains('.form-item--error') || formElement.value === '') {
+        isValid = false;
+      }
+    });
+    return isValid;
+  }
+
+  public validateSubmit(): void {
+    this.isValidForm();
+  }
+
+  public createCommonData(elements: NodeListOf<Element>): Data {
+    const commonData: Data = {};
+
+    elements.forEach((element) => {
+      const commonDataElement = element as HTMLInputElement;
+      commonData[`${commonDataElement.getAttribute('data-type')}`] = commonDataElement.value;
+    });
+
+    return commonData;
+  }
+
+  public createAdressData(elements: NodeListOf<Element>): Data {
+    const adressData: Data = {};
+
+    elements.forEach((element) => {
+      const adressDataElement = element as HTMLInputElement | HTMLSelectElement;
+      adressData[`${adressDataElement.getAttribute('data-type')}`] = adressDataElement.value;
+    });
+
+    return adressData;
   }
 }
 

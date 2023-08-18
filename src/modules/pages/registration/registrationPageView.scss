@@ -15,6 +15,13 @@ $font-Montserrat: Montserrat;
   padding: 20px 40px;
 }
 
+.form {
+  padding-top: 19px;
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+}
+
 .form-title {
   display: flex;
   flex-direction: column;
@@ -40,25 +47,15 @@ $font-Montserrat: Montserrat;
   letter-spacing: 0.5px;
 }
 
-.adresses-container {
+.adress-container,
+.common-data-container {
   padding-top: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 13px;
 }
 
-.form,
-.adress-form-content {
-  display: flex;
-  flex-direction: column;
-  gap: 19px;
-}
-
-.form {
-  padding-top: 19px;
-}
-
-.adress-form-content__description {
+.adress-container__description {
   font-weight: 500;
 }
 
@@ -111,6 +108,7 @@ $font-Montserrat: Montserrat;
   }
 }
 
+.input[type='password'],
 .registration-form__input,
 .select {
   width: 488px;
@@ -141,6 +139,7 @@ $font-Montserrat: Montserrat;
 }
 
 .password-input-icon {
+  cursor: pointer;
   background: url(../../../assets/image/password-icon.svg);
 }
 

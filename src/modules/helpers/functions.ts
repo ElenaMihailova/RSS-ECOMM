@@ -1,5 +1,4 @@
-import { AdressCategories } from '../../types/enums';
-import { AttrSet, FormItems } from '../../types/interfaces';
+import { AttrSet } from '../../types/interfaces';
 
 export function createElement<K extends keyof HTMLElementTagNameMap>(elData: {
   tagName: K;
@@ -58,52 +57,4 @@ export const getElementCollection = (selector: string): NodeListOf<Element> => {
   }
 
   return collection;
-};
-
-export const createAdressFormItems = (category: AdressCategories): FormItems[] => {
-  return [
-    {
-      tagName: 'select',
-      attributes: [{ name: 'country' }, { category: `${category}` }],
-      classNames: [`${category}-adress__select`, 'select'],
-      options: [
-        {
-          text: 'Select your country',
-          attributes: [{ value: '' }, { selected: 'true' }, { disabled: 'true' }],
-        },
-        {
-          text: 'Belarus',
-          attributes: [{ value: 'Belarus' }],
-        },
-        {
-          text: 'Spain',
-          attributes: [{ value: 'Spain' }],
-        },
-        {
-          text: 'Netherlands',
-          attributes: [{ value: 'Netherlands' }],
-        },
-      ],
-    },
-    {
-      tagName: 'input',
-      attributes: [{ 'data-type': 'city' }, { type: 'text' }, { placeholder: 'City' }, { disabled: 'true' }],
-      classNames: ['registration-form__input', `${category}-adress__input`, 'input'],
-    },
-    {
-      tagName: 'input',
-      attributes: [{ 'data-type': 'street' }, { type: 'text' }, { placeholder: 'Street' }, { disabled: 'true' }],
-      classNames: ['registration-form__input', `${category}-adress__input`, 'input'],
-    },
-    {
-      tagName: 'input',
-      attributes: [
-        { 'data-type': 'postal-code' },
-        { type: 'text' },
-        { placeholder: 'Postal Code' },
-        { disabled: 'true' },
-      ],
-      classNames: ['registration-form__input', `${category}-adress__input`, 'input'],
-    },
-  ];
 };

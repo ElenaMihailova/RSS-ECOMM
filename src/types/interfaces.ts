@@ -24,3 +24,7 @@ export interface FormItems {
     attributes?: AttrSet[];
   };
 }
+
+export interface Data {
+  [key: string]: string;
+}
