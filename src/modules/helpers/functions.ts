@@ -1,4 +1,4 @@
-import { AttrSet } from '../types';
+import { AttrSet } from '../../types';
 
 export function createElement<T extends keyof HTMLElementTagNameMap>(elData: {
   tagName: T;

@@ -1,6 +1,6 @@
-import ComponentView from '../../helpers/component-view';
+import PageView from '../../core/pageView';
 
-class IndexView extends ComponentView {
+class IndexView extends PageView {
   constructor() {
     super();
     this.container.textContent = 'INDEX PAGE';

@@ -1,4 +1,4 @@
-import ComponentView from '../helpers/component-view';
+import PageView from '../core/pageView';
 
 class Main {
   protected container: HTMLElement;
@@ -12,7 +12,7 @@ class Main {
     return this.container;
   }
 
-  public setContent(content: ComponentView): void {
+  public setContent(content: PageView): void {
     this.container.innerHTML = '';
     this.container.append(content.render());
   }
