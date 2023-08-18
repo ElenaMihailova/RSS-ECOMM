@@ -1,5 +1,3 @@
-import fetch from 'node-fetch';
-
 import {
   ClientBuilder,
   // Import middlewares
@@ -33,7 +31,6 @@ const ctpClient = new ClientBuilder()
   .withProjectKey(projectKey) // .withProjectKey() is not required if the projectKey is included in authMiddlewareOptions
   .withClientCredentialsFlow(authMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
-  .withLoggerMiddleware() // Include middleware for logging
   .build();
 
 export default ctpClient;

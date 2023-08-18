@@ -8,14 +8,14 @@ const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
 });
 
 async function getEndpoint(): Promise<CustomersFromApi> {
-  let resData: CustomersFromApi = {};
   try {
     const res = await apiRoot.customers().get().execute();
-    resData = await res.body;
+    const resData: CustomersFromApi = await res.body;
+    return resData;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
-  return resData;
+  return {};
 }
 
 export default getEndpoint;

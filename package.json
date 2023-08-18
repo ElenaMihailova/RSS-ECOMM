@@ -49,6 +49,6 @@
     "@commercetools/platform-sdk": "^5.0.0",
     "@commercetools/sdk-client-v2": "^2.2.0",
     "dotenv": "^16.3.1",
-    "node-fetch": "^2.6.1"
+    "fetch": "^1.1.0"
   }
 }
