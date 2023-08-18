@@ -1,6 +1,6 @@
-import ComponentView from '../../../helpers/component-view';
+import PageView from '../../core/pageView';
 
-class LoginView extends ComponentView {
+class LoginView extends PageView {
   constructor() {
     super();
     this.container.textContent = 'LOGIN PAGE';
