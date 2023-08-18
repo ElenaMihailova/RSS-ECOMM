@@ -1,4 +1,4 @@
-import ComponentView from '../../../helpers/component-view';
+import ComponentView from '../../helpers/component-view';
 
 class IndexView extends ComponentView {
   constructor() {

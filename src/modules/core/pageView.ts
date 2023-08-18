@@ -1,4 +1,4 @@
-abstract class ComponentView {
+abstract class PageView {
   protected container: HTMLElement;
 
   constructor() {
@@ -8,6 +8,8 @@ abstract class ComponentView {
   public render(): HTMLElement {
     return this.container;
   }
+
+  public runHandlers(): void {}
 }
 
-export default ComponentView;
+export default PageView;
