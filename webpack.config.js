@@ -5,7 +5,9 @@ const MiniCssExtractPlugin=require('mini-css-extract-plugin');
 const {ESLint}=require('eslint');
 const ESLintPlugin=require('eslint-webpack-plugin');
 const CopyPlugin=require('copy-webpack-plugin');
-
+const dotenv=require('dotenv').config({path: __dirname+'/.env'});
+const isDevelopment=process.env.NODE_ENV!=='production';
+const webpack=require('webpack');
 const devServer=(isDev) =>
   !isDev
     ? {}
@@ -13,6 +15,7 @@ const devServer=(isDev) =>
       devServer: {
         open: true,
         port: 8080,
+        historyApiFallback: true,
       },
     };
 
@@ -20,7 +23,8 @@ const esLintPlugin=(isDev) => (isDev? []:[new ESLintPlugin({extensions: ['ts', '
 
 module.exports=({develop}) => ({
   mode: develop? 'development':'production',
-  devtool: 'inline-source-map',
+  devtool: develop? 'source-map':false,
+
   entry: {
     main: path.resolve(__dirname, './src/index.ts'),
   },
@@ -51,6 +55,7 @@ module.exports=({develop}) => ({
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    fallback: {crypto: false},
   },
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -73,6 +78,10 @@ module.exports=({develop}) => ({
       ],
     }),
     new CleanWebpackPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(dotenv.parsed),
+      'process.env.NODE_ENV': JSON.stringify(isDevelopment? 'development':'production'),
+    }),
     ...esLintPlugin(develop),
   ],
   ...devServer(develop),

@@ -1,7 +1,7 @@
 import { generateLink } from '../helpers/renderHelpers';
 import { NavLink, FooterLinksType } from '../../types/nav.types';
 import desktopMenuTemplate from '../templates/DesktopMenuTemplate';
-import mobileMenuTemplate from '../templates/mobileMenuModule';
+import mobileMenuTemplate from '../templates/MobileMenuModule';
 import headerTemplate from '../templates/HeaderTemplate';
 import footerTemplate from '../templates/FooterTemplate';
 
