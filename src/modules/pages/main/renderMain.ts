@@ -11,8 +11,8 @@ export default function renderMain(mainData: MainData): void {
 `;
 
   const footer = document.querySelector('footer');
-  if (footer && footer.parentNode) {
-    footer.parentNode.insertBefore(main, footer);
+  if (footer) {
+    footer.insertAdjacentElement('beforebegin', main);
   } else {
     document.body.appendChild(main);
   }

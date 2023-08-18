@@ -70,7 +70,7 @@ module.exports=({develop}) => ({
       patterns: [
         {from: 'src/assets/image', to: 'image'},
         {from: 'src/assets/fonts', to: 'fonts'},
-      ]
+      ],
     }),
     new CleanWebpackPlugin(),
     ...esLintPlugin(develop),
