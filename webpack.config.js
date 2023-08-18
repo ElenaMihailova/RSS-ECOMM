@@ -4,7 +4,9 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { ESLint } = require('eslint');
 const ESLintPlugin = require('eslint-webpack-plugin');
-
+const dotenv = require('dotenv').config({ path: __dirname + '/.env' });
+const isDevelopment = process.env.NODE_ENV !== 'production'
+const webpack = require('webpack');
 const devServer = (isDev) =>
   !isDev
     ? {}
@@ -12,6 +14,7 @@ const devServer = (isDev) =>
         devServer: {
           open: true,
           port: 8080,
+          historyApiFallback: true,
         },
       };
 
@@ -20,7 +23,7 @@ isDev ? [] : [new ESLintPlugin({ extensions: ['ts', 'js'] })];
 
 module.exports = ({ develop }) => ({
   mode: develop ? 'development' : 'production',
-  devtool: develop ? 'inline-source-map' : 'none',
+  devtool: develop ? 'source-map' : false,
   entry: {
     main: path.resolve(__dirname, './src/index.ts'),
   },
@@ -51,6 +54,7 @@ module.exports = ({ develop }) => ({
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    fallback: { "crypto": false }
   },
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -60,15 +64,18 @@ module.exports = ({ develop }) => ({
   plugins: [
     new HtmlWebpackPlugin({
       title: 'webpack Boilerplate',
-      template: path.resolve(__dirname, './src/index.html'), 
-      filename: 'index.html', 
+      template: path.resolve(__dirname, './src/index.html'),
+      filename: 'index.html',
     }),
     new MiniCssExtractPlugin({
       filename: 'index.css',
     }),
     new CleanWebpackPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(dotenv.parsed),
+      'process.env.NODE_ENV': JSON.stringify(isDevelopment ? 'development' : 'production'),
+    }),
     ...esLintPlugin(develop),
   ],
-
   ...devServer(develop),
 });
