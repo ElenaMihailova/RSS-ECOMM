@@ -18,7 +18,7 @@ const mobileMenuTemplate = (linksHtml: string): string => `
     </div>
     <ul class="menu__user">
       <li>
-        <a href="#" class="login">
+        <a href="login.html" class="login">
           <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
             <use xlink:href="./image/sprite.svg#person"></use>
           </svg>
