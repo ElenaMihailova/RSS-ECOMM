@@ -6,16 +6,13 @@ const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
   projectKey: process.env.CTP_PROJECT_KEY as string,
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getEndpoint = (): any => {
-  return apiRoot
-    .customers()
-    .get()
-    .execute()
-    .then(({ body }) => {
-      console.log(JSON.stringify(body));
-    })
-    .catch(console.error);
-};
+async function obtainAccessToken(): Promise<void> {
+  try {
+    const products = apiRoot.products().get().execute();
+    console.log(products);
+  } catch (err) {
+    console.log(err);
+  }
+}
 
-export default getEndpoint;
+export default obtainAccessToken;

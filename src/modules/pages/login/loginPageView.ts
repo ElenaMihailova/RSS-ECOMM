@@ -1,5 +1,6 @@
+import obtainAccessToken from '../../api/api-client';
 import PageView from '../../core/pageView';
-import { createElement } from '../../helpers/functions';
+import { createElement, getElement } from '../../helpers/functions';
 import './loginPageView.scss';
 
 class LoginView extends PageView {
@@ -105,6 +106,17 @@ class LoginView extends PageView {
     });
 
     return this.container;
+  }
+
+  public runHandlers(): void {
+    this.loginHandler();
+  }
+
+  private loginHandler(): void {
+    const loginBtn: HTMLButtonElement = getElement('.login__button');
+    loginBtn.addEventListener('click', async () => {
+      await obtainAccessToken();
+    });
   }
 }
 

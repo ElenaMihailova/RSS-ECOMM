@@ -15,6 +15,7 @@ class Main {
   public setContent(content: PageView): void {
     this.container.innerHTML = '';
     this.container.append(content.render());
+    content.runHandlers();
   }
 }
 
