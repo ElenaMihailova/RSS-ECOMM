@@ -1,5 +1,5 @@
 import { PageUrls } from '../../assets/data/constants';
-import { RouteAction, UserRequest } from '../../types';
+import { RouteAction, UserRequest } from '../../types/types';
 
 class Router {
   public routes: RouteAction[];

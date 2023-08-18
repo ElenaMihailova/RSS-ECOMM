@@ -1,5 +1,5 @@
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import { CustomersFromApi } from '../../types';
+import { CustomersFromApi } from '../../types/types';
 import ctpClient from './build-client';
 
 // Create apiRoot from the imported ClientBuilder and include your Project key

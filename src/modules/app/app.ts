@@ -1,24 +1,28 @@
 import { PageUrls } from '../../assets/data/constants';
-import { RouteAction } from '../../types';
-import Header from '../header/header';
+import { RouteAction } from '../../types/types';
 import Router from '../router/router';
-import Main from '../main/main';
+import Main from '../core/main';
 import IndexView from '../pages/index/indexPageView';
 import RegistrationView from '../pages/registration/registrationPageView';
 import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
+import { FooterLinksType, NavLink } from '../../types/nav.types';
+import createLayout from '../components/createLayout';
+import { headerLinks, footerLinks } from '../../assets/data/navigationData';
+import mainContent from '../templates/mainContent';
 
 class App {
   private static container: HTMLElement = document.body;
 
   public router: Router;
 
-  public header: Header | null;
-
   public main: Main | null;
 
+  private headerData: NavLink[] = headerLinks;
+
+  private footerData: FooterLinksType = footerLinks;
+
   constructor() {
-    this.header = null;
     this.main = null;
     const routes = this.createRoutes();
     this.router = new Router(routes);
@@ -26,9 +30,12 @@ class App {
   }
 
   private createView(): void {
-    this.header = new Header(this.router);
-    this.main = new Main();
-    App.container.append(this.header.render(), this.main.render());
+    const layout = createLayout(this.headerData, this.footerData);
+    App.container.append(layout.header, layout.footer);
+    if (!this.main) {
+      this.main = new Main();
+    }
+    App.container.append(this.main.render());
   }
 
   private createRoutes(): RouteAction[] {
@@ -37,7 +44,8 @@ class App {
         path: ``,
         callback: (): void => {
           if (this.main) {
-            this.main.setContent(new IndexView());
+            this.main.clearContent();
+            this.main.setContent(new IndexView(mainContent));
           }
         },
       },
@@ -45,7 +53,8 @@ class App {
         path: `${PageUrls.IndexPageUrl}`,
         callback: (): void => {
           if (this.main) {
-            this.main.setContent(new IndexView());
+            this.main.clearContent();
+            this.main.setContent(new IndexView(mainContent));
           }
         },
       },
@@ -53,6 +62,7 @@ class App {
         path: `${PageUrls.RegistrationPageUrl}`,
         callback: (): void => {
           if (this.main) {
+            this.main.clearContent();
             this.main.setContent(new RegistrationView());
           }
         },
@@ -61,6 +71,7 @@ class App {
         path: `${PageUrls.LoginPageUrl}`,
         callback: (): void => {
           if (this.main) {
+            this.main.clearContent();
             this.main.setContent(new LoginView());
           }
         },
@@ -69,6 +80,7 @@ class App {
         path: `${PageUrls.ErrorPageUrl}`,
         callback: (): void => {
           if (this.main) {
+            this.main.clearContent();
             this.main.setContent(new ErrorView());
           }
         },

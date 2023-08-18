@@ -4,7 +4,7 @@ import errorMarkup from '../../templates/ErrorTemplate';
 class ErrorView extends PageView {
   constructor() {
     super();
-    this.container.textContent = errorMarkup;
+    this.container.innerHTML = errorMarkup;
   }
 
   public render(): HTMLElement {

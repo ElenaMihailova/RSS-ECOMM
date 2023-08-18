@@ -1,33 +1,11 @@
-import PageView from '../../core/pageView';
+import PageView from './pageView';
 
-interface MainData {
-  title: string;
-  content: string;
-}
-
-class IndexView extends PageView {
+class Main {
   protected container: HTMLElement;
 
-  private title: string;
-
-  private content: string;
-
-  constructor(mainData: MainData) {
-    super();
-    this.title = mainData.title;
-    this.content = mainData.content;
-
-    this.container = document.createElement('main');
+  constructor() {
+    this.container = document.createElement('div');
     this.container.classList.add('main');
-
-    this.updateMainContent();
-  }
-
-  public updateMainContent(): void {
-    this.container.innerHTML = `
-      <h1 class="visually-hidden">${this.title}</h1>
-      ${this.content}
-    `;
   }
 
   private insertMainInDOM(): void {
@@ -56,4 +34,4 @@ class IndexView extends PageView {
   }
 }
 
-export default IndexView;
+export default Main;

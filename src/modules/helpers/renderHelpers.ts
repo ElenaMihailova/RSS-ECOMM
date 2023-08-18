@@ -1,8 +1,8 @@
-export const addHTML = (tag: string, classNames: string[], html: string): void => {
-  const root = document.createElement(tag);
-  root.classList.add(...classNames);
-  root.innerHTML = html;
-  document.body.appendChild(root);
+export const addHTML = (tag: string, classNames: string[], html: string): HTMLElement => {
+  const element = document.createElement(tag);
+  element.classList.add(...classNames);
+  element.innerHTML = html;
+  return element;
 };
 
 export const generateLink = (text: string, link: string): string => {
