@@ -34,10 +34,14 @@
   margin-bottom: 26px;
 }
 
-.login__email-input {
+.login__email-input-container {
   height: 56px;
-  width: 100%;
   margin-bottom: 46px;
+}
+
+.login__email-input {
+  height: 100%;
+  width: 100%;
   padding-left: 40px;
 }
 
@@ -46,15 +50,21 @@
   position: absolute;
   width: 20px;
   height: 16px;
-  top: 152px;
-  left: 53px;
-  z-index: 2;
+  top: 19px;
+  left: 12px;
+  z-index: 3;
+}
+
+.login__password-input-container {
+  height: 56px;
+  margin-bottom: 46px;
+  width: 100%;
 }
 
 .login__password-input {
-  height: 56px;
-  margin-bottom: 46px;
-  padding-left: 40px;
+  height: 100%;
+  width: 100%;
+  padding: 0 40px;
 }
 
 .login__password-icon {
@@ -62,9 +72,22 @@
   position: absolute;
   width: 20px;
   height: 19px;
-  top: 252px;
-  left: 53px;
-  z-index: 2;
+  top: 17px;
+  left: 12px;
+  z-index: 3;
+}
+
+.login__showpassword-icon {
+  background: url(../../../assets/svg/password-icon.svg);
+  background-size: cover;
+  position: absolute;
+  border: none;
+  width: 25px;
+  height: 25px;
+  top: 16px;
+  left: 296px;
+  z-index: 5  ;
+  cursor: pointer;
 }
 
 .login__button {
@@ -124,4 +147,45 @@
   height: 56px;
   width: 100%;
   cursor: pointer;
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 56px;
+
+
+  .input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+  }
+}
+
+.form-item label {
+  position: absolute;
+  top: 53px;
+  left: 0;
+  display: block;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.16px;
+  padding-top: 3px;
+}
+.form-item--error {
+  .input {
+    border: 2px solid $color-error;
+    outline: none;
+  }
+
+  label {
+    color: $color-error;
+  }
 }

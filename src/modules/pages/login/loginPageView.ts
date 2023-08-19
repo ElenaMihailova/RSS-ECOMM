@@ -1,11 +1,16 @@
-import obtainAccessToken from '../../api/api-client';
+import getAccessToken from '../../api/api-client';
+import buildClientWithPasswordFlow from '../../api/build-client';
 import PageView from '../../core/pageView';
 import { createElement, getElement } from '../../helpers/functions';
+import Validator from '../../validation/validator';
 import './loginPageView.scss';
 
 class LoginView extends PageView {
+  private validator: Validator;
+
   constructor() {
     super();
+    this.validator = new Validator();
     this.container.classList.add('login-page');
   }
 
@@ -25,42 +30,74 @@ class LoginView extends PageView {
 
     const loginText = createElement({
       tagName: 'p',
-      classNames: ['login__text'],
+      classNames: ['login__text', 'form-item', 'form-item-element'],
       text: 'Welcome back! Sign in for faster checkout.',
       parent: loginContainer,
+    });
+
+    const loginForm = createElement({
+      tagName: 'form',
+      classNames: ['login__form', 'form'],
+      attributes: [{ action: '#' }],
+      parent: loginContainer,
+    });
+
+    const loginEmailInputContainer = createElement({
+      tagName: 'div',
+      classNames: ['login__email-input-container', 'form-item'],
+      parent: loginForm,
     });
 
     const loginEmailIcon = createElement({
       tagName: 'span',
       classNames: ['login__email-icon'],
-      parent: loginContainer,
+      parent: loginEmailInputContainer,
     });
 
     const loginEmailInput = createElement({
       tagName: 'input',
-      classNames: ['input', 'login__email-input'],
-      attributes: [{ type: 'text' }, { value: '' }, { placeholder: 'Email Adress' }],
-      parent: loginContainer,
+      classNames: ['input', 'login__email-input', 'form-item-element'],
+      attributes: [{ 'data-type': 'email' }, { type: 'text' }, { value: '' }, { placeholder: 'Email Adress' }],
+      parent: loginEmailInputContainer,
+    });
+
+    const loginPasswordInputContainer = createElement({
+      tagName: 'div',
+      classNames: ['login__password-input-container', 'form-item'],
+      parent: loginForm,
     });
 
     const loginPasswordIcon = createElement({
       tagName: 'span',
       classNames: ['login__password-icon'],
-      parent: loginContainer,
+      parent: loginPasswordInputContainer,
+    });
+
+    const loginShowPasswordIcon = createElement({
+      tagName: 'button',
+      classNames: ['login__showpassword-icon'],
+      attributes: [{ type: 'button' }],
+      parent: loginPasswordInputContainer,
     });
 
     const loginPasswordInput = createElement({
       tagName: 'input',
       classNames: ['input', 'login__password-input'],
-      attributes: [{ type: 'text' }, { value: '' }, { placeholder: 'Enter your password' }],
-      parent: loginContainer,
+      attributes: [
+        { 'data-type': 'login-password' },
+        { type: 'password' },
+        { value: '' },
+        { placeholder: 'Enter your password' },
+      ],
+      parent: loginPasswordInputContainer,
     });
 
     const loginSubmit = createElement({
       tagName: 'button',
       classNames: ['login__button'],
+      attributes: [{ type: 'button' }],
       text: 'SIGN IN',
-      parent: loginContainer,
+      parent: loginForm,
     });
 
     const registrationContainer = createElement({
@@ -101,6 +138,7 @@ class LoginView extends PageView {
     const createAccButton = createElement({
       tagName: 'button',
       classNames: ['registration__button'],
+      attributes: [{ type: 'button' }],
       text: 'CREATE AN ACCOUNT',
       parent: registrationContainer,
     });
@@ -109,14 +147,59 @@ class LoginView extends PageView {
   }
 
   public runHandlers(): void {
-    this.loginHandler();
+    this.loginBtnHandler();
+    this.inputsHandlers();
   }
 
-  private loginHandler(): void {
+  private loginBtnHandler(): void {
     const loginBtn: HTMLButtonElement = getElement('.login__button');
+    const usrname = 'johndoe@example.com';
+    const usrpassword = 'secret123';
     loginBtn.addEventListener('click', async () => {
-      await obtainAccessToken();
+      await getAccessToken(usrname, usrpassword);
     });
+  }
+
+  private inputsHandlers(): void {
+    const emailInput: HTMLInputElement = getElement('.login__email-input');
+    const passwordContainer: HTMLDivElement = getElement('.login__password-input-container');
+    const passwordInput: HTMLInputElement = getElement('.login__password-input');
+    const showPasswordButton: HTMLButtonElement = getElement('.login__showpassword-icon');
+
+    emailInput.addEventListener('focusout', (e: Event) => {
+      e.preventDefault();
+      this.validator.validateFocusOut(emailInput);
+    });
+
+    emailInput.addEventListener('focusin', (e: Event) => {
+      e.preventDefault();
+      this.validator.removeLabels(emailInput);
+    });
+
+    passwordContainer.addEventListener('focusout', (e: Event): void => {
+      e.preventDefault();
+      this.validator.validateFocusOut(passwordInput);
+    });
+
+    passwordContainer.addEventListener('focusin', (e: Event) => {
+      e.preventDefault();
+      this.validator.removeLabels(passwordInput);
+    });
+
+    showPasswordButton.addEventListener('click', () => {
+      this.togglePasswordView();
+    });
+  }
+
+  private togglePasswordView(): void {
+    const passwordInput: HTMLInputElement = getElement('.login__password-input');
+    if (passwordInput.getAttribute('type') === 'password') {
+      passwordInput.removeAttribute('type');
+      passwordInput.setAttribute('type', 'text');
+    } else {
+      passwordInput.removeAttribute('type');
+      passwordInput.setAttribute('type', 'password');
+    }
   }
 }
 

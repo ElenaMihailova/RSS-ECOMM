@@ -1,18 +1,14 @@
-import fetch from 'node-fetch';
-
 import {
   ClientBuilder,
   // Import middlewares
-  type AuthMiddlewareOptions, // Required for auth
   type PasswordAuthMiddlewareOptions, // Required for auth
-  type HttpMiddlewareOptions, // Required for sending HTTP requests
+  type HttpMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 
 const projectKey = process.env.CTP_PROJECT_KEY as string;
 const scopes = process.env.CTP_SCOPES?.split(' ');
-
 const usrname = 'johndoe@example.com';
-const usrpassword = 'rss2023Q1!';
+const usrpassword = 'secret123';
 
 const passwordAuthMiddlewareOptions: PasswordAuthMiddlewareOptions = {
   host: process.env.CTP_AUTH_URL as string,
@@ -25,7 +21,7 @@ const passwordAuthMiddlewareOptions: PasswordAuthMiddlewareOptions = {
       password: usrpassword,
     },
   },
-  scopes: [`view_published_products:${projectKey}`],
+  scopes,
   fetch,
 };
 
@@ -35,36 +31,36 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
   fetch,
 };
 
-export const withPasswordFlowClient = (email: string, pass: string): void => {
-  const options: PasswordAuthMiddlewareOptions = {
-    host: process.env.CTP_AUTH_URL as string,
-    projectKey,
-    credentials: {
-      clientId: process.env.CTP_CLIENT_ID as string,
-      clientSecret: process.env.CTP_CLIENT_SECRET as string,
-      user: {
-        username: email,
-        password: pass,
-      },
-    },
-    scopes: [`view_published_products:${projectKey}`],
-    fetch,
-  };
-
-  const clientWithPasswordFlow = new ClientBuilder()
-    .withProjectKey(projectKey) // .withProjectKey() is not required if the projectKey is included in authMiddlewareOptions
-    .withPasswordFlow(passwordAuthMiddlewareOptions)
-    .withHttpMiddleware(httpMiddlewareOptions)
-    .withLoggerMiddleware() // Include middleware for logging
-    .build();
-};
-
 // Export the ClientBuilder
 const ctpClient = new ClientBuilder()
   .withProjectKey(projectKey) // .withProjectKey() is not required if the projectKey is included in authMiddlewareOptions
   .withPasswordFlow(passwordAuthMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
-  .withLoggerMiddleware() // Include middleware for logging
   .build();
+
+// const buildClientWithPasswordFlow = (username: string, password: string): Client => {
+//   const options: PasswordAuthMiddlewareOptions = {
+//     host: process.env.CTP_AUTH_URL as string,
+//     projectKey,
+//     credentials: {
+//       clientId: process.env.CTP_CLIENT_ID as string,
+//       clientSecret: process.env.CTP_CLIENT_SECRET as string,
+//       user: {
+//         username,
+//         password,
+//       },
+//     },
+//     scopes: [`view_published_products:${projectKey}`],
+//     fetch,
+//   };
+
+//   const client = new ClientBuilder()
+//     .withProjectKey(projectKey) // .withProjectKey() is not required if the projectKey is included in authMiddlewareOptions
+//     .withPasswordFlow(options)
+//     .withHttpMiddleware(httpMiddlewareOptions)
+//     .build();
+
+//   return client;
+// };
 
 export default ctpClient;
