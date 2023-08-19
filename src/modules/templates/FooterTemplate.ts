@@ -25,7 +25,7 @@ const footerTemplate = (collectionHtml: string, learnHtml: string, customerServi
         ${customerServiceHtml}
       </ul>
     </div>
-    <div class="navigation__wrap">
+    <div class="navigation__wrap" id="contact">
       <h2 class="navigation__name titleMonserrat titleMonserrat--medium">Contact us</h2>
       <ul class="navigation__list">
         <li>

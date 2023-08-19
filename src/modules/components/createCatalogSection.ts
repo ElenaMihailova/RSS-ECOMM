@@ -8,15 +8,17 @@ export default function createCatalogSection(items: CatalogItem[]): string {
     .map(
       (item) => `
       <li class="catalog__item">
-        <img src="${item.image}" width="172" height="172" alt="${item.name}" />
-        <h3 class="titleMonserrat titleMonserrat--small">${item.name}</h3>
+      <a href="#" class="catalog__link titleMonserrat titleMonserrat--small">
+      <img src="${item.image}" width="172" height="172" alt="${item.name}" />
+      <h3>${item.name}</h3>
+      </a>
       </li>
     `,
     )
     .join('');
 
   return `
-      <section class="container catalog">
+      <section class="container catalog" id="tea_collections">
         <h2 class="titleProstoOne titleProstoOne--big">Our Collections</h2>
         <ul class="catalog__list">
           ${itemsMarkup}

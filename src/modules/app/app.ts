@@ -10,6 +10,7 @@ import { FooterLinksType, NavLink } from '../../types/nav.types';
 import createLayout from '../components/createLayout';
 import { headerLinks, footerLinks } from '../../assets/data/navigationData';
 import mainContent from '../templates/mainContent';
+import setupHeaderListeners from '../components/setupHeaderListeners';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -32,6 +33,9 @@ class App {
   private createView(): void {
     const layout = createLayout(this.headerData, this.footerData);
     App.container.append(layout.header, layout.footer);
+
+    setupHeaderListeners('hamburger', 'menu');
+
     if (!this.main) {
       this.main = new Main();
     }
@@ -45,7 +49,7 @@ class App {
         callback: (): void => {
           if (this.main) {
             this.main.clearContent();
-            this.main.setContent(new IndexView(mainContent));
+            this.main.setContent(new IndexView(mainContent).render());
           }
         },
       },
@@ -54,7 +58,7 @@ class App {
         callback: (): void => {
           if (this.main) {
             this.main.clearContent();
-            this.main.setContent(new IndexView(mainContent));
+            this.main.setContent(new IndexView(mainContent).render());
           }
         },
       },
@@ -63,7 +67,7 @@ class App {
         callback: (): void => {
           if (this.main) {
             this.main.clearContent();
-            this.main.setContent(new RegistrationView());
+            this.main.setContent(new RegistrationView().render());
           }
         },
       },
@@ -72,7 +76,7 @@ class App {
         callback: (): void => {
           if (this.main) {
             this.main.clearContent();
-            this.main.setContent(new LoginView());
+            this.main.setContent(new LoginView().render());
           }
         },
       },
@@ -81,7 +85,7 @@ class App {
         callback: (): void => {
           if (this.main) {
             this.main.clearContent();
-            this.main.setContent(new ErrorView());
+            this.main.setContent(new ErrorView().render());
           }
         },
       },

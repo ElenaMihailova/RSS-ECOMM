@@ -1,10 +1,8 @@
-import PageView from './pageView';
-
 class Main {
   protected container: HTMLElement;
 
   constructor() {
-    this.container = document.createElement('div');
+    this.container = document.createElement('main');
     this.container.classList.add('main');
   }
 
@@ -26,10 +24,8 @@ class Main {
     return this.container;
   }
 
-  public setContent(content: PageView): void {
-    const contentContainer = document.createElement('div');
-    contentContainer.append(content.render());
-    this.container.appendChild(contentContainer);
+  public setContent(content: HTMLElement): void {
+    this.container.appendChild(content);
     this.insertMainInDOM();
   }
 }

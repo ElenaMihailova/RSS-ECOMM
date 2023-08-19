@@ -6,8 +6,6 @@ interface MainData {
 }
 
 class IndexView extends PageView {
-  protected container: HTMLElement;
-
   private title: string;
 
   private content: string;
@@ -16,18 +14,6 @@ class IndexView extends PageView {
     super();
     this.title = mainData.title;
     this.content = mainData.content;
-
-    this.container = document.createElement('main');
-    this.container.classList.add('main');
-
-    this.updateMainContent();
-  }
-
-  public updateMainContent(): void {
-    this.container.innerHTML = `
-      <h1 class="visually-hidden">${this.title}</h1>
-      ${this.content}
-    `;
   }
 
   private insertMainInDOM(): void {
@@ -44,8 +30,12 @@ class IndexView extends PageView {
   }
 
   public render(): HTMLElement {
-    this.insertMainInDOM();
-    return this.container;
+    const contentContainer = document.createElement('div');
+    contentContainer.innerHTML = `
+      <h1 class="visually-hidden">${this.title}</h1>
+      ${this.content}
+    `;
+    return contentContainer;
   }
 
   public setContent(content: PageView): void {

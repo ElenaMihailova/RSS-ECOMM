@@ -1,5 +1,5 @@
 const blogSection = `
-<section class="blog">
+<section class="blog" id="blog">
   <div class="container">
     <h2 class="titleProstoOne titleProstoOne--big">Last Blog Posts</h2>
     <ul class="blog__list">
