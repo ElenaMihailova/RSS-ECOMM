@@ -6,9 +6,12 @@ import {
   numbers,
   numbersAndDots,
   passwordFormat,
+  spaces,
   upperLetters,
 } from './regExpVariables';
 import { getAgeFromDateString } from './validationHelpers';
+
+export const hasSpaces = (string: string): boolean => Boolean(string.match(spaces));
 
 export const hasNumbers = (string: string): boolean => Boolean(string.match(numbers));
 

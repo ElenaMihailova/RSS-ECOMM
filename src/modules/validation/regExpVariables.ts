@@ -1,6 +1,7 @@
 export const letters = /^[A-Za-zА-Яа-яЁё\s]+$/;
 export const lowerLetters = /[a-z-а-яё]/;
 export const upperLetters = /[A-Z-А-Я-Ё]/;
+export const spaces = /^[A-Za-z0-9]+(?: +[A-Za-z0-9]+)*$/;
 export const numbers = /[0-9]/;
 export const onlyNumbers = /^[0-9]+$/;
 export const numbersAndDots = /^(?=.*\d)(\d*\.?){0,}\d*$/;

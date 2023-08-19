@@ -17,6 +17,7 @@ import {
   isEmailFormat,
   isLessLengthLimit,
   passwordFormatLength,
+  hasSpaces,
 } from './validationChecks';
 
 class Validator {
@@ -69,27 +70,23 @@ class Validator {
           }
 
           break;
-        case 'password':
-          if (isOverMaxLength(value, passwordFormatLength)) {
-            if (!isPasswordFormat(value)) {
-              removeError(element);
-              const passwordErors = [];
-
-              if (!hasNumbers(value)) {
-                passwordErors.push('1 number');
-              }
-
-              if (!hasLowerLetters(value)) {
-                passwordErors.push('1 lowercase letter');
-              }
-
-              if (!hasUpperLetters(value)) {
-                passwordErors.push('1 uppercase letter');
-              }
-
-              const errorString = `Must contain at least: ${passwordErors.join(', ')}`;
-              createError(element, errorString);
-            }
+        case 'email':
+          if (!isEmailFormat(value)) {
+            createError(element, 'Incorrect email address!');
+          }
+          break;
+        case 'login-password':
+          if (
+            isWithinLengthLimit(value, passwordFormatLength) ||
+            !hasSpaces(value) ||
+            !hasLowerLetters(value) ||
+            !hasNumbers(value) ||
+            !hasUpperLetters(value)
+          ) {
+            createError(
+              element,
+              'Password must be at least 8 characters long, must contain at least one uppercase letter (A-Z), must contain at least one lowercase letter (a-z), must contain at least one digit (0-9), must not contain leading or trailing whitespace',
+            );
           }
           break;
         case 'postal-code':
@@ -138,34 +135,6 @@ class Validator {
           if (isWithinLengthLimit(value, passwordFormatLength)) {
             removeError(element);
             createError(element, 'Must contain at least 8 characters');
-          }
-          break;
-        case 'login-password':
-          if (isWithinLengthLimit(value, passwordFormatLength)) {
-            removeError(element);
-            createError(element, 'Must contain at least 8 characters');
-          } else {
-            removeError(element);
-            const passwordErors: string[] = [];
-
-            if (!hasNumbers(value)) {
-              passwordErors.push('1 number');
-            }
-
-            if (!hasLowerLetters(value)) {
-              passwordErors.push('1 lowercase letter');
-            }
-
-            if (!hasUpperLetters(value)) {
-              passwordErors.push('1 uppercase letter');
-            }
-
-            const errorString = `Must contain at least: ${passwordErors.join(', ')}`;
-            createError(element, errorString);
-
-            if (hasNumbers(value) && hasLowerLetters(value) && hasUpperLetters(value)) {
-              removeError(element);
-            }
           }
           break;
         case 'postal-code':

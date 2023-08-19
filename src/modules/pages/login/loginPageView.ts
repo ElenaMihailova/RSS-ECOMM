@@ -166,24 +166,14 @@ class LoginView extends PageView {
     const passwordInput: HTMLInputElement = getElement('.login__password-input');
     const showPasswordButton: HTMLButtonElement = getElement('.login__showpassword-icon');
 
-    emailInput.addEventListener('focusout', (e: Event) => {
+    emailInput.addEventListener('input', (e: Event) => {
       e.preventDefault();
-      this.validator.validateFocusOut(emailInput);
+      this.validator.validateRealTime(emailInput);
     });
 
-    emailInput.addEventListener('focusin', (e: Event) => {
+    passwordContainer.addEventListener('input', (e: Event): void => {
       e.preventDefault();
-      this.validator.removeLabels(emailInput);
-    });
-
-    passwordContainer.addEventListener('focusout', (e: Event): void => {
-      e.preventDefault();
-      this.validator.validateFocusOut(passwordInput);
-    });
-
-    passwordContainer.addEventListener('focusin', (e: Event) => {
-      e.preventDefault();
-      this.validator.removeLabels(passwordInput);
+      this.validator.validateRealTime(passwordInput);
     });
 
     showPasswordButton.addEventListener('click', () => {
