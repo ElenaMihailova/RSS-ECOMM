@@ -2,30 +2,28 @@
 $color-error: #ff0000;
 $font-Montserrat: Montserrat;
 
-.registration-container {
-  background-color: $color-background-variant;
-  border: 1px solid $color-primary;
-  max-width: 568px;
-  height: auto;
+.registration-page {
   font-family: Montserrat;
   color: $color-primary;
+
+  .registration-page__content {
+    display: flex;
+    flex-direction: row;
+    padding: 40px;
+    gap: 40px;
+  }
 }
 
-.registration-content {
-  padding: 20px 40px;
+.registration-form-container {
+  background-color: $color-background-variant;
+  padding: 36px 36px 48px 36px;
+  max-width: 528px;
 }
 
-.form {
-  padding-top: 19px;
+.title-container {
   display: flex;
   flex-direction: column;
-  gap: 19px;
-}
-
-.form-title {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+  gap: 12px;
 
   .title {
     font-size: 22px;
@@ -35,7 +33,7 @@ $font-Montserrat: Montserrat;
     letter-spacing: 0.11px;
   }
 
-  .form-description {
+  .description {
     font-weight: 400;
   }
 }
@@ -45,6 +43,19 @@ $font-Montserrat: Montserrat;
   font-style: normal;
   line-height: 1.5;
   letter-spacing: 0.5px;
+}
+
+.form {
+  padding-top: 19px;
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+}
+
+.adresses-container {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
 }
 
 .adress-container,
@@ -111,7 +122,8 @@ $font-Montserrat: Montserrat;
 .input[type='password'],
 .registration-form__input,
 .select {
-  width: 488px;
+  width: 100%;
+  max-width: 456px;
   height: 56px;
   padding-left: 16px;
   font-size: 16px;
@@ -145,7 +157,7 @@ $font-Montserrat: Montserrat;
 
 .registration-form__button {
   width: 100%;
-  max-width: 488px;
+  max-width: 456px;
   height: 66px;
 }
 
@@ -177,5 +189,23 @@ input[type='checkbox']:disabled {
 
   label {
     color: $color-error;
+  }
+}
+
+.login-container {
+  width: 100%;
+  max-width: 456px;
+  padding: 32px 28px 48px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  height: 240px;
+  background-color: $color-background-variant;
+
+  .button {
+    width: 100%;
+    padding: 10px 24px;
+    max-width: 392px;
+    height: 56px;
   }
 }

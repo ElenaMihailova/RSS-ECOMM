@@ -16,35 +16,48 @@ class RegistrationView extends PageView {
   }
 
   public render(): HTMLElement {
-    const registrationPageContainer = createElement({
+    const registrationPage = createElement({
       tagName: 'div',
-      classNames: ['registration-container'],
+      classNames: ['registration-page'],
       parent: this.container,
     });
 
     const registrationPageContent = createElement({
       tagName: 'div',
-      classNames: ['registration-content'],
-      parent: registrationPageContainer,
+      classNames: ['registration-page__content'],
+      parent: registrationPage,
+    });
+
+    this.renderRegistrationFormContainer(registrationPageContent);
+    this.renderLoginContainer(registrationPageContent);
+
+    return this.container;
+  }
+
+  private renderRegistrationFormContainer(container: HTMLElement): void {
+    const registrationFormContainer = createElement({
+      tagName: 'div',
+      classNames: ['registration-form-container'],
+      parent: container,
     });
 
     const formTitleContainer = createElement({
       tagName: 'div',
-      classNames: ['form-title'],
-      parent: registrationPageContent,
+      classNames: ['title-container', 'form-title'],
+      parent: registrationFormContainer,
     });
 
     createElement({
       tagName: 'span',
       text: 'Create an account!',
-      classNames: ['form-title__title', 'title'],
+      classNames: ['title', 'form-title__title'],
       parent: formTitleContainer,
     });
 
     createElement({
       tagName: 'span',
       text: 'Please, fill out this form.',
-      classNames: ['form-title__description', 'form-description'],
+      classNames: ['form-title__description', 'form-description', 'description'],
       parent: formTitleContainer,
     });
 
@@ -52,7 +65,7 @@ class RegistrationView extends PageView {
       tagName: 'form',
       classNames: ['registration-form', 'form'],
       attributes: [{ action: '#' }],
-      parent: registrationPageContent,
+      parent: registrationFormContainer,
     });
 
     const commonDataContainer = createElement({
@@ -84,8 +97,6 @@ class RegistrationView extends PageView {
       e.preventDefault();
       this.validator.validateSubmit();
     });
-
-    return this.container;
   }
 
   private renderFormItems(container: HTMLElement, data: FormItems[]): HTMLElement {
@@ -276,6 +287,42 @@ class RegistrationView extends PageView {
         classNames: ['registration-form__input', `${category}-adress__input`, 'input'],
       },
     ];
+  }
+
+  private renderLoginContainer(container: HTMLElement): void {
+    const loginContainer = createElement({
+      tagName: 'div',
+      classNames: ['login-container'],
+      parent: container,
+    });
+
+    const loginTitleContainer = createElement({
+      tagName: 'div',
+      classNames: ['title-container', 'login-title'],
+      parent: loginContainer,
+    });
+
+    createElement({
+      tagName: 'span',
+      text: 'Already a customer?',
+      classNames: ['title', 'login-title__title'],
+      parent: loginTitleContainer,
+    });
+
+    createElement({
+      tagName: 'span',
+      text: 'Welcome back!',
+      classNames: ['login-title__description', 'description'],
+      parent: loginTitleContainer,
+    });
+
+    createElement({
+      tagName: 'button',
+      classNames: ['login-container__button', 'button'],
+      text: 'SIGN IN',
+      attributes: [{ type: 'button' }],
+      parent: loginContainer,
+    });
   }
 }
 
