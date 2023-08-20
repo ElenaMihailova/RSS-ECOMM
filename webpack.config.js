@@ -74,8 +74,7 @@ module.exports = ({ develop }) => ({
     new CopyPlugin({
       patterns: [
         { from: 'src/assets/image', to: 'image' },
-        { from: 'src/assets/fonts', to: 'fonts' },
-        { from: 'src/manifest.webmanifest', to: 'manifest.webmanifest' },
+        { from: 'src/assets/fonts', to: 'fonts' }
       ],
     }),
     new CleanWebpackPlugin(),
