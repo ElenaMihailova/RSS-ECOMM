@@ -1,0 +1,104 @@
+.menu {
+  width: 267px;
+  background-color: $color-on-primary;
+  padding: 16px;
+  padding-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+#menu {
+  display: none;
+}
+
+.menu__user {
+  list-style: none;
+  padding: 0;
+}
+
+.menu__user a {
+  display: flex;
+  font-family: $font-monserrat;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  padding: 0;
+  text-decoration: none;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 2px;
+  color: $color-primary;
+}
+
+.menu__user svg {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+}
+
+.menu__user p {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu__user span {
+  font-family: $font-monserrat;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+}
+
+.menu__nav {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.menu__nav a {
+  text-transform: uppercase;
+  text-decoration: none;
+  color: $color-primary;
+  padding: 12px;
+  display: block;
+  transition: transform $trans-default;
+
+  &:hover,
+  &:active {
+    transform: scale(1.1);
+  }
+}
+
+.menu--desktop {
+  flex-direction: row;
+  width: auto;
+  padding-right: 0;
+}
+
+.menu__nav--desktop {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.menu__user--desktop {
+  display: flex;
+  width: fit-content;
+  flex-shrink: 0;
+
+  a {
+    padding: 12px;
+  }
+}
+
+.menu__nav--desktop a {
+  transition: transform $trans-default;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}

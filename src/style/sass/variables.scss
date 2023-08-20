@@ -1,0 +1,38 @@
+// Colors
+
+// Default
+$color-transparent: rgba(255, 255, 255, 0);
+
+// Project palette
+$color-primary: rgb(40, 40, 40);
+$color-primary-opacity: rgba(40, 40, 40, 0.08);
+$color-on-primary: rgb(255, 255, 255);
+$color-secondary: rgb(195, 178, 18);
+$color-on-secondary: rgb(0, 0, 0);
+$color-background: rgb(254, 254, 254);
+$color-background-variant: rgb(244, 244, 244);
+$color-outline: rgb(160, 160, 160);
+
+// Gradient
+
+$black-to-right: linear-gradient(90deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 75%);
+
+//Fonts
+$font-monserrat: Montserrat, Arial;
+$font-prosto:
+  Prosto One,
+  Arial;
+
+// Animation
+$tf-default: ease;
+$trans-default: 0.3s $tf-default;
+
+// Viewport
+$vp-320: 320px;
+$vp-375: 375px;
+$vp-768: 768px;
+$vp-1024: 1024px;
+$vp-1100: 1100px;
+$vp-1280: 1280px;
+$vp-1440: 1440px;
+$vp-1920: 1920px;
