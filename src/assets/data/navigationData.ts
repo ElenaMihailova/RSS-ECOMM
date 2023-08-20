@@ -1,6 +1,6 @@
 export const headerLinks = [
   { text: 'tea collections', href: '#tea_collections' },
-  { text: 'accessories', href: 'accessories' },
+  { text: 'accessories', href: '#' },
   { text: 'blog', href: '#blog' },
   { text: 'contact us', href: '#contact' },
 ];

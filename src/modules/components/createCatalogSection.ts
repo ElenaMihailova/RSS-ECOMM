@@ -8,10 +8,10 @@ export default function createCatalogSection(items: CatalogItem[]): string {
     .map(
       (item) => `
       <li class="catalog__item">
-      <a href="#" class="catalog__link titleMonserrat titleMonserrat--small">
-      <img src="${item.image}" width="172" height="172" alt="${item.name}" />
-      <h3>${item.name}</h3>
-      </a>
+        <a href="#" class="catalog__link titleMonserrat titleMonserrat--small">
+          <img src="${item.image}" width="172" height="172" alt="${item.name}" />
+          <h3>${item.name}</h3>
+        </a>
       </li>
     `,
     )
