@@ -1,0 +1,45 @@
+.article {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding-bottom: 32px;
+
+  &--reverse {
+    flex-direction: row-reverse;
+
+    @include vp-768 {
+      flex-direction: row;
+    }
+  }
+}
+
+.article__description,
+.article__img {
+  flex: 0 0 47%;
+}
+
+.article__img {
+  aspect-ratio: 172/273;
+  object-fit: cover;
+  height: auto;
+}
+
+.article__text {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+
+  @include vp-768 {
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0.5px;
+  }
+}
+
+.article__description {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  justify-content: space-between;
+}

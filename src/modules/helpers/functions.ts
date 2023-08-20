@@ -1,19 +1,19 @@
-import { AttrSet } from '../../types/interfaces';
+import { AttrSet } from '../../types/types';
 
-export function createElement<K extends keyof HTMLElementTagNameMap>(elData: {
-  tagName: K;
+export function createElement<T extends keyof HTMLElementTagNameMap>(elData: {
+  tagName: T;
   classNames?: string[];
   attributes?: AttrSet[];
   text?: string;
   html?: string;
   parent?: HTMLElement;
-}): HTMLElementTagNameMap[K] {
+}): HTMLElementTagNameMap[T] {
   const { tagName, classNames, attributes, text, parent, html } = elData;
 
-  const element: HTMLElementTagNameMap[K] = document.createElement(tagName);
+  const element: HTMLElementTagNameMap[T] = document.createElement(tagName);
 
   if (classNames) {
-    classNames.forEach((className) => {
+    classNames.forEach((className: string) => {
       element.classList.add(className);
     });
   }

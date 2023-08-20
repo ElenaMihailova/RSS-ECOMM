@@ -1,0 +1,37 @@
+// Mobile first
+
+@mixin vp-375 {
+  @media (min-width: $vp-375) {
+    @content;
+  }
+}
+
+@mixin vp-768 {
+  @media (min-width: $vp-768) {
+    @content;
+  }
+}
+
+@mixin vp-1024 {
+  @media (min-width: $vp-1024) {
+    @content;
+  }
+}
+
+@mixin vp-1280 {
+  @media (min-width: $vp-1280) {
+    @content;
+  }
+}
+
+@mixin vp-1440 {
+  @media (min-width: $vp-1440) {
+    @content;
+  }
+}
+
+@mixin vp-1920 {
+  @media (min-width: $vp-1920) {
+    @content;
+  }
+}
