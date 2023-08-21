@@ -94,7 +94,6 @@ class LoginController {
         };
         const apiRoot = createApiRootWithPasswordFlow(options);
         const login = await loginUser(apiRoot, email, password);
-        console.log(login);
 
         if (!Object.keys(login).length) {
           Toastify({
