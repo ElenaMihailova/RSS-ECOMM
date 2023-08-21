@@ -7,6 +7,7 @@ const ESLintPlugin=require('eslint-webpack-plugin');
 const CopyPlugin=require('copy-webpack-plugin');
 const dotenv=require('dotenv').config({path: __dirname+'/.env'});
 const isDevelopment=process.env.NODE_ENV!=='production';
+const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
 const webpack=require('webpack');
 const devServer=(isDev) =>
   !isDev
@@ -78,11 +79,13 @@ module.exports=({develop}) => ({
       ],
     }),
     new CleanWebpackPlugin(),
+    new SpriteLoaderPlugin(),
     new webpack.DefinePlugin({
       'process.env': JSON.stringify(dotenv.parsed),
       // 'process.env.NODE_ENV': JSON.stringify(isDevelopment? 'development':'production'),
     }),
     ...esLintPlugin(develop),
+   
   ],
   ...devServer(develop),
 });
