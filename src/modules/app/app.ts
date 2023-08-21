@@ -7,6 +7,8 @@ import RegistrationView from '../pages/registration/registrationPageView';
 import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
 import { PageUrls } from '../constants';
+import LoginController from '../pages/login/loginPageController';
+import { getFromLS } from '../helpers/functions';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -17,9 +19,12 @@ class App {
 
   public main: Main | null;
 
+  private loginController: LoginController | null;
+
   constructor() {
     this.header = null;
     this.main = null;
+    this.loginController = null;
     const routes = this.createRoutes();
     this.router = new Router(routes);
     this.createView();
@@ -61,7 +66,12 @@ class App {
         path: `${PageUrls.LoginPageUrl}`,
         callback: (): void => {
           if (this.main) {
+            if (getFromLS('token')) {
+              this.router.navigateFromButton('index');
+              return;
+            }
             this.main.setContent(new LoginView());
+            this.loginController = new LoginController(this.router);
           }
         },
       },

@@ -1,16 +1,10 @@
-import getAccessToken from '../../api/api-client';
-import buildClientWithPasswordFlow from '../../api/build-client';
 import PageView from '../../core/pageView';
-import { createElement, getElement } from '../../helpers/functions';
-import Validator from '../../validation/validator';
-import './loginPageView.scss';
+import { createElement } from '../../helpers/functions';
+import './loginPage.scss';
 
 class LoginView extends PageView {
-  private validator: Validator;
-
   constructor() {
     super();
-    this.validator = new Validator();
     this.container.classList.add('login-page');
   }
 
@@ -73,9 +67,10 @@ class LoginView extends PageView {
       parent: loginPasswordInputContainer,
     });
 
-    const loginShowPasswordIcon = createElement({
+    const loginShowPasswordBtn = createElement({
       tagName: 'button',
-      classNames: ['login__showpassword-icon'],
+      classNames: ['login__showpassword-button'],
+      text: 'SHOW',
       attributes: [{ type: 'button' }],
       parent: loginPasswordInputContainer,
     });
@@ -144,52 +139,6 @@ class LoginView extends PageView {
     });
 
     return this.container;
-  }
-
-  public runHandlers(): void {
-    this.loginBtnHandler();
-    this.inputsHandlers();
-  }
-
-  private loginBtnHandler(): void {
-    const loginBtn: HTMLButtonElement = getElement('.login__button');
-    const usrname = 'johndoe@example.com';
-    const usrpassword = 'secret123';
-    loginBtn.addEventListener('click', async () => {
-      await getAccessToken(usrname, usrpassword);
-    });
-  }
-
-  private inputsHandlers(): void {
-    const emailInput: HTMLInputElement = getElement('.login__email-input');
-    const passwordContainer: HTMLDivElement = getElement('.login__password-input-container');
-    const passwordInput: HTMLInputElement = getElement('.login__password-input');
-    const showPasswordButton: HTMLButtonElement = getElement('.login__showpassword-icon');
-
-    emailInput.addEventListener('input', (e: Event) => {
-      e.preventDefault();
-      this.validator.validateRealTime(emailInput);
-    });
-
-    passwordContainer.addEventListener('input', (e: Event): void => {
-      e.preventDefault();
-      this.validator.validateRealTime(passwordInput);
-    });
-
-    showPasswordButton.addEventListener('click', () => {
-      this.togglePasswordView();
-    });
-  }
-
-  private togglePasswordView(): void {
-    const passwordInput: HTMLInputElement = getElement('.login__password-input');
-    if (passwordInput.getAttribute('type') === 'password') {
-      passwordInput.removeAttribute('type');
-      passwordInput.setAttribute('type', 'text');
-    } else {
-      passwordInput.removeAttribute('type');
-      passwordInput.setAttribute('type', 'password');
-    }
   }
 }
 

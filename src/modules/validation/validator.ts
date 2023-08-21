@@ -1,5 +1,5 @@
 import { Data } from '../types';
-import { getElementCollection } from '../helpers/functions';
+import { getElement, getElementCollection } from '../helpers/functions';
 import { removeError, removeHelp, createError, createHelp } from './validationHelpers';
 import {
   dateFormatLength,
@@ -11,13 +11,13 @@ import {
   hasNumbers,
   hasNumbersAndDots,
   isWithinLengthLimit,
-  isPasswordFormat,
   hasLowerLetters,
   hasUpperLetters,
   isEmailFormat,
   isLessLengthLimit,
   passwordFormatLength,
-  hasSpaces,
+  hasLSpaces,
+  hasTSpaces,
 } from './validationChecks';
 
 class Validator {
@@ -46,6 +46,7 @@ class Validator {
   public validateRealTime(element: HTMLInputElement): void {
     this.removeLabels(element);
     const { value } = element;
+    const loginBtn = getElement('.login__button');
 
     if (value) {
       switch (element.dataset.type) {
@@ -73,20 +74,27 @@ class Validator {
         case 'email':
           if (!isEmailFormat(value)) {
             createError(element, 'Incorrect email address!');
+            loginBtn.setAttribute('disabled', 'disabled');
+          } else {
+            loginBtn.removeAttribute('disabled');
           }
           break;
         case 'login-password':
           if (
             isWithinLengthLimit(value, passwordFormatLength) ||
-            !hasSpaces(value) ||
+            hasLSpaces(value) ||
+            hasTSpaces(value) ||
             !hasLowerLetters(value) ||
             !hasNumbers(value) ||
             !hasUpperLetters(value)
           ) {
             createError(
               element,
-              'Password must be at least 8 characters long, must contain at least one uppercase letter (A-Z), must contain at least one lowercase letter (a-z), must contain at least one digit (0-9), must not contain leading or trailing whitespace',
+              'Password must be at least 8 characters long, must contain at least one uppercase letter, must contain at least one lowercase letter, must contain at least one digit, must not contain leading or trailing whitespace',
             );
+            loginBtn.setAttribute('disabled', 'disabled');
+          } else {
+            loginBtn.removeAttribute('disabled');
           }
           break;
         case 'postal-code':

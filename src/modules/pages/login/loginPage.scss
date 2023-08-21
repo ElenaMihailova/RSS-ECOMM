@@ -2,15 +2,25 @@
 
 .login-page {
   display: flex;
-  justify-content: space-between;
-  padding: 8px 76px 0;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  padding: 8px 10px 0;
+}
+
+@media (max-width: 1200px) {
+  .login-page {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
 }
 
 .login__container {
   max-width: 552px;
   width: 100%;
   background-color: $color-background-variant;
-  padding: 43px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -57,7 +67,7 @@
 
 .login__password-input-container {
   height: 56px;
-  margin-bottom: 80px;
+  margin-bottom: 120px;
   width: 100%;
 }
 
@@ -77,16 +87,16 @@
   z-index: 3;
 }
 
-.login__showpassword-icon {
-  background: url(../../../assets/svg/password-icon.svg);
-  background-size: cover;
-  position: absolute;
+.login__showpassword-button {
+  background-color: transparent;
   border: none;
-  width: 25px;
-  height: 25px;
-  top: 16px;
-  left: 431px;
-  z-index: 5  ;
+  position: absolute;
+  top: 20px;
+  right: 10px;
+  padding: 0;
+  z-index: 5;
+  font-size: .9rem;
+  font-weight: 400;
   cursor: pointer;
 }
 
@@ -103,7 +113,7 @@
   max-width: 456px;
   width: 100%;
   background-color: $color-background-variant;
-  padding: 36px 36px 51px;
+  padding: 36px 40px 51px;
   display: flex;
   flex-direction: column;
 }
@@ -124,7 +134,7 @@
   line-height: 24px;
   letter-spacing: 0.5px;
   padding: 0;
-  margin-bottom: 40px;
+  margin-bottom: 60px;
 }
 
 .registration__advantages-option {
@@ -141,7 +151,6 @@
   content: url(../../../assets/svg/expand_more.svg);
   padding: 0 10px;
 }
-
 
 .registration__button {
   height: 56px;
@@ -176,8 +185,9 @@
   display: block;
   font-size: 14px;
   line-height: 20px;
-  letter-spacing: -0.16px;
+  letter-spacing: 0.16px;
   padding-top: 3px;
+  transition: all 0.5s linear;
 }
 .form-item--error {
   .input {
@@ -187,5 +197,37 @@
 
   label {
     color: $color-error;
+  }
+}
+
+.error-popup {
+  width: 100%;
+  min-height: 100%;
+  background-color: $color-popup-background;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  z-index: 10;
+}
+
+.error-popup-content{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, 350%);
+  width: 300px;
+  height: fit-content;
+  padding: 10px;
+  top: 50%;
+  text-align: center;
+  background-color: $color-background-variant;
+  bottom: 0;
+}
+
+@media (max-width: 480px) {
+  .login__container,
+  .registration__container {
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }
