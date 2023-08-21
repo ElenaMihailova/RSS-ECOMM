@@ -51,3 +51,8 @@
   animation: textFadeIn 1s 0.5s forwards;
   white-space: normal;
 }
+
+.no-scroll {
+  overflow: hidden;
+  height: 100%;
+}

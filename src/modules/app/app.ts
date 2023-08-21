@@ -39,6 +39,7 @@ class App {
 
     const message = document.createElement('p');
     message.innerHTML = `Привет!<br>Мы всё ещё работаем над сайтом.<br>Будем благодарны, если ты найдешь время в четверг, чтобы оценить наши усилия и проверить нашу работу.<br>Заранее спасибо за понимание и терпение!`;
+    document.body.classList.add('no-scroll');
 
     content.appendChild(message);
     modal.appendChild(content);
