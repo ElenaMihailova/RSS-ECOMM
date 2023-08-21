@@ -92,6 +92,7 @@
 
   a {
     padding: 12px;
+    position: relative;
   }
 }
 
@@ -106,5 +107,50 @@
 .menu__user a:hover {
   svg {
     fill: $color-secondary;
+  }
+}
+
+.menu__user div {
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+
+  span {
+    text-transform: none;
+  }
+}
+
+.tooltip {
+  visibility: hidden;
+  z-index: 1;
+  opacity: 0.4;
+  padding: 10px;
+  width: fit-content;
+  display: block;
+  background-color: $color-on-primary;
+  color: $color-secondary;
+  position: absolute;
+  top: -70%;
+  left: -25%;
+  border-radius: 9px;
+  transform: translateY(9px);
+  transition: all $trans-default;
+  border: 1px solid $color-secondary;
+}
+
+.menu__user--desktop a:hover .tooltip {
+  visibility: visible;
+  transform: translateY(-10px);
+  opacity: 1;
+  transition: 0.3s linear;
+  animation: odsoky 1s ease-in-out infinite alternate;
+}
+@keyframes odsoky {
+  0% {
+    transform: translateY(6px);
+  }
+
+  100% {
+    transform: translateY(1px);
   }
 }
