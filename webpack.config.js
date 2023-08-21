@@ -4,8 +4,9 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { ESLint } = require('eslint');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const dotenv = require('dotenv').config({ path: __dirname + '/.env' });
-const isDevelopment = process.env.NODE_ENV !== 'production'
+const isDevelopment = process.env.NODE_ENV !== 'production';
 const webpack = require('webpack');
 const devServer = (isDev) =>
   !isDev
@@ -18,12 +19,12 @@ const devServer = (isDev) =>
         },
       };
 
-const esLintPlugin = (isDev) =>
-isDev ? [] : [new ESLintPlugin({ extensions: ['ts', 'js'] })];
+const esLintPlugin = (isDev) => (isDev ? [] : [new ESLintPlugin({ extensions: ['ts', 'js'] })]);
 
 module.exports = ({ develop }) => ({
   mode: develop ? 'development' : 'production',
-  devtool: develop ? 'inline-source-map' : 'none',
+  devtool: develop ? 'source-map' : false,
+
   entry: {
     main: path.resolve(__dirname, './src/index.ts'),
   },
@@ -44,17 +45,17 @@ module.exports = ({ develop }) => ({
       },
       {
         test: /\.(scss|css)$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'sass-loader',
-        ],
-    },
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-sprite-loader',
+      },
     ],
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
-    fallback: { "crypto": false }
+    fallback: { crypto: false },
   },
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -70,10 +71,16 @@ module.exports = ({ develop }) => ({
     new MiniCssExtractPlugin({
       filename: 'index.css',
     }),
+    new CopyPlugin({
+      patterns: [
+        { from: 'src/assets/image', to: 'image' },
+        { from: 'src/assets/fonts', to: 'fonts' }
+      ],
+    }),
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env': JSON.stringify(dotenv.parsed),
-      'process.env.NODE_ENV': JSON.stringify(isDevelopment ? 'development' : 'production'),
+      // 'process.env.NODE_ENV': JSON.stringify(isDevelopment? 'development':'production'),
     }),
     ...esLintPlugin(develop),
   ],

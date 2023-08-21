@@ -1,7 +1,7 @@
 import PageView from '../../core/pageView';
 
 class IndexView extends PageView {
-  constructor() {
+  constructor(element: { title: string; content: string }) {
     super();
     this.container.textContent = 'INDEX PAGE';
   }

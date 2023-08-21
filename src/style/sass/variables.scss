@@ -4,22 +4,22 @@
 $color-transparent: rgba(255, 255, 255, 0);
 
 // Project palette
-$color-primary: #282828;
+$color-primary: rgb(40, 40, 40);
 $color-primary-opacity: rgba(40, 40, 40, 0.08);
-$color-on-primary: #ffffff;
-$color-secondary: #c3b212;
-$color-on-secondary: #000000;
-$color-background: #fefefe;
-$color-background-variant: #f4f4f4;
-$color-outline: #a0a0a0;
-$color-error: #ff0000;
-$color-popup-background: rgba(0, 0, 0, 0.15);
+$color-on-primary: rgb(255, 255, 255);
+$color-secondary: rgb(195, 178, 18);
+$color-on-secondary: rgb(0, 0, 0);
+$color-background: rgb(254, 254, 254);
+$color-background-variant: rgb(244, 244, 244);
+$color-outline: rgb(160, 160, 160);
 
 // Gradient
 
 $black-to-right: linear-gradient(90deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 75%);
 
-// Shadow
+//Fonts
+$font-monserrat: 'Montserrat', 'Arial';
+$font-prosto: 'Prosto One', cursive, 'Arial';
 
 // Animation
 $tf-default: ease;
