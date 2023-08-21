@@ -102,3 +102,9 @@
     transform: scale(1.1);
   }
 }
+
+.menu__user a:hover {
+  svg {
+    fill: $color-secondary;
+  }
+}
