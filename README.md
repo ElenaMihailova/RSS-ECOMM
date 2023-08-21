@@ -6,7 +6,7 @@ For more detailed information about the task, you can check out the [task descri
 
 ## Live Demo
 
-Experience the deployed application [here](https://#).
+Experience the deployed application [here](https://ecommerce-tea.netlify.app/).
 
 ## Project Description
 

@@ -2,6 +2,7 @@
   width: 267px;
   background-color: $color-on-primary;
   padding: 16px;
+  padding-top: 30px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -18,7 +19,7 @@
 
 .menu__user a {
   display: flex;
-  font-family: Montserrat;
+  font-family: $font-monserrat;
   font-size: 11px;
   font-style: normal;
   font-weight: 500;
@@ -45,7 +46,7 @@
 }
 
 .menu__user span {
-  font-family: Montserrat;
+  font-family: $font-monserrat;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -65,6 +66,12 @@
   color: $color-primary;
   padding: 12px;
   display: block;
+  transition: transform $trans-default;
+
+  &:hover,
+  &:active {
+    transform: scale(1.1);
+  }
 }
 
 .menu--desktop {
@@ -85,5 +92,13 @@
 
   a {
     padding: 12px;
+  }
+}
+
+.menu__nav--desktop a {
+  transition: transform $trans-default;
+
+  &:hover {
+    transform: scale(1.1);
   }
 }
