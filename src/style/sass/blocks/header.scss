@@ -1,0 +1,22 @@
+.header {
+  padding: 8px 16px;
+  width: 100%;
+
+  @include vp-1024 {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 30px 72px;
+  }
+}
+
+.header__wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header__logo {
+  @include vp-768 {
+    flex: 0 0 25%;
+  }
+}

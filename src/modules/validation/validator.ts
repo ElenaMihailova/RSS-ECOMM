@@ -1,7 +1,14 @@
-import { AdressCategories, PostalCodes } from '../../types/enums';
-import { Data } from '../../types/interfaces';
+import { AdressCategories, Countries, CountryCodes, PostalCodes } from '../../types/enums';
+import { CustomerData, BaseAdress, FormAdressData } from '../../types/interfaces';
 import { getElementCollection } from '../helpers/functions';
-import { removeError, removeHelp, createError, createHelp } from './validationHelpers';
+import {
+  removeError,
+  removeHelp,
+  createError,
+  createHelp,
+  getDateFromString,
+  getDateISOStringWithoutTime,
+} from './validationHelpers';
 import {
   dateFormatLength,
   isDateFormat,
@@ -19,6 +26,7 @@ import {
   isLessLengthLimit,
   passwordFormatLength,
 } from './validationChecks';
+import { createCustomerWithAdress } from '../api/ApiClient';
 
 class Validator {
   private billingCountry: string | null;
@@ -31,11 +39,14 @@ class Validator {
 
   private readonly minAge = 16;
 
+  public isCommonAdress: boolean;
+
   constructor() {
     this.postalCodeLength = null;
     this.billingCountry = null;
     this.shippingCountry = null;
     this.currentValidateCountry = null;
+    this.isCommonAdress = false;
   }
 
   public removeLabels(element: HTMLInputElement): void {
@@ -212,28 +223,110 @@ class Validator {
     return isValid;
   }
 
-  public validateSubmit(): void {
-    this.isValidForm();
+  public async validateSubmit(): Promise<boolean> {
+    if (this.isValidForm()) {
+      const formCommonDataElements = getElementCollection('.common-data-container .form-item-element');
+      const customerData = this.createCustomerData(formCommonDataElements);
+      const shippingAdress = this.createAdress(AdressCategories.shipping);
+
+      if (this.isCommonAdress) {
+        await createCustomerWithAdress(customerData, shippingAdress);
+      } else {
+        const billingAdress = this.createAdress(AdressCategories.billing);
+        await createCustomerWithAdress(customerData, shippingAdress, billingAdress);
+      }
+    }
+    return false;
   }
 
-  public createCommonData(elements: NodeListOf<Element>): Data {
-    const commonData: Data = {};
+  public createCustomerData(elements: NodeListOf<Element>): CustomerData {
+    const commonData: CustomerData = {
+      email: '',
+      password: '',
+    };
 
     elements.forEach((element) => {
       const commonDataElement = element as HTMLInputElement;
-      commonData[`${commonDataElement.getAttribute('data-type')}`] = commonDataElement.value;
+
+      switch (commonDataElement.getAttribute('data-type')) {
+        case 'name':
+          commonData.firstName = commonDataElement.value;
+          break;
+        case 'surname':
+          commonData.lastName = commonDataElement.value;
+          break;
+        case 'age':
+          commonData.dateOfBirth = getDateISOStringWithoutTime(getDateFromString(commonDataElement.value));
+          break;
+        case 'password':
+          commonData.password = commonDataElement.value;
+          break;
+        case 'email':
+          commonData.email = commonDataElement.value;
+          break;
+        default:
+      }
     });
 
     return commonData;
   }
 
-  public createAdressData(elements: NodeListOf<Element>): Data {
-    const adressData: Data = {};
+  public createAdress(category: string): FormAdressData {
+    const adressData: FormAdressData = {
+      category,
+      isDefault: false,
+    };
 
-    elements.forEach((element) => {
+    const baseAdressdata: BaseAdress | object = {};
+
+    const adressDataElements = getElementCollection(`.${category}-adress .form-item-element`);
+    adressDataElements.forEach((element) => {
+      const data = baseAdressdata as BaseAdress;
       const adressDataElement = element as HTMLInputElement | HTMLSelectElement;
-      adressData[`${adressDataElement.getAttribute('data-type')}`] = adressDataElement.value;
+      switch (adressDataElement.getAttribute('data-type')) {
+        case 'country':
+          if (adressDataElement.value === Countries.Belarus) {
+            data.country = CountryCodes.Belarus;
+          } else if (adressDataElement.value === Countries.Spain) {
+            data.country = CountryCodes.Spain;
+          } else if (adressDataElement.value === Countries.Netherlands) {
+            data.country = CountryCodes.Netherlands;
+          }
+          break;
+        case 'city':
+          data.city = adressDataElement.value;
+          break;
+        case 'street':
+          data.streetName = adressDataElement.value;
+          break;
+        case 'postal-code':
+          data.postalCode = adressDataElement.value;
+          break;
+
+        default:
+      }
     });
+
+    const adressCheckboxes = getElementCollection('.adress-checkboxes .input');
+    adressCheckboxes.forEach((element) => {
+      const adressDataElement = element as HTMLInputElement;
+      switch (adressDataElement.getAttribute('data-type')) {
+        case 'default-adress':
+          if (adressDataElement.checked) {
+            adressData.isDefault = true;
+          }
+          break;
+        case 'use-as-billing-adress':
+          if (adressDataElement.checked) {
+            this.isCommonAdress = true;
+            adressData.additionalCategory = AdressCategories.billing;
+          }
+          break;
+        default:
+      }
+    });
+
+    adressData.data = baseAdressdata as BaseAdress;
 
     return adressData;
   }

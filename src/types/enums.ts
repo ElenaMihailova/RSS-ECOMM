@@ -9,6 +9,12 @@ export const enum Countries {
   Netherlands = 'Netherlands',
 }
 
+export const enum CountryCodes {
+  Belarus = 'BY',
+  Spain = 'ES',
+  Netherlands = 'NL',
+}
+
 export const enum PostalCodes {
   Belarus = 6,
   Spain = 5,

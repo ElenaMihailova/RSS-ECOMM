@@ -28,3 +28,36 @@ export interface FormItems {
 export interface Data {
   [key: string]: string;
 }
+
+export interface FormAdressData {
+  data?: BaseAdress;
+  category?: string;
+  isDefault?: boolean;
+  additionalCategory?: string;
+}
+
+export interface BaseAdress {
+  id?: string;
+  key?: string;
+  country: string;
+  streetName?: string;
+  postalCode?: string;
+  city?: string;
+}
+
+export interface CustomerData {
+  id?: string;
+  key?: string;
+  customerNumber?: string;
+  email: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
+  version?: number;
+  dateOfBirth?: string;
+  addresses?: BaseAdress[];
+  defaultShippingAddress?: number;
+  shippingAddresses?: number[];
+  defaultBillingAddress?: number;
+  billingAddresses?: number[];
+}

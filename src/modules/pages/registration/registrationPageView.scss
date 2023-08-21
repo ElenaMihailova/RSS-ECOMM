@@ -58,6 +58,16 @@ $font-Montserrat: Montserrat;
   gap: 13px;
 }
 
+.adress-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .checkbox {
+    line-height: 1;
+  }
+}
+
 .adress-container,
 .common-data-container {
   padding-top: 10px;
@@ -159,6 +169,30 @@ $font-Montserrat: Montserrat;
   width: 100%;
   max-width: 456px;
   height: 66px;
+  margin-top: 20px;
+}
+
+.popup {
+  width: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  z-index: 10;
+}
+
+.popup-content {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, 350%);
+  width: 300px;
+  height: fit-content;
+  padding: 10px;
+  top: 50%;
+  text-align: center;
+  background-color: $color-background-variant;
+  bottom: 0;
 }
 
 input[type='checkbox']:disabled {
@@ -208,4 +242,8 @@ input[type='checkbox']:disabled {
     max-width: 392px;
     height: 56px;
   }
+}
+
+.hidden {
+  display: none;
 }

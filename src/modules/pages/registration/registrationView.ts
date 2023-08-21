@@ -83,7 +83,8 @@ class RegistrationView extends PageView {
     });
 
     this.renderAdressContainer(adressesContainer, AdressCategories.shipping);
-    this.renderAdressContainer(adressesContainer, AdressCategories.billing);
+
+    this.addBillingAdressFields(adressesContainer);
 
     const submitFormButton = createElement({
       tagName: 'button',
@@ -93,9 +94,34 @@ class RegistrationView extends PageView {
       parent: registrationForm,
     });
 
-    submitFormButton.addEventListener('click', (e: Event) => {
+    submitFormButton.addEventListener('click', async (e: Event) => {
       e.preventDefault();
-      this.validator.validateSubmit();
+      const isValid = await this.validator.validateSubmit();
+      if (isValid) {
+        console.log('успешное уведомление');
+      }
+    });
+  }
+
+  private renderPopup(succes: boolean): void {
+    const type = succes ? 'succes' : 'error';
+    const text = succes ? 'Succesfully registered!' : 'The customer with this email is already registered!';
+    const popup = createElement({
+      tagName: 'div',
+      classNames: ['popup', `${type}-popup`],
+      parent: document.body,
+    });
+
+    const content = createElement({
+      tagName: 'div',
+      classNames: ['popup-content', `${type}-popup-content`],
+      text,
+      parent: popup,
+    });
+
+    popup.addEventListener('click', (): void => {
+      popup.remove();
+      content.remove();
     });
   }
 
@@ -206,26 +232,74 @@ class RegistrationView extends PageView {
 
     this.renderFormItems(adressContent, this.createAdressFormItems(category));
 
-    const adressChekboxLabel = createElement({
+    const adressCheckboxes = createElement({
+      tagName: 'div',
+      attributes: [{ category: `${category}` }],
+      classNames: ['adress-container__adress-checkboxes', 'adress-checkboxes', `${category}-adress-checkboxes`],
+      parent: adressContent,
+    });
+
+    const defaultAdressChekboxLabel = createElement({
       tagName: 'label',
       classNames: [`${category}-adress__checkbox`, 'adress-checkbox', 'checkbox'],
-      text: `Use as default ${category} adress`,
-      parent: adressContent,
+      attributes: [{ 'data-type': 'default-adress' }, { category: `${category}` }],
+      text: `Use as default adress`,
+      parent: adressCheckboxes,
     });
 
     createElement({
       tagName: 'input',
-      classNames: ['input', `${category}-adress__input`, 'visually-hidden'],
-      attributes: [{ type: 'checkbox' }, { disabled: 'true' }],
-      parent: adressChekboxLabel,
+      classNames: ['input', `${category}-default-adress__input`, `${category}-adress__input`, 'visually-hidden'],
+      attributes: [{ 'data-type': 'default-adress' }, { type: 'checkbox' }, { disabled: 'true' }],
+      parent: defaultAdressChekboxLabel,
     });
 
     createElement({
       tagName: 'span',
-      parent: adressChekboxLabel,
+      parent: defaultAdressChekboxLabel,
     });
 
+    if (category === AdressCategories.shipping) {
+      const useAsBillingChekboxLabel = createElement({
+        tagName: 'label',
+        classNames: [`use-as-billing-adress__checkbox`, 'adress-checkbox', 'checkbox'],
+        attributes: [{ 'data-type': 'use-as-billing-adress' }],
+        text: `Also use as billing adress`,
+        parent: adressCheckboxes,
+      });
+
+      const useAsBillingCheckbox = createElement({
+        tagName: 'input',
+        classNames: ['input', `use-as-billing-adress__input`, `${category}-adress__input`, 'visually-hidden'],
+        attributes: [{ 'data-type': 'use-as-billing-adress' }, { type: 'checkbox' }, { disabled: 'true' }],
+        parent: useAsBillingChekboxLabel,
+      });
+
+      useAsBillingCheckbox.addEventListener('change', () => {
+        this.toggleBillingAdressView();
+      });
+
+      createElement({
+        tagName: 'span',
+        parent: useAsBillingChekboxLabel,
+      });
+    }
+
     return container;
+  }
+
+  private toggleBillingAdressView(): void {
+    const adressesContainer: HTMLElement = getElement(`.adresses-container`);
+    if (adressesContainer.querySelector('.billing-adress')) {
+      const billingAdressContainer = getElement(`.billing-adress`);
+      adressesContainer.removeChild(billingAdressContainer);
+    } else {
+      this.addBillingAdressFields(adressesContainer);
+    }
+  }
+
+  private addBillingAdressFields(container: HTMLElement): void {
+    this.renderAdressContainer(container, AdressCategories.billing);
   }
 
   private createAdressFormItems(category: AdressCategories): FormItems[] {

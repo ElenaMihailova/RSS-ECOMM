@@ -1,0 +1,40 @@
+.navbar {
+  @include vp-768 {
+    flex-basis: 100%;
+  }
+}
+
+.navbar__mobil {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @include vp-768 {
+    display: none;
+  }
+}
+
+.navbar .navbar__container li {
+  list-style: none;
+}
+
+.navbar__container {
+  display: block;
+  position: relative;
+  height: 40px;
+  position: relative;
+}
+
+.navbar__wrapper {
+  position: absolute;
+  right: 0;
+  top: 70%;
+}
+
+.navbar__menu.menu--desktop {
+  display: none;
+
+  @include vp-768 {
+    display: flex;
+  }
+}
