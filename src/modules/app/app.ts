@@ -30,9 +30,26 @@ class App {
     this.createView();
   }
 
+  private createMaintenanceModal(): HTMLElement {
+    const modal = document.createElement('div');
+    modal.classList.add('maintenance-modal');
+
+    const content = document.createElement('div');
+    content.classList.add('modal-content');
+
+    const message = document.createElement('p');
+    message.innerHTML = `Привет!<br>Мы всё ещё работаем над сайтом.<br>Будем благодарны, если ты найдешь время в четверг, чтобы оценить наши усилия и проверить нашу работу.<br>Заранее спасибо за понимание и терпение!`;
+
+    content.appendChild(message);
+    modal.appendChild(content);
+    return modal;
+  }
+
   private createView(): void {
     const layout = createLayout(this.headerData, this.footerData);
     App.container.append(layout.header, layout.footer);
+    const maintenanceModal = this.createMaintenanceModal();
+    App.container.appendChild(maintenanceModal);
 
     setupHeaderListeners('hamburger', 'menu');
 
