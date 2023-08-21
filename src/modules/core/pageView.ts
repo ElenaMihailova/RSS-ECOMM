@@ -8,6 +8,8 @@ abstract class PageView {
   public render(): HTMLElement {
     return this.container;
   }
+
+  public runHandlers(): void {}
 }
 
 export default PageView;

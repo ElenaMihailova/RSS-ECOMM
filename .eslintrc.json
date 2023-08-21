@@ -22,10 +22,7 @@
     "no-debugger": "off",
     "no-console": "off",
     "class-methods-use-this": "off",
-    "import/no-extraneous-dependencies": [
-      "error",
-      {"devDependencies": true}
-    ],
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/array-type": [
       "error",
