@@ -32,7 +32,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: 28px;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .login__text {
@@ -41,7 +41,6 @@
   font-weight: 400;
   line-height: 24px;
   letter-spacing: 0.5px;
-  margin-bottom: 26px;
 }
 
 .login__email-input-container {
@@ -113,7 +112,7 @@
   max-width: 456px;
   width: 100%;
   background-color: $color-background-variant;
-  padding: 36px 40px 51px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
 }
@@ -124,7 +123,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: 28px;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .registration__advantages-title {
@@ -200,34 +199,9 @@
   }
 }
 
-.error-popup {
-  width: 100%;
-  min-height: 100%;
-  background-color: $color-popup-background;
-  overflow: hidden;
-  position: fixed;
-  top: 0;
-  z-index: 10;
-}
-
-.error-popup-content{
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, 350%);
-  width: 300px;
-  height: fit-content;
-  padding: 10px;
-  top: 50%;
-  text-align: center;
-  background-color: $color-background-variant;
-  bottom: 0;
-}
-
 @media (max-width: 480px) {
   .login__container,
   .registration__container {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 20px;
   }
 }

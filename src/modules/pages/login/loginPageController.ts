@@ -1,3 +1,6 @@
+import './loginPage.scss';
+import '../../../style/toastify.css';
+import Toastify from 'toastify-js';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
 import { createApiRootWithPasswordFlow, loginUser } from '../../api/apiClient';
 import MyTokenCache from '../../api/myTokenCache';
@@ -5,7 +8,6 @@ import { PageUrls } from '../../constants';
 import { getElement, createElement, setToLS } from '../../helpers/functions';
 import Router from '../../router/router';
 import Validator from '../../validation/validator';
-import './loginPage.scss';
 
 class LoginController {
   private validator: Validator;
@@ -59,23 +61,16 @@ class LoginController {
 
     loginBtn.addEventListener('click', async (): Promise<void> => {
       if (emailInput.value === '' || passwordInput.value === '') {
-        const errorPopup = createElement({
-          tagName: 'div',
-          classNames: ['error-popup'],
-          parent: document.body,
-        });
-
-        const errorContent = createElement({
-          tagName: 'div',
-          classNames: ['error-popup-content'],
+        Toastify({
           text: 'Please enter your username and password',
-          parent: errorPopup,
-        });
-
-        errorPopup.addEventListener('click', (): void => {
-          errorContent.remove();
-          errorPopup.remove();
-        });
+          className: 'toastify',
+          duration: 3000,
+          newWindow: true,
+          close: true,
+          gravity: 'bottom',
+          position: 'center',
+          stopOnFocus: true,
+        }).showToast();
       }
 
       if (emailInput.value !== '' && passwordInput.value !== '') {
@@ -99,26 +94,20 @@ class LoginController {
         };
         const apiRoot = createApiRootWithPasswordFlow(options);
         const login = await loginUser(apiRoot, email, password);
+        console.log(login);
 
         if (!Object.keys(login).length) {
-          const errorPopup = createElement({
-            tagName: 'div',
-            classNames: ['error-popup'],
-            parent: document.body,
-          });
-
-          const errorContent = createElement({
-            tagName: 'div',
-            classNames: ['error-popup-content'],
+          Toastify({
             text: `Invalid credentials.
             Incorrect email or password`,
-            parent: errorPopup,
-          });
-
-          errorPopup.addEventListener('click', (): void => {
-            errorContent.remove();
-            errorPopup.remove();
-          });
+            className: 'toastify',
+            duration: 3000,
+            newWindow: true,
+            close: true,
+            gravity: 'bottom',
+            position: 'center',
+            stopOnFocus: true,
+          }).showToast();
         } else {
           const tokenInfo = tokenCache.get();
           setToLS('token', tokenInfo.token);
