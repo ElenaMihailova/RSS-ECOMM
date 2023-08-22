@@ -126,10 +126,10 @@ class LoginController {
   private togglePasswordView(): void {
     const showPasswordBtn: HTMLButtonElement = getElement('.login__showpassword-button');
     const passwordInput: HTMLInputElement = getElement('.login__password-input');
-    const passwordVisible = passwordInput.getAttribute('type') === 'text';
+    const isVisible = passwordInput.getAttribute('type') === 'text';
 
-    showPasswordBtn.innerText = passwordVisible ? 'SHOW' : 'HIDE';
-    passwordInput.type = passwordVisible ? 'password' : 'text';
+    showPasswordBtn.innerText = isVisible ? 'SHOW' : 'HIDE';
+    passwordInput.type = isVisible ? 'password' : 'text';
   }
 }
 
