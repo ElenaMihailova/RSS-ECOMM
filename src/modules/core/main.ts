@@ -1,3 +1,5 @@
+import PageView from './pageView';
+
 class Main {
   protected container: HTMLElement;
 
@@ -26,6 +28,11 @@ class Main {
 
   public setContent(content: HTMLElement): void {
     this.container.appendChild(content);
+    this.insertMainInDOM();
+  }
+
+  public setViewContent(content: PageView): void {
+    this.container.appendChild(content.render());
     this.insertMainInDOM();
   }
 }

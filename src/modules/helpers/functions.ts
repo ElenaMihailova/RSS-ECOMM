@@ -25,7 +25,7 @@ export function createElement<T extends keyof HTMLElementTagNameMap>(elData: {
   }
 
   if (text) {
-    element.textContent = text;
+    element.innerText = text;
   }
 
   if (html) {
@@ -37,6 +37,10 @@ export function createElement<T extends keyof HTMLElementTagNameMap>(elData: {
   }
 
   return element;
+}
+
+export function createSvgElement(className: string, id: string, w?: string, h?: string, v?: string): string {
+  return `<svg class=${className} width=${w} height=${h} viewBox=${v}><use href="./image/sprite.svg#${id}" /></svg>`;
 }
 
 export const getElement = <T extends Element>(selector: string): T => {
@@ -58,3 +62,38 @@ export const getElementCollection = (selector: string): NodeListOf<Element> => {
 
   return collection;
 };
+
+export function getFromLS(item: string): string | null {
+  const LSitem: string | null = localStorage.getItem(item);
+  if (LSitem) {
+    return LSitem;
+  }
+  return null;
+}
+
+export function setToLS(item: string, value: string): void {
+  localStorage.setItem(item, value);
+}
+
+export function removeFromLS(item: string): void {
+  if (localStorage.getItem(item)) {
+    localStorage.removeItem(item);
+  }
+}
+
+export function clearLS(): void {
+  localStorage.clear();
+}
+
+export function stringifyLS(item: number[]): string {
+  const stringifiedItem = JSON.stringify(item);
+  return stringifiedItem;
+}
+
+export function parseLS(item: string): number[] | null {
+  try {
+    return JSON.parse(item);
+  } catch (e) {
+    return null;
+  }
+}
