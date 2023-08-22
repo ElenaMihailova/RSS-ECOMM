@@ -78,7 +78,6 @@ class RegistrationController {
 
       selectElement.addEventListener('change', () => {
         const adressInputs = getElementCollection(`.${adressCategory}-adress__input`);
-
         adressInputs.forEach((input) => {
           const inputElement = input as HTMLInputElement;
           removeError(inputElement);
@@ -112,10 +111,12 @@ class RegistrationController {
   }
 
   public addCommonAdressCheckboxHandler(): void {
-    const commonAdressCheckbox = getElement('.use-as-billing-adress__input');
+    const commonAdressCheckbox: HTMLInputElement = getElement('.use-as-billing-adress__input');
 
     commonAdressCheckbox.addEventListener('change', () => {
+      this.isCommonAdress = commonAdressCheckbox.checked;
       this.registrationView.toggleBillingAdressView();
+      this.addFormSelectHandlers();
     });
   }
 
@@ -233,7 +234,6 @@ class RegistrationController {
           break;
         case CheckboxNames.UseAsBillingAdress:
           if (adressDataElement.checked) {
-            this.isCommonAdress = true;
             adressData.additionalCategory = AdressCategories.Billing;
           }
           break;
