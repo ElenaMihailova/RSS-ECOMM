@@ -135,10 +135,13 @@ class App {
     const loginSvg = getElement('.login-svg');
     const logoutSvg = getElement('.logout-svg');
     const tooltip = getElement('.tooltip--login');
+    const registrationBtn = getElement('.registration--desktop');
+    const registrationContainer = registrationBtn.closest('li');
 
     loginBtn.addEventListener('click', (e: Event): void => {
       e.preventDefault();
       if (getFromLS('token')) {
+        registrationContainer?.classList.remove('visually-hidden');
         logoutSvg.classList.add('visually-hidden');
         loginSvg.classList.remove('visually-hidden');
         tooltip.textContent = 'LOG IN';

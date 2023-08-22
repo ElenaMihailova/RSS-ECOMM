@@ -317,12 +317,21 @@ class RegistrationController {
       };
 
       const apiRoot = createApiRootWithPasswordFlow(options);
+      const loginSvg = getElement('.login-svg');
+      const logoutSvg = getElement('.logout-svg');
+      const tooltip = getElement('.tooltip--login');
+      const registrationBtn = getElement('.registration--desktop');
+      const registrationContainer = registrationBtn.closest('li');
 
       const login = await loginUser(apiRoot, email, password);
 
       if (Object.keys(login).length) {
         const tokenInfo = tokenCache.get();
         setToLS('token', tokenInfo.token);
+        registrationContainer?.classList.add('visually-hidden');
+        loginSvg.classList.add('visually-hidden');
+        logoutSvg.classList.remove('visually-hidden');
+        tooltip.textContent = 'LOG OUT';
         this.router.navigateFromButton(PageUrls.IndexPageUrl);
       }
 
@@ -346,9 +355,9 @@ class RegistrationController {
   }
 
   private addLoginBtnHandler(): void {
-    const registrationBtn: HTMLButtonElement = getElement('.login-container__button');
+    const loginBtn: HTMLButtonElement = getElement('.login-container__button');
 
-    registrationBtn.addEventListener('click', () => {
+    loginBtn.addEventListener('click', () => {
       this.router.navigateFromButton('login');
     });
   }
