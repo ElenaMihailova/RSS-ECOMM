@@ -35,15 +35,15 @@ const desktopMenuTemplate = (linksHtml: string): string => `
      </a>
     </li>
     <li>
-      <a href="login.html" class="con-tooltip">
-        <svg class="visually-hidden" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+      <a href="" class="login login--desktop">
+        <svg class="login-svg" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
           <use xlink:href="./image/sprite.svg#person"></use>
         </svg>
-        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <svg class="logout-svg visually-hidden" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
           <use xlink:href="./image/sprite.svg#logout"></use>
         </svg>
-        <div class="tooltip ">
-          <p>Log out</p>
+        <div class="tooltip tooltip--login">
+          <p>Log in</p>
         </div>
       </a>
     </li>
