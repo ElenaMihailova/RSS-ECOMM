@@ -1,9 +1,10 @@
 import PageView from '../../core/pageView';
+import errorMarkup from '../../templates/ErrorTemplate';
 
 class ErrorView extends PageView {
   constructor() {
     super();
-    this.container.textContent = `'404': 'Error! The page was not found.'`;
+    this.container.innerHTML = errorMarkup;
   }
 
   public render(): HTMLElement {
