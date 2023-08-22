@@ -7,7 +7,7 @@ import RegistrationView from '../pages/registration/registrationPageView';
 import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
 import LoginController from '../pages/login/loginPageController';
-import { createSvgElement, getElement, getFromLS } from '../helpers/functions';
+import { getElement, getFromLS, removeFromLS } from '../helpers/functions';
 import { FooterLinksType, NavLink } from '../../types/nav.types';
 import createLayout from '../components/createLayout';
 import { headerLinks, footerLinks } from '../../assets/data/navigationData';
@@ -39,6 +39,20 @@ class App {
   private createView(): void {
     const layout = createLayout(this.headerData, this.footerData);
     App.container.append(layout.header, layout.footer);
+
+    const loginSvg = getElement('.login-svg');
+    const logoutSvg = getElement('.logout-svg');
+    const tooltip = getElement('.tooltip--login');
+
+    if (getFromLS('token')) {
+      loginSvg.classList.add('visually-hidden');
+      logoutSvg.classList.remove('visually-hidden');
+      tooltip.textContent = 'LOG OUT';
+    } else {
+      logoutSvg.classList.add('visually-hidden');
+      loginSvg.classList.remove('visually-hidden');
+      tooltip.textContent = 'LOG IN';
+    }
 
     setupHeaderListeners('hamburger', 'menu');
 
@@ -105,10 +119,16 @@ class App {
 
   private loginBtnHandler(): void {
     const loginBtn = getElement('.login--desktop');
+    const loginSvg = getElement('.login-svg');
+    const logoutSvg = getElement('.logout-svg');
+    const tooltip = getElement('.tooltip--login');
     loginBtn.addEventListener('click', (e: Event): void => {
       e.preventDefault();
       if (getFromLS('token')) {
-        this.router.navigateFromButton(PageUrls.IndexPageUrl);
+        logoutSvg.classList.add('visually-hidden');
+        loginSvg.classList.remove('visually-hidden');
+        tooltip.textContent = 'LOG IN';
+        removeFromLS('token');
       } else {
         this.router.navigateFromButton(PageUrls.LoginPageUrl);
       }

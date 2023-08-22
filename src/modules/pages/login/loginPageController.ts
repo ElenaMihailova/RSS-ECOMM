@@ -98,11 +98,17 @@ class LoginController {
         };
         const apiRoot = createApiRootWithPasswordFlow(options);
         const login = await loginUser(apiRoot, email, password);
+        const loginSvg = getElement('.login-svg');
+        const logoutSvg = getElement('.logout-svg');
+        const tooltip = getElement('.tooltip--login');
 
         if (Object.keys(login).length) {
           const tokenInfo = tokenCache.get();
           setToLS('token', tokenInfo.token);
           this.router.navigateFromButton(PageUrls.IndexPageUrl);
+          loginSvg.classList.add('visually-hidden');
+          logoutSvg.classList.remove('visually-hidden');
+          tooltip.textContent = 'LOG OUT';
         }
       }
     });
