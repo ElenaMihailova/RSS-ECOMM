@@ -38,6 +38,7 @@ class App {
     this.createView();
     this.registrationController = null;
     this.loginBtnHandler();
+    this.registrationBtnHandler();
   }
 
   private createView(): void {
@@ -146,6 +147,14 @@ class App {
         this.router.navigateFromButton(PageUrls.LoginPageUrl);
       }
     });
+  }
+
+  private registrationBtnHandler(): void {
+    if (getFromLS('token')) {
+      this.router.navigateFromButton(PageUrls.IndexPageUrl);
+    } else {
+      this.router.navigateFromButton(PageUrls.RegistrationPageUrl);
+    }
   }
 }
 
