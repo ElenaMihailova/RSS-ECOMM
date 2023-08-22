@@ -15,14 +15,27 @@ export interface FormItems {
   tagName: keyof HTMLElementTagNameMap;
   attributes?: AttrSet[];
   classNames: string[];
-  options?: {
-    text: string;
-    attributes?: AttrSet[];
-  }[];
-  icon?: {
-    className: string;
-    attributes?: AttrSet[];
-  };
+  options?: SelectOption[];
+  icon?: Icon;
+  btn?: InputBtn;
+}
+
+export interface SelectOption {
+  text: string;
+  attributes?: AttrSet[];
+}
+
+export interface Icon {
+  containerClassName: string;
+  attributes?: AttrSet[];
+  className: string;
+  id: string;
+}
+
+export interface InputBtn {
+  className: string;
+  attributes?: AttrSet[];
+  text: string;
 }
 
 export interface Data {

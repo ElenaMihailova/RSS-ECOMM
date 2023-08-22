@@ -3,7 +3,7 @@ import { RouteAction } from '../../types/types';
 import Router from '../router/router';
 import Main from '../core/main';
 import IndexView from '../pages/index/indexPageView';
-import RegistrationView from '../pages/registration/registrationView';
+import RegistrationView from '../pages/registration/registrationPageView';
 import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
 import { FooterLinksType, NavLink } from '../../types/nav.types';
@@ -11,6 +11,8 @@ import createLayout from '../components/createLayout';
 import { headerLinks, footerLinks } from '../../assets/data/navigationData';
 import mainContent from '../templates/mainContent';
 import setupHeaderListeners from '../components/setupHeaderListeners';
+import RegistrationController from '../pages/registration/registrationPageController';
+import { getFromLS } from '../helpers/functions';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -23,11 +25,14 @@ class App {
 
   private footerData: FooterLinksType = footerLinks;
 
+  private registrationController: RegistrationController | null;
+
   constructor() {
     this.main = null;
     const routes = this.createRoutes();
     this.router = new Router(routes);
     this.createView();
+    this.registrationController = null;
   }
 
   private createView(): void {
@@ -67,7 +72,13 @@ class App {
         callback: (): void => {
           if (this.main) {
             this.main.clearContent();
-            this.main.setContent(new RegistrationView().render());
+            if (getFromLS('token')) {
+              this.router.navigateFromButton('index');
+              return;
+            }
+            const registrationView = new RegistrationView();
+            this.main.setViewContent(registrationView);
+            this.registrationController = new RegistrationController(this.router, registrationView);
           }
         },
       },

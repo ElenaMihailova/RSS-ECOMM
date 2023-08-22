@@ -25,7 +25,7 @@ export function createElement<T extends keyof HTMLElementTagNameMap>(elData: {
   }
 
   if (text) {
-    element.textContent = text;
+    element.innerText = text;
   }
 
   if (html) {
@@ -57,4 +57,45 @@ export const getElementCollection = (selector: string): NodeListOf<Element> => {
   }
 
   return collection;
+};
+
+export const getFromLS = (item: string): string | null => {
+  const LSitem: string | null = localStorage.getItem(item);
+
+  if (LSitem) {
+    return LSitem;
+  }
+
+  return null;
+};
+
+export const setToLS = (item: string, value: string): void => {
+  localStorage.setItem(item, value);
+};
+
+export const removeFromLS = (item: string): void => {
+  if (localStorage.getItem(item)) {
+    localStorage.removeItem(item);
+  }
+};
+
+export const clearLS = (): void => {
+  localStorage.clear();
+};
+
+export const stringifyLS = (item: number[]): string => {
+  const stringifiedItem = JSON.stringify(item);
+  return stringifiedItem;
+};
+
+export const parseLS = (item: string): number[] | null => {
+  try {
+    return JSON.parse(item);
+  } catch (e) {
+    return null;
+  }
+};
+
+export const createSvgElement = (className: string, id: string, w?: string, h?: string, v?: string): string => {
+  return `<svg class=${className} width=${w} height=${h} viewBox=${v}><use href="./image/sprite.svg#${id}" /></svg>`;
 };

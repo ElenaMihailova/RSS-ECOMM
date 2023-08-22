@@ -19,6 +19,7 @@
     "@babel/preset-typescript": "^7.22.5",
     "@types/jest": "^29.5.3",
     "@types/node-fetch": "^2.6.4",
+    "@types/toastify-js": "^1.12.0",
     "@typescript-eslint/eslint-plugin": "^5.60.0",
     "@typescript-eslint/parser": "^5.60.0",
     "clean-webpack-plugin": "^4.0.0",
@@ -50,6 +51,7 @@
     "@commercetools/importapi-sdk": "^4.6.2",
     "@commercetools/platform-sdk": "^5.0.0",
     "@commercetools/sdk-client-v2": "^2.2.0",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "toastify-js": "^1.12.0"
   }
 }

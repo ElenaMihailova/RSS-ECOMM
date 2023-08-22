@@ -2,7 +2,9 @@ import {
   ClientBuilder,
   // Import middlewares
   type AuthMiddlewareOptions, // Required for auth
-  type HttpMiddlewareOptions, // Required for sending HTTP requests
+  type HttpMiddlewareOptions,
+  PasswordAuthMiddlewareOptions,
+  Client, // Required for sending HTTP requests
 } from '@commercetools/sdk-client-v2';
 
 const projectKey = process.env.CTP_PROJECT_KEY as string;
@@ -29,11 +31,19 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
 };
 
 // Export the ClientBuilder
-const ctpClient = new ClientBuilder()
+export const ctpClient = new ClientBuilder()
   .withProjectKey(projectKey) // .withProjectKey() is not required if the projectKey is included in authMiddlewareOptions
   .withClientCredentialsFlow(authMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
   .withLoggerMiddleware() // Include middleware for logging
   .build();
 
-export default ctpClient;
+export const buildClientWithPasswordFlow = (options: PasswordAuthMiddlewareOptions): Client => {
+  const client = new ClientBuilder()
+    .withProjectKey(projectKey) // .withProjectKey() is not required if the projectKey is included in authMiddlewareOptions
+    .withPasswordFlow(options)
+    .withHttpMiddleware(httpMiddlewareOptions)
+    .build();
+
+  return client;
+};

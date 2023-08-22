@@ -85,7 +85,6 @@ module.exports=({develop}) => ({
       // 'process.env.NODE_ENV': JSON.stringify(isDevelopment? 'development':'production'),
     }),
     ...esLintPlugin(develop),
-   
   ],
   ...devServer(develop),
 });
