@@ -9,7 +9,7 @@ import {
   InputUserError,
 } from '../../../types/enums';
 import { BaseAdress, CustomerData, FormAdressData } from '../../../types/interfaces';
-import { createApiRootWithPasswordFlow, createCustomer, loginUser } from '../../api/ApiClient';
+import { createApiRootWithPasswordFlow, createCustomer, loginUser } from '../../api/apiClient';
 import { getElement, getElementCollection, setToLS } from '../../helpers/functions';
 import Router from '../../router/router';
 import {
