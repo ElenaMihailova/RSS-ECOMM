@@ -96,10 +96,12 @@ class App {
         callback: (): void => {
           if (this.main) {
             this.main.clearContent();
+
             if (getFromLS('token')) {
               this.router.navigateFromButton(PageUrls.IndexPageUrl);
               return;
             }
+
             this.main.setViewContent(new LoginView());
             this.loginController = new LoginController(this.router);
           }
@@ -122,6 +124,7 @@ class App {
     const loginSvg = getElement('.login-svg');
     const logoutSvg = getElement('.logout-svg');
     const tooltip = getElement('.tooltip--login');
+
     loginBtn.addEventListener('click', (e: Event): void => {
       e.preventDefault();
       if (getFromLS('token')) {

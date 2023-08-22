@@ -52,6 +52,7 @@ class LoginController {
     const emailInput: HTMLInputElement = getElement('.login__email-input');
     const passwordInput: HTMLInputElement = getElement('.login__password-input');
     const loginBtn: HTMLButtonElement = getElement('.login__button');
+
     this.validator.validateRealTime(inputEl);
     if (emailInput.value === '' && passwordInput.value === '') {
       loginBtn.removeAttribute('disabled');
@@ -116,6 +117,7 @@ class LoginController {
 
   private registrationBtnHandler(): void {
     const registrationBtn: HTMLButtonElement = getElement('.registration__button');
+
     registrationBtn.addEventListener('click', () => {
       this.router.navigateFromButton('registration');
     });
@@ -124,9 +126,10 @@ class LoginController {
   private togglePasswordView(): void {
     const showPasswordBtn: HTMLButtonElement = getElement('.login__showpassword-button');
     const passwordInput: HTMLInputElement = getElement('.login__password-input');
+    const passwordType = passwordInput.getAttribute('type') === 'password';
 
-    showPasswordBtn.innerText = passwordInput.getAttribute('type') === 'password' ? 'HIDE' : 'SHOW';
-    passwordInput.type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    showPasswordBtn.innerText = passwordType ? 'HIDE' : 'SHOW';
+    passwordInput.type = passwordType ? 'text' : 'password';
   }
 }
 
