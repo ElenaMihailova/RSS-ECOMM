@@ -91,7 +91,6 @@ $font-Montserrat: Montserrat;
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 2;
 }
 
 .registration-form__input::placeholder {
@@ -99,7 +98,7 @@ $font-Montserrat: Montserrat;
 }
 
 .registration-form__input[has-icon='true'] {
-  padding-left: 48px;
+  padding-left: 43px;
 }
 
 .registration-form__input,
@@ -119,7 +118,6 @@ $font-Montserrat: Montserrat;
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 2;
   margin-bottom: 0px;
 }
 
@@ -130,7 +128,8 @@ $font-Montserrat: Montserrat;
   height: 32px;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 70%;
+  background-size: 100%;
+  padding-top: 4px;
 }
 
 .input-icon[position='start'] {
@@ -160,9 +159,10 @@ $font-Montserrat: Montserrat;
   background-color: transparent;
   border: none;
   position: absolute;
+  background-color: $color-background;
   top: 20px;
   right: 20px;
-  padding: 0;
+  padding: 1px 0px;
   z-index: 5;
   font-size: 0.9rem;
   font-weight: 400;
@@ -176,7 +176,8 @@ input[type='checkbox']:disabled {
 .adress-checkboxes {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
+  padding: 10px 0px;
 }
 
 .adress-checkbox {
@@ -202,7 +203,7 @@ input[type='checkbox']:disabled {
   font-size: 14px;
   line-height: 20px;
   letter-spacing: -0.16px;
-  padding-top: 3px;
+  padding-top: 6px;
 }
 
 .form-item--error .input,
@@ -233,14 +234,17 @@ input[type='checkbox']:disabled {
   height: 56px;
 }
 
-.hidden {
-  display: none;
-}
-
 @media (max-width: 1200px) {
   .registration-page__content {
     flex-direction: column;
     align-items: center;
     gap: 40px;
+  }
+}
+
+@media (max-width: 550px) {
+  .registration-page__container {
+    padding-right: calc((100vw - 390px) / (550 - 390) * (68 - 0) + 0px);
+    padding-left: calc((100vw - 390px) / (550 - 390) * (68 - 0) + 0px);
   }
 }
