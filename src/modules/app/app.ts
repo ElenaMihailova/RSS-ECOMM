@@ -55,8 +55,8 @@ class App {
   private createView(): void {
     const layout = createLayout(this.headerData, this.footerData);
     App.container.append(layout.header, layout.footer);
-    const maintenanceModal = this.createMaintenanceModal();
-    App.container.appendChild(maintenanceModal);
+    // const maintenanceModal = this.createMaintenanceModal();
+    // App.container.appendChild(maintenanceModal);
 
     const loginSvg = getElement('.login-svg');
     const logoutSvg = getElement('.logout-svg');

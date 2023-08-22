@@ -17,6 +17,10 @@
   padding: 0;
 }
 
+.menu__user li {
+  margin-right: 8px;
+}
+
 .menu__user a {
   display: flex;
   font-family: $font-monserrat;
@@ -37,12 +41,15 @@
   flex-shrink: 0;
   width: 24px;
   height: 24px;
-  margin-right: 8px;
+  fill: none;
+  stroke: $color-primary;
+  transition: stroke $trans-default;
 }
 
 .menu__user p {
   display: flex;
   flex-direction: column;
+  margin-left: 5px;
 }
 
 .menu__user span {
@@ -106,7 +113,7 @@
 
 .menu__user a:hover {
   svg {
-    fill: $color-secondary;
+    stroke: $color-secondary;
   }
 }
 
