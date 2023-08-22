@@ -7,7 +7,7 @@ import RegistrationView from '../pages/registration/registrationPageView';
 import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
 import LoginController from '../pages/login/loginPageController';
-import { getElement, getFromLS } from '../helpers/functions';
+import { createSvgElement, getElement, getFromLS } from '../helpers/functions';
 import { FooterLinksType, NavLink } from '../../types/nav.types';
 import createLayout from '../components/createLayout';
 import { headerLinks, footerLinks } from '../../assets/data/navigationData';
@@ -104,7 +104,7 @@ class App {
   }
 
   private loginBtnHandler(): void {
-    const loginBtn = getElement('.desktop-login');
+    const loginBtn = getElement('.login--desktop');
     loginBtn.addEventListener('click', (e: Event): void => {
       e.preventDefault();
       if (getFromLS('token')) {

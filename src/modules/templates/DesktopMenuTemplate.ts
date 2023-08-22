@@ -12,7 +12,7 @@ const desktopMenuTemplate = (linksHtml: string): string => `
       </a>
     </li>
     <li>
-      <a href="" class="desktop-login">
+      <a href="" class="login login--desktop">
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
           <use xlink:href="./image/sprite.svg#person"></use>
         </svg>
