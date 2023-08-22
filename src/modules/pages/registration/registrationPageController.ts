@@ -254,13 +254,15 @@ class RegistrationController {
     formElements.forEach((element) => {
       const formElement = element as HTMLInputElement | HTMLSelectElement;
 
+      const parentElement = formElement.closest('.form-item');
+
       if (!formElement.value && !formElement.getAttribute('disabled')) {
         createError(formElement, InputUserError.EmptyFieldError);
       }
       if (!formElement.value && formElement.classList.contains('select')) {
         createError(formElement, InputUserError.CountryError);
       }
-      if (!formElement.value || formElement.closest('.form-item')?.classList.contains('.form-item--error')) {
+      if (formElement.value === '' || parentElement?.classList.contains('form-item--error')) {
         isValid = false;
       }
     });
