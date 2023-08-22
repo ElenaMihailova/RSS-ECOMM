@@ -20,6 +20,7 @@ export enum FieldNames {
   Age = 'age',
   Email = 'email',
   LoginPassword = 'login-password',
+  LoginEmail = 'login-email',
   PostaCode = 'postal-code',
   Password = 'password',
 }

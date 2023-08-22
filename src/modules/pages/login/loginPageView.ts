@@ -58,7 +58,7 @@ class LoginView extends PageView {
     const loginEmailInput = createElement({
       tagName: 'input',
       classNames: ['input', 'login__email-input', 'form-item-element'],
-      attributes: [{ 'data-type': 'email' }, { type: 'text' }, { value: '' }, { placeholder: 'Email Adress' }],
+      attributes: [{ 'data-type': 'login-email' }, { type: 'text' }, { value: '' }, { placeholder: 'Email Adress' }],
       parent: loginEmailInputContainer,
     });
 

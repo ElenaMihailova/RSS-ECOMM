@@ -1,5 +1,5 @@
 import { Data } from '../../types/types';
-import { getElement, getElementCollection } from '../helpers/functions';
+import { getElementCollection } from '../helpers/functions';
 import { removeError, removeHelp, createError, createHelp } from './validationHelpers';
 import {
   dateFormatLength,
@@ -47,7 +47,6 @@ class Validator {
   public validateRealTime(element: HTMLInputElement): void {
     this.removeLabels(element);
     const { value } = element;
-    const loginBtn = getElement('.login__button');
 
     if (value) {
       switch (element.dataset.type) {
@@ -72,17 +71,14 @@ class Validator {
           }
 
           break;
-        case FieldNames.Email:
+        case FieldNames.LoginEmail:
           if (!isEmailFormat(value)) {
             createError(element, InputUserError.EmailError);
-            loginBtn.setAttribute('disabled', 'disabled');
-          } else {
-            loginBtn.removeAttribute('disabled');
           }
           break;
         case FieldNames.LoginPassword:
           if (
-            isWithinLengthLimit(value, passwordFormatLength) ||
+            isLessLengthLimit(value, passwordFormatLength) ||
             hasLSpaces(value) ||
             hasTSpaces(value) ||
             !hasLowerLetters(value) ||
@@ -90,9 +86,6 @@ class Validator {
             !hasUpperLetters(value)
           ) {
             createError(element, InputUserError.PasswordError);
-            loginBtn.setAttribute('disabled', 'disabled');
-          } else {
-            loginBtn.removeAttribute('disabled');
           }
           break;
         case FieldNames.PostaCode:
