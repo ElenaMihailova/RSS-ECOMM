@@ -1,5 +1,4 @@
 import { AdressCategories, Countries, FieldNames, InputUserError, PostalCodes } from '../../types/enums';
-import { getElement } from '../helpers/functions';
 import { removeError, removeHelp, createError, createHelp } from './validationHelpers';
 import {
   dateFormatLength,
@@ -11,7 +10,6 @@ import {
   hasLetters,
   hasNumbers,
   hasNumbersAndDots,
-  isWithinLengthLimit,
   hasLowerLetters,
   hasUpperLetters,
   isEmailFormat,
@@ -47,7 +45,6 @@ class Validator {
   public validateRealTime(element: HTMLInputElement): void {
     this.removeLabels(element);
     const { value } = element;
-    const loginBtn = getElement('.login__button');
 
     if (value) {
       switch (element.dataset.type) {
@@ -95,17 +92,9 @@ class Validator {
             }
           }
           break;
-        case FieldNames.Email:
-          if (!isEmailFormat(value)) {
-            createError(element, InputUserError.EmailError);
-            loginBtn.setAttribute('disabled', 'disabled');
-          } else {
-            loginBtn.removeAttribute('disabled');
-          }
-          break;
         case FieldNames.LoginPassword:
           if (
-            isWithinLengthLimit(value, passwordFormatLength) ||
+            isLessLengthLimit(value, passwordFormatLength) ||
             hasLSpaces(value) ||
             hasTSpaces(value) ||
             !hasLowerLetters(value) ||
@@ -113,9 +102,6 @@ class Validator {
             !hasUpperLetters(value)
           ) {
             createError(element, InputUserError.PasswordError);
-            loginBtn.setAttribute('disabled', 'disabled');
-          } else {
-            loginBtn.removeAttribute('disabled');
           }
           break;
         case FieldNames.PostalCode:
@@ -189,7 +175,7 @@ class Validator {
         }
         break;
       case FieldNames.Password:
-        if (isWithinLengthLimit(value, passwordFormatLength)) {
+        if (isLessLengthLimit(value, passwordFormatLength)) {
           removeError(element);
           createError(element, InputUserError.PasswordLengthError);
         }
