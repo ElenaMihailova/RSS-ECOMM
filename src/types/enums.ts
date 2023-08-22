@@ -25,7 +25,7 @@ export enum InputUserError {
   LettersError = 'This field must not contain special characters or numbers',
   AgeError = 'Please enter your date of birth in the format: DD.MM.YYYY',
   DateSyntaxError = 'You should enter only numbers and dots',
-  InvalidDataError = 'Invalid',
+  InvalidDataError = 'Invalid data',
   TooManyCharactersError = 'This does not match the required format. Too many characters',
   PasswordError = 'Password must be at least 8 characters long, must contain at least one uppercase letter, must contain at least one lowercase letter, must contain at least one digit, must not contain leading or trailing whitespace',
   PostalCodeError = 'Postal code must have numeric characters only',
