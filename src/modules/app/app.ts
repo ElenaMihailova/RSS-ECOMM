@@ -33,6 +33,7 @@ class App {
     const routes = this.createRoutes();
     this.router = new Router(routes);
     this.createView();
+    this.indexBtnHandler();
     this.loginBtnHandler();
   }
 
@@ -135,6 +136,15 @@ class App {
       } else {
         this.router.navigateFromButton(PageUrls.LoginPageUrl);
       }
+    });
+  }
+
+  private indexBtnHandler(): void {
+    const indexBtn = getElement('.logo__link');
+
+    indexBtn.addEventListener('click', (e: Event): void => {
+      e.preventDefault();
+      this.router.navigateFromButton(PageUrls.IndexPageUrl);
     });
   }
 }

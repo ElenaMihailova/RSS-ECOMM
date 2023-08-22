@@ -5,7 +5,7 @@ const desktopMenuTemplate = (linksHtml: string): string => `
   </ul>
   <ul class="menu__user menu__user--desktop">
     <li>
-      <a href="#" class="search">
+      <a href="" class="search">
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
           <use xlink:href="./image/sprite.svg#search"></use>
         </svg>
@@ -15,7 +15,7 @@ const desktopMenuTemplate = (linksHtml: string): string => `
       </a>
     </li>
     <li>
-      <a href="#" class="corb">
+      <a href="" class="corb">
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
           <use xlink:href="./image/sprite.svg#corb"></use>
         </svg>
