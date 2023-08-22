@@ -75,6 +75,7 @@ module.exports = ({ develop }) => ({
     new CopyPlugin({
       patterns: [
         { from: 'src/assets/image', to: 'image' },
+        { from: 'src/assets/image/favicon', to: 'image' },
         { from: 'src/assets/fonts', to: 'fonts' }
       ],
     }),
