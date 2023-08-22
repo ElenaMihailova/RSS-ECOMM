@@ -4,8 +4,8 @@ import Toastify from 'toastify-js';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
 import { createApiRootWithPasswordFlow, loginUser } from '../../api/apiClient';
 import MyTokenCache from '../../api/myTokenCache';
-import { PageUrls } from '../../constants';
-import { getElement, createElement, setToLS } from '../../helpers/functions';
+import { PageUrls } from '../../../assets/data/constants';
+import { getElement, setToLS } from '../../helpers/functions';
 import Router from '../../router/router';
 import Validator from '../../validation/validator';
 
@@ -35,23 +35,27 @@ class LoginController {
 
     emailInput.addEventListener('input', (e: Event) => {
       e.preventDefault();
-      this.validator.validateRealTime(emailInput);
-      if (emailInput.value === '' && passwordInput.value === '') {
-        loginBtn.removeAttribute('disabled');
-      }
+      this.validateInput(emailInput);
     });
 
     passwordContainer.addEventListener('input', (e: Event): void => {
       e.preventDefault();
-      this.validator.validateRealTime(passwordInput);
-      if (emailInput.value === '' && passwordInput.value === '') {
-        loginBtn.removeAttribute('disabled');
-      }
+      this.validateInput(passwordInput);
     });
 
     showPasswordButton.addEventListener('click', () => {
       this.togglePasswordView();
     });
+  }
+
+  private validateInput(inputEl: HTMLInputElement): void {
+    const emailInput: HTMLInputElement = getElement('.login__email-input');
+    const passwordInput: HTMLInputElement = getElement('.login__password-input');
+    const loginBtn: HTMLButtonElement = getElement('.login__button');
+    this.validator.validateRealTime(inputEl);
+    if (emailInput.value === '' && passwordInput.value === '') {
+      loginBtn.removeAttribute('disabled');
+    }
   }
 
   private loginHandler(): void {
@@ -63,8 +67,8 @@ class LoginController {
       if (emailInput.value === '' || passwordInput.value === '') {
         Toastify({
           text: 'Please enter your username and password',
-          className: 'toastify',
-          duration: 3000,
+          className: 'toastify toastify-error',
+          duration: 4000,
           newWindow: true,
           close: true,
           gravity: 'bottom',
@@ -95,19 +99,7 @@ class LoginController {
         const apiRoot = createApiRootWithPasswordFlow(options);
         const login = await loginUser(apiRoot, email, password);
 
-        if (!Object.keys(login).length) {
-          Toastify({
-            text: `Invalid credentials.
-            Incorrect email or password`,
-            className: 'toastify',
-            duration: 3000,
-            newWindow: true,
-            close: true,
-            gravity: 'bottom',
-            position: 'center',
-            stopOnFocus: true,
-          }).showToast();
-        } else {
+        if (Object.keys(login).length) {
           const tokenInfo = tokenCache.get();
           setToLS('token', tokenInfo.token);
           this.router.navigateFromButton(PageUrls.IndexPageUrl);
@@ -126,15 +118,9 @@ class LoginController {
   private togglePasswordView(): void {
     const showPasswordBtn: HTMLButtonElement = getElement('.login__showpassword-button');
     const passwordInput: HTMLInputElement = getElement('.login__password-input');
-    if (passwordInput.getAttribute('type') === 'password') {
-      showPasswordBtn.innerText = 'HIDE';
-      passwordInput.removeAttribute('type');
-      passwordInput.setAttribute('type', 'text');
-    } else {
-      showPasswordBtn.innerText = 'SHOW';
-      passwordInput.removeAttribute('type');
-      passwordInput.setAttribute('type', 'password');
-    }
+
+    showPasswordBtn.innerText = passwordInput.getAttribute('type') === 'password' ? 'HIDE' : 'SHOW';
+    passwordInput.type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
   }
 }
 

@@ -7,7 +7,7 @@ import RegistrationView from '../pages/registration/registrationPageView';
 import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
 import LoginController from '../pages/login/loginPageController';
-import { getFromLS } from '../helpers/functions';
+import { getElement, getFromLS } from '../helpers/functions';
 import { FooterLinksType, NavLink } from '../../types/nav.types';
 import createLayout from '../components/createLayout';
 import { headerLinks, footerLinks } from '../../assets/data/navigationData';
@@ -33,6 +33,7 @@ class App {
     const routes = this.createRoutes();
     this.router = new Router(routes);
     this.createView();
+    this.loginBtnHandler();
   }
 
   private createView(): void {
@@ -80,11 +81,12 @@ class App {
         path: `${PageUrls.LoginPageUrl}`,
         callback: (): void => {
           if (this.main) {
+            this.main.clearContent();
             if (getFromLS('token')) {
-              this.router.navigateFromButton('index');
+              this.router.navigateFromButton(PageUrls.IndexPageUrl);
               return;
             }
-            this.main.setLoginContent(new LoginView());
+            this.main.setViewContent(new LoginView());
             this.loginController = new LoginController(this.router);
           }
         },
@@ -99,6 +101,18 @@ class App {
         },
       },
     ];
+  }
+
+  private loginBtnHandler(): void {
+    const loginBtn = getElement('.desktop-login');
+    loginBtn.addEventListener('click', (e: Event): void => {
+      e.preventDefault();
+      if (getFromLS('token')) {
+        this.router.navigateFromButton(PageUrls.IndexPageUrl);
+      } else {
+        this.router.navigateFromButton(PageUrls.LoginPageUrl);
+      }
+    });
   }
 }
 

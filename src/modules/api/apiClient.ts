@@ -1,3 +1,4 @@
+import Toastify from 'toastify-js';
 import { createApiBuilderFromCtpClient, CustomerSignInResult } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
@@ -15,20 +16,31 @@ export const loginUser = async (
   email: string,
   password: string,
 ): Promise<CustomerSignInResult | object> => {
-  try {
-    const res = await root
-      .login()
-      .post({
-        body: {
-          email,
-          password,
-        },
-      })
-      .execute();
-    const resData = await res.body;
-    return resData;
-  } catch (err) {
-    console.log(err);
-  }
-  return {};
+  let resData = {};
+  const res = await root
+    .login()
+    .post({
+      body: {
+        email,
+        password,
+      },
+    })
+    .execute()
+    .then((r) => {
+      resData = r.body;
+    })
+    .catch((e) => {
+      Toastify({
+        text: e.message,
+        className: 'toastify toastify-error',
+        duration: 4000,
+        newWindow: true,
+        close: true,
+        gravity: 'bottom',
+        position: 'center',
+        stopOnFocus: true,
+      }).showToast();
+    });
+
+  return resData;
 };

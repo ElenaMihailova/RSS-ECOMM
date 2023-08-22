@@ -22,48 +22,41 @@ export const getAgeFromDateString = (dateString: string): number => {
   return age;
 };
 
-export const removeError = (formElement: HTMLElement): void => {
+const removeBlock = (formElement: HTMLElement, classNames: string[]): void => {
   const parent: HTMLElement | null = formElement.closest('.form-item');
-  if (parent && parent.classList.contains('form-item--error')) {
-    parent.classList.remove('form-item--error');
-    parent.querySelector('.error-label')?.remove();
+  if (parent && parent.classList.contains(classNames[0])) {
+    parent.classList.remove(classNames[0]);
+    parent.querySelector(classNames[1])?.remove();
   }
 };
 
+export const removeError = (formElement: HTMLElement): void => {
+  removeBlock(formElement, ['form-item--error', '.error-label']);
+};
+
 export const removeHelp = (formElement: HTMLElement): void => {
+  removeBlock(formElement, ['form-item--help', '.help-label']);
+};
+
+const createBlock = (formElement: HTMLElement, text: string, classNames: string[]): void => {
+  removeHelp(formElement);
+  removeError(formElement);
   const parent: HTMLElement | null = formElement.closest('.form-item');
-  if (parent && parent.classList.contains('form-item--help')) {
-    parent.classList.remove('form-item--help');
-    parent.querySelector('.help-label')?.remove();
+  if (parent) {
+    parent.classList.add(classNames[0]);
+    createElement({
+      tagName: 'label',
+      classNames: [classNames[1]],
+      text,
+      parent,
+    });
   }
 };
 
 export const createError = (formElement: HTMLElement, text: string): void => {
-  removeHelp(formElement);
-  removeError(formElement);
-  const parent: HTMLElement | null = formElement.closest('.form-item');
-  if (parent) {
-    parent.classList.add('form-item--error');
-    createElement({
-      tagName: 'label',
-      classNames: ['error-label'],
-      text,
-      parent,
-    });
-  }
+  createBlock(formElement, text, ['form-item--error', 'error-label']);
 };
 
 export const createHelp = (formElement: HTMLElement, text: string): void => {
-  removeError(formElement);
-  removeHelp(formElement);
-  const parent: HTMLElement | null = formElement.closest('.form-item');
-  if (parent) {
-    parent.classList.add('form-item--help');
-    createElement({
-      tagName: 'label',
-      classNames: ['help-label'],
-      text,
-      parent,
-    });
-  }
+  createBlock(formElement, text, ['form-item--help', 'help-label']);
 };

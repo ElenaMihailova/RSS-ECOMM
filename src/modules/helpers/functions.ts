@@ -1,4 +1,4 @@
-import { AttrSet } from '../types';
+import { AttrSet } from '../../types/types';
 
 export function createElement<T extends keyof HTMLElementTagNameMap>(elData: {
   tagName: T;
@@ -37,6 +37,10 @@ export function createElement<T extends keyof HTMLElementTagNameMap>(elData: {
   }
 
   return element;
+}
+
+export function createSvgElement(className: string, id: string, w?: string, h?: string, v?: string): string {
+  return `<svg class=${className} width=${w} height=${h} viewBox=${v}><use href="./image/sprite.svg#${id}" /></svg>`;
 }
 
 export const getElement = <T extends Element>(selector: string): T => {

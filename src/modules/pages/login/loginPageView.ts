@@ -1,5 +1,5 @@
 import PageView from '../../core/pageView';
-import { createElement } from '../../helpers/functions';
+import { createElement, createSvgElement } from '../../helpers/functions';
 import './loginPage.scss';
 
 class LoginView extends PageView {
@@ -9,10 +9,16 @@ class LoginView extends PageView {
   }
 
   public render(): HTMLElement {
+    const loginWrapper = createElement({
+      tagName: 'div',
+      classNames: ['login__wrapper'],
+      parent: this.container,
+    });
+
     const loginContainer = createElement({
       tagName: 'div',
       classNames: ['login__container'],
-      parent: this.container,
+      parent: loginWrapper,
     });
 
     const loginTitle = createElement({
@@ -43,8 +49,9 @@ class LoginView extends PageView {
     });
 
     const loginEmailIcon = createElement({
-      tagName: 'span',
+      tagName: 'div',
       classNames: ['login__email-icon'],
+      html: createSvgElement('mail-icon', 'login-email-icon'),
       parent: loginEmailInputContainer,
     });
 
@@ -62,8 +69,9 @@ class LoginView extends PageView {
     });
 
     const loginPasswordIcon = createElement({
-      tagName: 'span',
+      tagName: 'div',
       classNames: ['login__password-icon'],
+      html: createSvgElement('password-icon', 'login-password-icon'),
       parent: loginPasswordInputContainer,
     });
 
@@ -98,7 +106,7 @@ class LoginView extends PageView {
     const registrationContainer = createElement({
       tagName: 'div',
       classNames: ['registration__container'],
-      parent: this.container,
+      parent: loginWrapper,
     });
 
     const registrationTitle = createElement({

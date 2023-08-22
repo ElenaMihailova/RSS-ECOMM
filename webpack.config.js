@@ -6,6 +6,7 @@ const { ESLint } = require('eslint');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const dotenv = require('dotenv').config({ path: __dirname + '/.env' });
+const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const webpack = require('webpack');
 const devServer = (isDev) =>
@@ -82,6 +83,7 @@ module.exports = ({ develop }) => ({
       'process.env': JSON.stringify(dotenv.parsed),
       // 'process.env.NODE_ENV': JSON.stringify(isDevelopment? 'development':'production'),
     }),
+    new SpriteLoaderPlugin(),
     ...esLintPlugin(develop),
   ],
   ...devServer(develop),

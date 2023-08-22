@@ -8,11 +8,11 @@
 
 .toastify {
     padding: 12px 20px;
-    color: #ffffff;
+    color: rgb(255, 255, 255);
     display: inline-block;
     box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3);
-    background: -webkit-linear-gradient(315deg, #73a5ff, #5477f5);
-    background: linear-gradient(135deg, #73a5ff, #5477f5);
+    background: -webkit-linear-gradient(315deg, rgb(115, 165, 255), rgb(84, 119, 245));
+    background: linear-gradient(135deg, rgb(115, 165, 255), rgb(84, 119, 245));
     position: fixed;
     opacity: 0;
     transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -21,6 +21,18 @@
     text-decoration: none;
     max-width: calc(50% - 20px);
     z-index: 2147483647;
+}
+
+.toastify-error {
+    box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.045), 0 10px 36px -4px rgba(232, 77, 77, 0.3);
+    background: -webkit-linear-gradient(315deg, rgba(255, 0, 0, 0.77), rgb(255, 47, 0));
+    background: linear-gradient(135deg, rgba(255, 0, 0, 0.77), rgb(255, 47, 0));
+}
+
+.toastify-succes {
+    box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.045), 0 10px 36px -4px rgba(195, 177, 18, 0.271);
+    background: -webkit-linear-gradient(315deg,rgba(195, 177, 18, 0.712), rgb(195, 178, 18));
+    background: linear-gradient(135deg, rgba(195, 177, 18, 0.712), rgb(195, 178, 18));
 }
 
 .toastify.on {

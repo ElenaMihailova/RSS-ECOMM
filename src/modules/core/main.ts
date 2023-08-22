@@ -31,9 +31,9 @@ class Main {
     this.insertMainInDOM();
   }
 
-  public setLoginContent(content: PageView): void {
-    this.container.innerHTML = '';
-    this.container.append(content.render());
+  public setViewContent(content: PageView): void {
+    this.container.appendChild(content.render());
+    this.insertMainInDOM();
   }
 }
 

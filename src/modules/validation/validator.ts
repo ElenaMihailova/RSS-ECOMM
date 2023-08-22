@@ -1,4 +1,4 @@
-import { Data } from '../types';
+import { Data } from '../../types/types';
 import { getElement, getElementCollection } from '../helpers/functions';
 import { removeError, removeHelp, createError, createHelp } from './validationHelpers';
 import {
@@ -19,6 +19,7 @@ import {
   hasLSpaces,
   hasTSpaces,
 } from './validationChecks';
+import { FieldNames, InputUserError } from '../../types/enums';
 
 class Validator {
   private billingCountry: string | null;
@@ -50,36 +51,36 @@ class Validator {
 
     if (value) {
       switch (element.dataset.type) {
-        case 'name':
-        case 'surname':
-        case 'city':
+        case FieldNames.Name:
+        case FieldNames.Surname:
+        case FieldNames.City:
           if (!hasLetters(value)) {
-            createError(element, 'This field must not contain special characters or numbers');
+            createError(element, InputUserError.LettersError);
           }
           break;
-        case 'age':
-          createHelp(element, 'Please enter your date of birth in the format: DD.MM.YYYY');
+        case FieldNames.Age:
+          createHelp(element, InputUserError.AgeError);
 
           if (!hasNumbersAndDots(value)) {
-            createError(element, 'You should enter only numbers and dots');
+            createError(element, InputUserError.DateSyntaxError);
           } else if (isMaxLength(value, dateFormatLength) && !isDateFormat(value)) {
-            createError(element, 'Invalid data!');
+            createError(element, InputUserError.DataError);
           } else if (isMaxLength(value, dateFormatLength) && isDateFormat(value) && isLessMinAge(value, this.minAge)) {
             createError(element, `User must be at least ${this.minAge} years old`);
           } else if (isOverMaxLength(value, dateFormatLength)) {
-            createError(element, 'The date does not match the required format. Too many characters');
+            createError(element, InputUserError.DateFormatError);
           }
 
           break;
-        case 'email':
+        case FieldNames.Email:
           if (!isEmailFormat(value)) {
-            createError(element, 'Incorrect email address!');
+            createError(element, InputUserError.EmailError);
             loginBtn.setAttribute('disabled', 'disabled');
           } else {
             loginBtn.removeAttribute('disabled');
           }
           break;
-        case 'login-password':
+        case FieldNames.LoginPassword:
           if (
             isWithinLengthLimit(value, passwordFormatLength) ||
             hasLSpaces(value) ||
@@ -88,16 +89,13 @@ class Validator {
             !hasNumbers(value) ||
             !hasUpperLetters(value)
           ) {
-            createError(
-              element,
-              'Password must be at least 8 characters long, must contain at least one uppercase letter, must contain at least one lowercase letter, must contain at least one digit, must not contain leading or trailing whitespace',
-            );
+            createError(element, InputUserError.PasswordError);
             loginBtn.setAttribute('disabled', 'disabled');
           } else {
             loginBtn.removeAttribute('disabled');
           }
           break;
-        case 'postal-code':
+        case FieldNames.PostaCode:
           if (element.classList.contains('billing-adress__input')) {
             this.currentValidateCountry = this.billingCountry;
           } else if (element.classList.contains('shipping-adress__input')) {
@@ -106,7 +104,7 @@ class Validator {
 
           if (!hasNumbers(value)) {
             removeError(element);
-            createError(element, 'Postal code must have numeric characters only');
+            createError(element, InputUserError.PostalCodeError);
           }
 
           if (this.postalCodeLength && isOverMaxLength(value, this.postalCodeLength)) {
@@ -127,44 +125,43 @@ class Validator {
     const { value } = element;
     const parent: HTMLElement | null = element.closest('.form-item');
 
-    if (value) {
-      switch (element.dataset.type) {
-        case 'email':
-          if (!isEmailFormat(value)) {
-            createError(element, 'Incorrect email address!');
-          }
-          break;
-        case 'age':
-          if (isLessLengthLimit(value, dateFormatLength) && parent && !parent.classList.contains('form-item--error')) {
-            createError(element, 'Please enter your date of birth in the format: DD.MM.YYYY');
-          }
-          break;
-        case 'password':
-          if (isWithinLengthLimit(value, passwordFormatLength)) {
-            removeError(element);
-            createError(element, 'Must contain at least 8 characters');
-          }
-          break;
-        case 'postal-code':
-          if (element.classList.contains('billing-adress__input')) {
-            this.currentValidateCountry = this.billingCountry;
-          } else if (element.classList.contains('shipping-adress__input')) {
-            this.currentValidateCountry = this.shippingCountry;
-          }
-          if (this.postalCodeLength) {
-            if (isOverMaxLength(value, this.postalCodeLength) || isLessLengthLimit(value, this.postalCodeLength)) {
-              removeError(element);
-              createError(
-                element,
-                `Postal code for ${this.currentValidateCountry} must have ${this.postalCodeLength} characters`,
-              );
-            }
-          }
-          break;
-        default:
-      }
-    } else {
+    if (!value) {
       this.removeLabels(element);
+    }
+    switch (element.dataset.type) {
+      case FieldNames.Email:
+        if (!isEmailFormat(value)) {
+          createError(element, InputUserError.EmailError);
+        }
+        break;
+      case FieldNames.Age:
+        if (isLessLengthLimit(value, dateFormatLength) && parent && !parent.classList.contains('form-item--error')) {
+          createError(element, InputUserError.BirthdayError);
+        }
+        break;
+      case FieldNames.Password:
+        if (isWithinLengthLimit(value, passwordFormatLength)) {
+          removeError(element);
+          createError(element, InputUserError.PasswordError);
+        }
+        break;
+      case FieldNames.PostaCode:
+        if (element.classList.contains('billing-adress__input')) {
+          this.currentValidateCountry = this.billingCountry;
+        } else if (element.classList.contains('shipping-adress__input')) {
+          this.currentValidateCountry = this.shippingCountry;
+        }
+        if (this.postalCodeLength) {
+          if (isOverMaxLength(value, this.postalCodeLength) || isLessLengthLimit(value, this.postalCodeLength)) {
+            removeError(element);
+            createError(
+              element,
+              `Postal code for ${this.currentValidateCountry} must have ${this.postalCodeLength} characters`,
+            );
+          }
+        }
+        break;
+      default:
     }
   }
 
@@ -176,13 +173,11 @@ class Validator {
     formElements.forEach((element) => {
       const formElement = element as HTMLInputElement | HTMLSelectElement;
 
-      if (formElement.value === '') {
-        if (!formElement.getAttribute('disabled')) {
-          createError(formElement, 'Please, fill out this field');
-        }
-        if (formElement.classList.contains('select')) {
-          createError(formElement, 'Please, select your country');
-        }
+      if (formElement.value === '' && !formElement.getAttribute('disabled')) {
+        createError(formElement, InputUserError.FieldError);
+      }
+      if (formElement.value === '' && formElement.classList.contains('select')) {
+        createError(formElement, InputUserError.CountryError);
       }
 
       if (formElement.closest('.form-item')?.classList.contains('.form-item--error') || formElement.value === '') {
