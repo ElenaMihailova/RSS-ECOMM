@@ -93,3 +93,7 @@ export interface HTMLElementTagNameMap {
 export interface AttrSet {
   [key: string]: string;
 }
+
+export interface Data {
+  [key: string]: string;
+}

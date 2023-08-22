@@ -1,8 +1,10 @@
 import { AdressCategories, Countries, FieldNames, InputUserError, PostalCodes } from '../../types/enums';
+import { getElement } from '../helpers/functions';
 import { removeError, removeHelp, createError, createHelp } from './validationHelpers';
 import {
   dateFormatLength,
   isDateFormat,
+  isPasswordFormat,
   isLessMinAge,
   isMaxLength,
   isOverMaxLength,
@@ -10,12 +12,13 @@ import {
   hasNumbers,
   hasNumbersAndDots,
   isWithinLengthLimit,
-  isPasswordFormat,
   hasLowerLetters,
   hasUpperLetters,
   isEmailFormat,
   isLessLengthLimit,
   passwordFormatLength,
+  hasLSpaces,
+  hasTSpaces,
 } from './validationChecks';
 
 class Validator {
@@ -44,6 +47,7 @@ class Validator {
   public validateRealTime(element: HTMLInputElement): void {
     this.removeLabels(element);
     const { value } = element;
+    const loginBtn = getElement('.login__button');
 
     if (value) {
       switch (element.dataset.type) {
@@ -89,6 +93,29 @@ class Validator {
               const errorString = `Must contain at least: ${passwordErors.join(', ')}`;
               createError(element, errorString);
             }
+          }
+          break;
+        case FieldNames.Email:
+          if (!isEmailFormat(value)) {
+            createError(element, InputUserError.EmailError);
+            loginBtn.setAttribute('disabled', 'disabled');
+          } else {
+            loginBtn.removeAttribute('disabled');
+          }
+          break;
+        case FieldNames.LoginPassword:
+          if (
+            isWithinLengthLimit(value, passwordFormatLength) ||
+            hasLSpaces(value) ||
+            hasTSpaces(value) ||
+            !hasLowerLetters(value) ||
+            !hasNumbers(value) ||
+            !hasUpperLetters(value)
+          ) {
+            createError(element, InputUserError.PasswordError);
+            loginBtn.setAttribute('disabled', 'disabled');
+          } else {
+            loginBtn.removeAttribute('disabled');
           }
           break;
         case FieldNames.PostalCode:

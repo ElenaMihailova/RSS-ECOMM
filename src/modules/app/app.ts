@@ -6,13 +6,14 @@ import IndexView from '../pages/index/indexPageView';
 import RegistrationView from '../pages/registration/registrationPageView';
 import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
+import LoginController from '../pages/login/loginPageController';
+import { getElement, getFromLS, removeFromLS } from '../helpers/functions';
 import { FooterLinksType, NavLink } from '../../types/nav.types';
 import createLayout from '../components/createLayout';
 import { headerLinks, footerLinks } from '../../assets/data/navigationData';
 import mainContent from '../templates/mainContent';
 import setupHeaderListeners from '../components/setupHeaderListeners';
 import RegistrationController from '../pages/registration/registrationPageController';
-import { getFromLS } from '../helpers/functions';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -20,6 +21,8 @@ class App {
   public router: Router;
 
   public main: Main | null;
+
+  private loginController: LoginController | null;
 
   private headerData: NavLink[] = headerLinks;
 
@@ -29,15 +32,31 @@ class App {
 
   constructor() {
     this.main = null;
+    this.loginController = null;
     const routes = this.createRoutes();
     this.router = new Router(routes);
     this.createView();
     this.registrationController = null;
+    this.loginBtnHandler();
   }
 
   private createView(): void {
     const layout = createLayout(this.headerData, this.footerData);
     App.container.append(layout.header, layout.footer);
+
+    const loginSvg = getElement('.login-svg');
+    const logoutSvg = getElement('.logout-svg');
+    const tooltip = getElement('.tooltip--login');
+
+    if (getFromLS('token')) {
+      loginSvg.classList.add('visually-hidden');
+      logoutSvg.classList.remove('visually-hidden');
+      tooltip.textContent = 'LOG OUT';
+    } else {
+      logoutSvg.classList.add('visually-hidden');
+      loginSvg.classList.remove('visually-hidden');
+      tooltip.textContent = 'LOG IN';
+    }
 
     setupHeaderListeners('hamburger', 'menu');
 
@@ -87,7 +106,14 @@ class App {
         callback: (): void => {
           if (this.main) {
             this.main.clearContent();
-            this.main.setContent(new LoginView().render());
+
+            if (getFromLS('token')) {
+              this.router.navigateFromButton(PageUrls.IndexPageUrl);
+              return;
+            }
+
+            this.main.setViewContent(new LoginView());
+            this.loginController = new LoginController(this.router);
           }
         },
       },
@@ -101,6 +127,25 @@ class App {
         },
       },
     ];
+  }
+
+  private loginBtnHandler(): void {
+    const loginBtn = getElement('.login--desktop');
+    const loginSvg = getElement('.login-svg');
+    const logoutSvg = getElement('.logout-svg');
+    const tooltip = getElement('.tooltip--login');
+
+    loginBtn.addEventListener('click', (e: Event): void => {
+      e.preventDefault();
+      if (getFromLS('token')) {
+        logoutSvg.classList.add('visually-hidden');
+        loginSvg.classList.remove('visually-hidden');
+        tooltip.textContent = 'LOG IN';
+        removeFromLS('token');
+      } else {
+        this.router.navigateFromButton(PageUrls.LoginPageUrl);
+      }
+    });
   }
 }
 

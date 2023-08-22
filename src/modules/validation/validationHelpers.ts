@@ -27,7 +27,7 @@ export const getAgeFromDateString = (dateString: string): number => {
   return age;
 };
 
-export const removeLabelBlock = (formElement: HTMLElement, classNames: string[]): void => {
+const removeBlock = (formElement: HTMLElement, classNames: string[]): void => {
   const parent: HTMLElement | null = formElement.closest('.form-item');
   if (parent && parent.classList.contains(classNames[0])) {
     parent.classList.remove(classNames[0]);
@@ -36,14 +36,14 @@ export const removeLabelBlock = (formElement: HTMLElement, classNames: string[])
 };
 
 export const removeError = (formElement: HTMLElement): void => {
-  removeLabelBlock(formElement, ['form-item--error', '.error-label']);
+  removeBlock(formElement, ['form-item--error', '.error-label']);
 };
 
 export const removeHelp = (formElement: HTMLElement): void => {
-  removeLabelBlock(formElement, ['form-item--help', '.help-label']);
+  removeBlock(formElement, ['form-item--help', '.help-label']);
 };
 
-export const createLabelBlock = (formElement: HTMLElement, text: string, classNames: string[]): void => {
+const createBlock = (formElement: HTMLElement, text: string, classNames: string[]): void => {
   removeHelp(formElement);
   removeError(formElement);
   const parent: HTMLElement | null = formElement.closest('.form-item');
@@ -59,9 +59,9 @@ export const createLabelBlock = (formElement: HTMLElement, text: string, classNa
 };
 
 export const createError = (formElement: HTMLElement, text: string): void => {
-  createLabelBlock(formElement, text, ['form-item--error', 'error-label']);
+  createBlock(formElement, text, ['form-item--error', 'error-label']);
 };
 
 export const createHelp = (formElement: HTMLElement, text: string): void => {
-  createLabelBlock(formElement, text, ['form-item--help', 'help-label']);
+  createBlock(formElement, text, ['form-item--help', 'help-label']);
 };

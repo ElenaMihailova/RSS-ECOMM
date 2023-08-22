@@ -55,7 +55,7 @@ const footerTemplate = (collectionHtml: string, learnHtml: string, customerServi
       </ul>
     </div>
   </nav>
-  </div>
+</div>
 `;
 
 export default footerTemplate;

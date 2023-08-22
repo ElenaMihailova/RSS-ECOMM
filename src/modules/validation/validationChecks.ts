@@ -1,14 +1,20 @@
 import {
   dateFormat,
   emailFormat,
+  leadingSpaces,
   letters,
   lowerLetters,
   numbers,
   numbersAndDots,
   passwordFormat,
+  trailingSpaces,
   upperLetters,
 } from './regExpVariables';
 import { getAgeFromDateString } from './validationHelpers';
+
+export const hasLSpaces = (string: string): boolean => Boolean(string.match(leadingSpaces));
+
+export const hasTSpaces = (string: string): boolean => Boolean(string.match(trailingSpaces));
 
 export const hasNumbers = (string: string): boolean => Boolean(string.match(numbers));
 
