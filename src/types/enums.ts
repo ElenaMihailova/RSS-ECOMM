@@ -29,7 +29,7 @@ export enum InputUserError {
   TooManyCharactersError = 'This does not match the required format. Too many characters',
   PasswordError = 'Password must be at least 8 characters long, must contain at least one uppercase letter, must contain at least one lowercase letter, must contain at least one digit, must not contain leading or trailing whitespace',
   PostalCodeError = 'Postal code must have numeric characters only',
-  EmailError = 'Incorrect email address! For example: @example.com',
+  EmailError = 'A correctly formatted email address: example@email.com',
   BirthdayFormatError = 'Please enter your date of birth in the format: DD.MM.YYYY',
   PasswordLengthError = 'Must contain at least 8 characters',
   EmptyFieldError = 'Please, fill out this field',
