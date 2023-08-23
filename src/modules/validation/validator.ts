@@ -18,6 +18,7 @@ import {
   hasLSpaces,
   hasTSpaces,
   isOnlyNumbers,
+  isOverOrEqualMaxLength,
 } from './validationChecks';
 
 class Validator {
@@ -71,7 +72,7 @@ class Validator {
 
           break;
         case FieldNames.Password:
-          if (isOverMaxLength(value, passwordFormatLength)) {
+          if (isOverOrEqualMaxLength(value, passwordFormatLength)) {
             if (!isPasswordFormat(value)) {
               removeError(element);
               const passwordErors = [];

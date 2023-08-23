@@ -47,3 +47,6 @@ export const isLessLengthLimit = (string: string, maxLength: number): boolean =>
 export const isMaxLength = (string: string, maxLength: number): boolean => Boolean(string.length === maxLength);
 
 export const isOverMaxLength = (string: string, maxLength: number): boolean => Boolean(string.length > maxLength);
+
+export const isOverOrEqualMaxLength = (string: string, maxLength: number): boolean =>
+  Boolean(string.length >= maxLength);
