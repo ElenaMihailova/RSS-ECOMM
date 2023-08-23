@@ -115,6 +115,8 @@ class LoginController {
         const tooltip = getElement('.tooltip--login');
         const registrationBtn = getElement('.registration--desktop');
         const registrationContainer = registrationBtn.closest('li');
+        const registrationMobileBtn = getElement('.registration--mobile');
+        const registrationMobileContainer = registrationMobileBtn.closest('a');
 
         if (Object.keys(login).length) {
           const tokenInfo = tokenCache.get();
@@ -122,6 +124,7 @@ class LoginController {
           this.router.navigateFromButton(PageUrls.IndexPageUrl);
           loginSvg.classList.add('visually-hidden');
           registrationContainer?.classList.add('visually-hidden');
+          registrationMobileContainer?.classList.add('visually-hidden');
           logoutSvg.classList.remove('visually-hidden');
           tooltip.textContent = 'LOG OUT';
         }

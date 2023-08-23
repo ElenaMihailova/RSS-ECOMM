@@ -322,6 +322,8 @@ class RegistrationController {
       const tooltip = getElement('.tooltip--login');
       const registrationBtn = getElement('.registration--desktop');
       const registrationContainer = registrationBtn.closest('li');
+      const registrationMobileBtn = getElement('.registration--mobile');
+      const registrationMobileContainer = registrationMobileBtn.closest('a');
 
       const login = await loginUser(apiRoot, email, password);
 
@@ -329,6 +331,7 @@ class RegistrationController {
         const tokenInfo = tokenCache.get();
         setToLS('token', tokenInfo.token);
         registrationContainer?.classList.add('visually-hidden');
+        registrationMobileContainer?.classList.add('visually-hidden');
         loginSvg.classList.add('visually-hidden');
         logoutSvg.classList.remove('visually-hidden');
         tooltip.textContent = 'LOG OUT';

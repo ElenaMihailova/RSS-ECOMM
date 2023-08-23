@@ -40,6 +40,7 @@ class App {
     this.indexBtnHandler();
     this.loginBtnHandler();
     this.registrationBtnHandler();
+    this.loginMobileBtnHandler();
   }
 
   // private createMaintenanceModal(): HTMLElement {
@@ -69,16 +70,20 @@ class App {
     const tooltip = getElement('.tooltip--login');
     const registrationBtn = getElement('.registration--desktop');
     const registrationContainer = registrationBtn.closest('li');
+    const registrationMobileBtn = getElement('.registration--mobile');
+    const registrationMobileContainer = registrationMobileBtn.closest('a');
 
     if (getFromLS('token')) {
       loginSvg.classList.add('visually-hidden');
       logoutSvg.classList.remove('visually-hidden');
       registrationContainer?.classList.add('visually-hidden');
+      registrationMobileContainer?.classList.add('visually-hidden');
       tooltip.textContent = 'LOG OUT';
     } else {
       logoutSvg.classList.add('visually-hidden');
       loginSvg.classList.remove('visually-hidden');
       registrationContainer?.classList.remove('visually-hidden');
+      registrationMobileContainer?.classList.remove('visually-hidden');
       tooltip.textContent = 'LOG IN';
     }
 
@@ -169,6 +174,22 @@ class App {
         loginSvg.classList.remove('visually-hidden');
         tooltip.textContent = 'LOG IN';
         removeFromLS('token');
+      } else {
+        this.router.navigateFromButton(PageUrls.LoginPageUrl);
+      }
+    });
+  }
+
+  private loginMobileBtnHandler(): void {
+    const loginMobileBtn = getElement('.login--mobile');
+    const registrationMobileBtn = getElement('.registration--mobile');
+    const registrationMobileContainer = registrationMobileBtn.closest('a');
+
+    loginMobileBtn.addEventListener('click', (e: Event): void => {
+      e.preventDefault();
+      if (getFromLS('token')) {
+        removeFromLS('token');
+        registrationMobileContainer?.classList.remove('visually-hidden');
       } else {
         this.router.navigateFromButton(PageUrls.LoginPageUrl);
       }
