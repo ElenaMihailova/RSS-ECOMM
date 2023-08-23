@@ -1,6 +1,4 @@
 import { AdressCategories, Countries, FieldNames, InputUserError, PostalCodes } from '../../types/enums';
-import { Data } from '../../types/types';
-import { getElementCollection } from '../helpers/functions';
 import { removeError, removeHelp, createError, createHelp } from './validationHelpers';
 import {
   dateFormatLength,
@@ -19,6 +17,7 @@ import {
   passwordFormatLength,
   hasLSpaces,
   hasTSpaces,
+  isOnlyNumbers,
 } from './validationChecks';
 
 class Validator {
@@ -118,7 +117,7 @@ class Validator {
             this.currentValidateCountry = this.shippingCountry;
           }
 
-          if (!hasNumbers(value)) {
+          if (!isOnlyNumbers(value)) {
             removeError(element);
             createError(element, InputUserError.PostalCodeError);
           }
@@ -127,7 +126,7 @@ class Validator {
             removeError(element);
             createError(
               element,
-              `Postal code for ${this.currentValidateCountry} must have ${this.postalCodeLength} characters`,
+              `Postal code for ${this.currentValidateCountry} must have ${this.postalCodeLength} numeric characters`,
             );
           }
           break;

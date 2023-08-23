@@ -6,6 +6,7 @@ import {
   lowerLetters,
   numbers,
   numbersAndDots,
+  onlyNumbers,
   passwordFormat,
   trailingSpaces,
   upperLetters,
@@ -25,6 +26,8 @@ export const hasLowerLetters = (string: string): boolean => Boolean(string.match
 export const hasUpperLetters = (string: string): boolean => Boolean(string.match(upperLetters));
 
 export const hasNumbersAndDots = (string: string): boolean => Boolean(string.match(numbersAndDots));
+
+export const isOnlyNumbers = (string: string): boolean => Boolean(string.match(onlyNumbers));
 
 export const isDateFormat = (string: string): boolean => Boolean(string.match(dateFormat));
 export const dateFormatLength = 10;
