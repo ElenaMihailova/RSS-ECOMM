@@ -11,7 +11,7 @@ export default `
       been moved or deleted.
       <span>But don't worry, we have plenty of other delicious teas for you to try!</span>
     </p>
-    <a href="index" class="button">Go to homepage</a>
+    <a href="index" class="button home--button">Go to homepage</a>
   </div>
 </section>
 `;
