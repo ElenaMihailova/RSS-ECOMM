@@ -19,7 +19,7 @@ const mobileMenuTemplate = (linksHtml: string): string => `
       <ul class="menu__user">
         <li>
           <div>
-            <a href="login">
+            <a  href="login" class="login login--mobile">
               <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
                 <use xlink:href="./image/sprite.svg#person"></use>
               </svg>
@@ -35,7 +35,7 @@ const mobileMenuTemplate = (linksHtml: string): string => `
         </li>
         <li>
         <div>
-          <a href="registration.html">
+          <a href="registration" class="registration registration--mobile">
             <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
               <use xlink:href="./image/sprite.svg#add_person"></use>
             </svg>

@@ -6,6 +6,7 @@ import {
   lowerLetters,
   numbers,
   numbersAndDots,
+  onlyNumbers,
   passwordFormat,
   trailingSpaces,
   upperLetters,
@@ -26,6 +27,8 @@ export const hasUpperLetters = (string: string): boolean => Boolean(string.match
 
 export const hasNumbersAndDots = (string: string): boolean => Boolean(string.match(numbersAndDots));
 
+export const isOnlyNumbers = (string: string): boolean => Boolean(string.match(onlyNumbers));
+
 export const isDateFormat = (string: string): boolean => Boolean(string.match(dateFormat));
 export const dateFormatLength = 10;
 
@@ -44,3 +47,6 @@ export const isLessLengthLimit = (string: string, maxLength: number): boolean =>
 export const isMaxLength = (string: string, maxLength: number): boolean => Boolean(string.length === maxLength);
 
 export const isOverMaxLength = (string: string, maxLength: number): boolean => Boolean(string.length > maxLength);
+
+export const isOverOrEqualMaxLength = (string: string, maxLength: number): boolean =>
+  Boolean(string.length >= maxLength);

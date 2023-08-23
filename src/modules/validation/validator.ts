@@ -1,6 +1,4 @@
 import { AdressCategories, Countries, FieldNames, InputUserError, PostalCodes } from '../../types/enums';
-import { Data } from '../../types/types';
-import { getElementCollection } from '../helpers/functions';
 import { removeError, removeHelp, createError, createHelp } from './validationHelpers';
 import {
   dateFormatLength,
@@ -19,6 +17,8 @@ import {
   passwordFormatLength,
   hasLSpaces,
   hasTSpaces,
+  isOnlyNumbers,
+  isOverOrEqualMaxLength,
 } from './validationChecks';
 
 class Validator {
@@ -72,7 +72,7 @@ class Validator {
 
           break;
         case FieldNames.Password:
-          if (isOverMaxLength(value, passwordFormatLength)) {
+          if (isOverOrEqualMaxLength(value, passwordFormatLength)) {
             if (!isPasswordFormat(value)) {
               removeError(element);
               const passwordErors = [];
@@ -118,7 +118,7 @@ class Validator {
             this.currentValidateCountry = this.shippingCountry;
           }
 
-          if (!hasNumbers(value)) {
+          if (!isOnlyNumbers(value)) {
             removeError(element);
             createError(element, InputUserError.PostalCodeError);
           }
@@ -127,7 +127,7 @@ class Validator {
             removeError(element);
             createError(
               element,
-              `Postal code for ${this.currentValidateCountry} must have ${this.postalCodeLength} characters`,
+              `Postal code for ${this.currentValidateCountry} must have ${this.postalCodeLength} numeric characters`,
             );
           }
           break;
