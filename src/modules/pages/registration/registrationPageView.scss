@@ -10,7 +10,7 @@ $font-Montserrat: Montserrat;
 .registration-page__container {
   display: flex;
   justify-content: center;
-  padding: 72px;
+  padding: 10px 72px 38px 72px;
   max-width: 1280px;
   width: 100%;
   margin: 0 auto;
@@ -68,12 +68,19 @@ $font-Montserrat: Montserrat;
 .common-data-container {
   display: flex;
   flex-direction: column;
-  gap: 13px;
+  gap: 30px;
 }
 
-.adress-container,
 .common-data-container {
   padding-top: 10px;
+}
+
+.adress-container {
+  padding-top: 17px;
+}
+
+.adresses-container {
+  gap: 17px;
 }
 
 .adress-container__description {
@@ -176,7 +183,7 @@ input[type='checkbox']:disabled {
 .adress-checkboxes {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 22px;
   padding: 10px 0px;
 }
 
@@ -194,7 +201,6 @@ input[type='checkbox']:disabled {
 .form-item--help,
 .form-item--error {
   margin-bottom: 13px;
-  padding: 57px 0px 20px 3px;
 }
 
 .form-item label {
