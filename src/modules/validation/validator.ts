@@ -1,4 +1,7 @@
+
 import { AdressCategories, Countries, FieldNames, InputUserError, PostalCodes } from '../../types/enums';
+import { Data } from '../../types/types';
+import { getElementCollection } from '../helpers/functions';
 import { removeError, removeHelp, createError, createHelp } from './validationHelpers';
 import {
   dateFormatLength,
@@ -90,6 +93,9 @@ class Validator {
               const errorString = `Must contain at least: ${passwordErors.join(', ')}`;
               createError(element, errorString);
             }
+        case FieldNames.LoginEmail:
+          if (!isEmailFormat(value)) {
+            createError(element, InputUserError.EmailError);
           }
           break;
         case FieldNames.LoginPassword:

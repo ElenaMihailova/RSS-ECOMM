@@ -35,11 +35,21 @@ class LoginController {
     emailInput.addEventListener('input', (e: Event) => {
       e.preventDefault();
       this.validateInput(emailInput);
+      if (document.querySelector('.form-item--error')) {
+        loginBtn.setAttribute('disabled', 'disabled');
+      } else {
+        loginBtn.removeAttribute('disabled');
+      }
     });
 
     passwordContainer.addEventListener('input', (e: Event): void => {
       e.preventDefault();
       this.validateInput(passwordInput);
+      if (document.querySelector('.form-item--error')) {
+        loginBtn.setAttribute('disabled', 'disabled');
+      } else {
+        loginBtn.removeAttribute('disabled');
+      }
     });
 
     showPasswordButton.addEventListener('click', () => {

@@ -33,10 +33,11 @@ class App {
   constructor() {
     this.main = null;
     this.loginController = null;
+    this.registrationController = null;
     const routes = this.createRoutes();
     this.router = new Router(routes);
     this.createView();
-    this.registrationController = null;
+    this.indexBtnHandler();
     this.loginBtnHandler();
     this.registrationBtnHandler();
   }
@@ -152,12 +153,21 @@ class App {
     });
   }
 
+
   private registrationBtnHandler(): void {
     if (getFromLS('token')) {
       this.router.navigateFromButton(PageUrls.IndexPageUrl);
     } else {
       this.router.navigateFromButton(PageUrls.RegistrationPageUrl);
     }
+
+  private indexBtnHandler(): void {
+    const indexBtn = getElement('.logo__link');
+
+    indexBtn.addEventListener('click', (e: Event): void => {
+      e.preventDefault();
+      this.router.navigateFromButton(PageUrls.IndexPageUrl);
+    });
   }
 }
 

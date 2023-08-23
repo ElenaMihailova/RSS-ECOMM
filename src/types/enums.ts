@@ -42,6 +42,7 @@ export enum FieldNames {
   Age = 'age',
   Email = 'email',
   LoginPassword = 'login-password',
+  LoginEmail = 'login-email',
   Password = 'password',
   Country = 'country',
   City = 'city',
