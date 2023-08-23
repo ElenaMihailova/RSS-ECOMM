@@ -42,9 +42,27 @@ class App {
     this.registrationBtnHandler();
   }
 
+  // private createMaintenanceModal(): HTMLElement {
+  //   const modal = document.createElement('div');
+  //   modal.classList.add('maintenance-modal');
+
+  //   const content = document.createElement('div');
+  //   content.classList.add('modal-content');
+
+  //   const message = document.createElement('p');
+  //   message.innerHTML = `Привет!<br>Мы всё ещё работаем над сайтом.<br>Будем благодарны, если ты найдешь время в четверг, чтобы оценить наши усилия и проверить нашу работу.<br>Заранее спасибо за понимание и терпение!`;
+  //   document.body.classList.add('no-scroll');
+
+  //   content.appendChild(message);
+  //   modal.appendChild(content);
+  //   return modal;
+  // }
+
   private createView(): void {
     const layout = createLayout(this.headerData, this.footerData);
     App.container.append(layout.header, layout.footer);
+    // const maintenanceModal = this.createMaintenanceModal();
+    // App.container.appendChild(maintenanceModal);
 
     const loginSvg = getElement('.login-svg');
     const logoutSvg = getElement('.logout-svg');
@@ -94,7 +112,7 @@ class App {
           if (this.main) {
             this.main.clearContent();
             if (getFromLS('token')) {
-              this.router.navigateFromButton('index');
+              this.router.navigateFromButton(PageUrls.IndexPageUrl);
               return;
             }
             const registrationView = new RegistrationView();
@@ -153,13 +171,18 @@ class App {
     });
   }
 
-
   private registrationBtnHandler(): void {
-    if (getFromLS('token')) {
-      this.router.navigateFromButton(PageUrls.IndexPageUrl);
-    } else {
-      this.router.navigateFromButton(PageUrls.RegistrationPageUrl);
-    }
+    const registrationBtn = getElement('.registration--desktop');
+
+    registrationBtn.addEventListener('click', (e: Event): void => {
+      e.preventDefault();
+      if (getFromLS('token')) {
+        this.router.navigateFromButton(PageUrls.IndexPageUrl);
+      } else {
+        this.router.navigateFromButton(PageUrls.RegistrationPageUrl);
+      }
+    });
+  }
 
   private indexBtnHandler(): void {
     const indexBtn = getElement('.logo__link');

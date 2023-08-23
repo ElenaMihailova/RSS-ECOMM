@@ -6,6 +6,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  z-index: 5;
 }
 
 #menu {
@@ -15,6 +16,10 @@
 .menu__user {
   list-style: none;
   padding: 0;
+}
+
+.menu__user li {
+  margin-right: 8px;
 }
 
 .menu__user a {
@@ -37,12 +42,15 @@
   flex-shrink: 0;
   width: 24px;
   height: 24px;
-  margin-right: 8px;
+  fill: none;
+  stroke: $color-primary;
+  transition: stroke $trans-default;
 }
 
 .menu__user p {
   display: flex;
   flex-direction: column;
+  margin-left: 5px;
 }
 
 .menu__user span {
@@ -106,7 +114,7 @@
 
 .menu__user a:hover {
   svg {
-    fill: $color-secondary;
+    stroke: $color-secondary;
   }
 }
 

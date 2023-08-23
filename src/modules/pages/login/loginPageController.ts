@@ -31,6 +31,7 @@ class LoginController {
     const passwordContainer: HTMLDivElement = getElement('.login__password-input-container');
     const passwordInput: HTMLInputElement = getElement('.login__password-input');
     const showPasswordButton: HTMLButtonElement = getElement('.login__showpassword-button');
+    const loginBtn: HTMLButtonElement = getElement('.login__button');
 
     emailInput.addEventListener('input', (e: Event) => {
       e.preventDefault();

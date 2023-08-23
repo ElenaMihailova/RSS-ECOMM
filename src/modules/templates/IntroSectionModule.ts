@@ -10,7 +10,7 @@ const introSection = `
       joy. Each cup contains a&nbsp;story that takes us&nbsp;to&nbsp;faraway corners of&nbsp;the planet, where green
       hills are covered with plantations and the air is&nbsp;filled with the aroma of&nbsp;freshly plucked leaves.
     </p>
-    <a href="" class="button button--black">about tea</a>
+    <a href="javascript:void(0)" class="button button--black">about tea</a>
   </div>
 </section>
 `;

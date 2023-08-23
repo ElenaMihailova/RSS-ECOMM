@@ -7,7 +7,7 @@ const orderSection = `
       We&nbsp;offer the best quality loose tea leaves for your business. With over 450 different loose tea varieties
       to&nbsp;choose from, we&nbsp;can make a&nbsp;sophisticated selection to&nbsp;suit your type of&nbsp;establishment.
     </p>
-    <a href="" class="button button--noWidth">get a free consultation</a>
+    <a href="javascript:void(0)" class="button button--noWidth">get a free consultation</a>
   </div>
 </section>
 `;

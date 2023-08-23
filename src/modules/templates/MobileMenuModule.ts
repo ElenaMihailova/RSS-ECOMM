@@ -11,22 +11,22 @@ const mobileMenuTemplate = (linksHtml: string): string => `
       <div class="input input--icon">
         <input id="search" type="text" name="Name" placeholder="SEARCH PRODUCTS" />
         <label for="search">
-          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
             <use xlink:href="./image/sprite.svg#search"></use>
           </svg>
         </label>
       </div>
       <ul class="menu__user">
         <li>
-          <div class="visually-hidden">
-            <a href="login.html">
-              <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+          <div>
+            <a href="login">
+              <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
                 <use xlink:href="./image/sprite.svg#person"></use>
               </svg>
               <p>USER PROFILE <span>We know you as a guest user</span></p>
           </div>
-          <div>
-            <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+          <div class="visually-hidden">
+            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
               <use xlink:href="./image/sprite.svg#logout"></use>
             </svg>
             <p>You don't even want a cup of tea?</p>
@@ -36,7 +36,7 @@ const mobileMenuTemplate = (linksHtml: string): string => `
         <li>
         <div>
           <a href="registration.html">
-            <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
               <use xlink:href="./image/sprite.svg#add_person"></use>
             </svg>
             <p>USER REGISTRATION</p>
@@ -44,9 +44,9 @@ const mobileMenuTemplate = (linksHtml: string): string => `
         </div>
         </li>
         <li>
-          <a href="#">
-            <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
-              <use xlink:href="./image/sprite.svg#corb"></use>
+          <a href="javascript:void(0)">
+            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+              <use xlink:href="./image/sprite.svg#card"></use>
             </svg>
             <p>YOUR BAG<span>(3) items have been added</span></p>
           </a>

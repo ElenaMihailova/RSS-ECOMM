@@ -6,9 +6,7 @@ export const addHTML = (tag: string, classNames: string[], html: string): HTMLEl
 };
 
 export const generateLink = (text: string, link: string): string => {
-  return `
-      <li>
-          <a class="navigation__link titleMonserrat titleMonserrat--small" href="${link}">${text}</a>
-      </li>
-  `;
+  return link === '#'
+    ? `<li><a class="navigation__link titleMonserrat titleMonserrat--small" onclick="event.preventDefault();" href="${link}">${text}</a></li>`
+    : `<li><a class="navigation__link titleMonserrat titleMonserrat--small" href="${link}">${text}</a></li>`;
 };

@@ -4,9 +4,10 @@ const desktopMenuTemplate = (linksHtml: string): string => `
     ${linksHtml}
   </ul>
   <ul class="menu__user menu__user--desktop">
+  <!-- TODO href -->
     <li>
-      <a href="" class="search">
-        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+      <a href="javascript:void(0)">
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
           <use xlink:href="./image/sprite.svg#search"></use>
         </svg>
         <div class="tooltip ">
@@ -15,18 +16,18 @@ const desktopMenuTemplate = (linksHtml: string): string => `
       </a>
     </li>
     <li>
-      <a href="" class="corb">
-        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
-          <use xlink:href="./image/sprite.svg#corb"></use>
+      <a href="javascript:void(0)">
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+          <use xlink:href="./image/sprite.svg#card"></use>
         </svg>
         <div class="tooltip ">
-          <p>Corb</p>
+          <p>Card</p>
       </div>
       </a>
     </li>
     <li>
-      <a href="" class="registration--desktop">
-        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+      <a href="registration" class="registration registration--desktop">
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
           <use xlink:href="./image/sprite.svg#add_person"></use>
         </svg>
         <div class="tooltip ">
@@ -35,8 +36,8 @@ const desktopMenuTemplate = (linksHtml: string): string => `
      </a>
     </li>
     <li>
-      <a href="" class="login login--desktop">
-        <svg class="login-svg" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+      <a href="login" class="login login--desktop">
+        <svg class="login-svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
           <use xlink:href="./image/sprite.svg#person"></use>
         </svg>
         <svg class="logout-svg visually-hidden" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">

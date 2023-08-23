@@ -33,4 +33,6 @@ input::placeholder {
 .input--icon label svg {
   width: 24px;
   height: 24px;
+  fill: none;
+  stroke: $color-primary;
 }

@@ -27,7 +27,7 @@ const featuresSection = `
         <p class="titleMonserrat titleMonserrat--small">SAMPLE FOR ALL TEAS</p>
       </li>
     </ul>
-    <a href="#" class="button">Learn more</a>
+    <a href="javascript:void(0)" class="button">Learn more</a>
   </div>
 </section>
 `;

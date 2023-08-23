@@ -14,7 +14,7 @@ const blogSection = `
             and brewing time. By&nbsp;using quality tea leaves and following temperature recommendations, you can enjoy
             the perfect tea every time.
           </p>
-          <a href="" class="button button--text">Read More</a>
+          <a href="javascript:void(0)" class="button button--text">Read More</a>
         </div>
       </li>
       <li class="blog__item article article--reverse">
@@ -28,11 +28,11 @@ const blogSection = `
             origin and processing of&nbsp;the leaves. Tea aromas, whether floral, fruity or&nbsp;earthy, are indicators
             of&nbsp;the quality and freshness of&nbsp;the beverage.
           </p>
-          <a href="" class="button button--text">Read More</a>
+          <a href="javascript:void(0)" class="button button--text">Read More</a>
         </div>
       </li>
     </ul>
-    <a href="" class="button button--blog">Browse all posts</a>
+    <a href="javascript:void(0)" class="button button--blog">Browse all posts</a>
   </div>
 </section>
 `;
