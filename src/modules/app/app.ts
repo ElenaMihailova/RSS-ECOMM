@@ -151,8 +151,9 @@ class App {
         callback: (): void => {
           if (this.main) {
             this.main.clearContent();
-            this.main.setContent(new ErrorView().render());
+            this.main.setContent(new ErrorView(this.router).render());
           }
+          this.homeBtnHandler();
         },
       },
     ];
@@ -225,6 +226,15 @@ class App {
     const indexBtn = getElement('.logo__link');
 
     indexBtn.addEventListener('click', (e: Event): void => {
+      e.preventDefault();
+      this.router.navigateFromButton(PageUrls.IndexPageUrl);
+    });
+  }
+
+  private homeBtnHandler(): void {
+    const homeBtn = getElement('.home--button');
+
+    homeBtn.addEventListener('click', (e: Event): void => {
       e.preventDefault();
       this.router.navigateFromButton(PageUrls.IndexPageUrl);
     });
