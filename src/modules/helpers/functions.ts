@@ -1,13 +1,13 @@
 import { AttrSet } from '../../types/types';
 
-export function createElement<T extends keyof HTMLElementTagNameMap>(elData: {
+export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
   tagName: T;
   classNames?: string[];
   attributes?: AttrSet[];
   text?: string;
   html?: string;
   parent?: HTMLElement;
-}): HTMLElementTagNameMap[T] {
+}): HTMLElementTagNameMap[T] => {
   const { tagName, classNames, attributes, text, parent, html } = elData;
 
   const element: HTMLElementTagNameMap[T] = document.createElement(tagName);
@@ -37,7 +37,7 @@ export function createElement<T extends keyof HTMLElementTagNameMap>(elData: {
   }
 
   return element;
-}
+};
 
 export const getElement = <T extends Element>(selector: string): T => {
   const element = document.querySelector<T>(selector);
@@ -96,6 +96,6 @@ export const parseLS = (item: string): number[] | null => {
   }
 };
 
-export function createSvgElement(className: string, id: string): string {
+export const createSvgElement = (className: string, id: string): string => {
   return `<svg class=${className} width='24' height='24' viewBox='0 0 24 24'><use href="./image/sprite.svg#${id}" /></svg>`;
-}
+};

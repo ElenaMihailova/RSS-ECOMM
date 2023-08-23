@@ -172,11 +172,16 @@ class App {
   }
 
   private registrationBtnHandler(): void {
-    if (getFromLS('token')) {
-      this.router.navigateFromButton(PageUrls.IndexPageUrl);
-    } else {
-      this.router.navigateFromButton(PageUrls.RegistrationPageUrl);
-    }
+    const registrationBtn = getElement('.registration--desktop');
+
+    registrationBtn.addEventListener('click', (e: Event): void => {
+      e.preventDefault();
+      if (getFromLS('token')) {
+        this.router.navigateFromButton(PageUrls.IndexPageUrl);
+      } else {
+        this.router.navigateFromButton(PageUrls.RegistrationPageUrl);
+      }
+    });
   }
 
   private indexBtnHandler(): void {
