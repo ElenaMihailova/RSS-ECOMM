@@ -4,8 +4,9 @@ const desktopMenuTemplate = (linksHtml: string): string => `
     ${linksHtml}
   </ul>
   <ul class="menu__user menu__user--desktop">
+  <!-- TODO href -->
     <li>
-      <a href="#" class="search">
+      <a href="javascript:void(0)">
         <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
           <use xlink:href="./image/sprite.svg#search"></use>
         </svg>
@@ -15,17 +16,17 @@ const desktopMenuTemplate = (linksHtml: string): string => `
       </a>
     </li>
     <li>
-      <a href="#" class="corb">
+      <a href="javascript:void(0)">
         <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-          <use xlink:href="./image/sprite.svg#corb"></use>
+          <use xlink:href="./image/sprite.svg#card"></use>
         </svg>
         <div class="tooltip ">
-          <p>Corb</p>
+          <p>Card</p>
       </div>
       </a>
     </li>
     <li>
-      <a href="registration.html" class="registration">
+      <a href="registration">
         <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
           <use xlink:href="./image/sprite.svg#add_person"></use>
         </svg>
@@ -35,7 +36,7 @@ const desktopMenuTemplate = (linksHtml: string): string => `
      </a>
     </li>
     <li>
-      <a href="" class="login login--desktop">
+      <a href="login" class="login login--desktop">
         <svg class="login-svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
           <use xlink:href="./image/sprite.svg#person"></use>
         </svg>

@@ -44,9 +44,9 @@ const mobileMenuTemplate = (linksHtml: string): string => `
         </div>
         </li>
         <li>
-          <a href="#">
+          <a href="javascript:void(0)">
             <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-              <use xlink:href="./image/sprite.svg#corb"></use>
+              <use xlink:href="./image/sprite.svg#card"></use>
             </svg>
             <p>YOUR BAG<span>(3) items have been added</span></p>
           </a>

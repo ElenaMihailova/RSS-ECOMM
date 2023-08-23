@@ -97,7 +97,7 @@ class LoginView extends PageView {
 
     const loginSubmit = createElement({
       tagName: 'button',
-      classNames: ['login__button'],
+      classNames: ['login__button', 'button'],
       attributes: [{ type: 'button' }],
       text: 'SIGN IN',
       parent: loginForm,

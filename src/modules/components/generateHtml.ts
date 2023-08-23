@@ -7,7 +7,11 @@ import footerTemplate from '../templates/FooterTemplate';
 
 export const createHeader = (navLinks: NavLink[]): string => {
   const linksHtml = navLinks
-    .map((link) => `<li><a class='titleMonserrat titleMonserrat--small' href="${link.href}">${link.text}</a></li>`)
+    .map((link) => {
+      return link.href === '#'
+        ? `<li><a class='titleMonserrat titleMonserrat--small' onclick="event.preventDefault();" href="${link.href}">${link.text}</a></li>`
+        : `<li><a class='titleMonserrat titleMonserrat--small' href="${link.href}">${link.text}</a></li>`;
+    })
     .join('');
 
   const mobilMenuHtml = mobileMenuTemplate(linksHtml);
