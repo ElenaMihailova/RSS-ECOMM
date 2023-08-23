@@ -21,14 +21,14 @@ class LoginView extends PageView {
       parent: loginWrapper,
     });
 
-    const loginTitle = createElement({
+    createElement({
       tagName: 'p',
       classNames: ['login__title'],
       text: 'Already a customer?',
       parent: loginContainer,
     });
 
-    const loginText = createElement({
+    createElement({
       tagName: 'p',
       classNames: ['login__text', 'form-item', 'form-item-element'],
       text: 'Welcome back! Sign in for faster checkout.',
@@ -48,17 +48,17 @@ class LoginView extends PageView {
       parent: loginForm,
     });
 
-    const loginEmailIcon = createElement({
+    createElement({
       tagName: 'div',
       classNames: ['login__email-icon'],
       html: createSvgElement('mail-icon', 'login-email-icon'),
       parent: loginEmailInputContainer,
     });
 
-    const loginEmailInput = createElement({
+    createElement({
       tagName: 'input',
       classNames: ['input', 'login__email-input', 'form-item-element'],
-      attributes: [{ 'data-type': 'email' }, { type: 'text' }, { value: '' }, { placeholder: 'Email Adress' }],
+      attributes: [{ 'data-type': 'login-email' }, { type: 'text' }, { value: '' }, { placeholder: 'Email Adress' }],
       parent: loginEmailInputContainer,
     });
 
@@ -68,14 +68,14 @@ class LoginView extends PageView {
       parent: loginForm,
     });
 
-    const loginPasswordIcon = createElement({
+    createElement({
       tagName: 'div',
       classNames: ['login__password-icon'],
       html: createSvgElement('password-icon', 'login-password-icon'),
       parent: loginPasswordInputContainer,
     });
 
-    const loginShowPasswordBtn = createElement({
+    createElement({
       tagName: 'button',
       classNames: ['login__showpassword-button'],
       text: 'SHOW',
@@ -83,7 +83,7 @@ class LoginView extends PageView {
       parent: loginPasswordInputContainer,
     });
 
-    const loginPasswordInput = createElement({
+    createElement({
       tagName: 'input',
       classNames: ['input', 'login__password-input'],
       attributes: [
@@ -95,7 +95,7 @@ class LoginView extends PageView {
       parent: loginPasswordInputContainer,
     });
 
-    const loginSubmit = createElement({
+    createElement({
       tagName: 'button',
       classNames: ['login__button', 'button'],
       attributes: [{ type: 'button' }],
@@ -109,7 +109,7 @@ class LoginView extends PageView {
       parent: loginWrapper,
     });
 
-    const registrationTitle = createElement({
+    createElement({
       tagName: 'p',
       classNames: ['registration__title'],
       text: 'New to our company?',
@@ -130,7 +130,7 @@ class LoginView extends PageView {
     ];
 
     optionsText.forEach((optionText) => {
-      const option = createElement({
+      createElement({
         tagName: 'li',
         classNames: ['registration__advantages-option'],
         text: optionText,
@@ -138,7 +138,7 @@ class LoginView extends PageView {
       });
     });
 
-    const createAccButton = createElement({
+    createElement({
       tagName: 'button',
       classNames: ['registration__button'],
       attributes: [{ type: 'button' }],

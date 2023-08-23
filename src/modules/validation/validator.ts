@@ -1,16 +1,17 @@
+import { AdressCategories, Countries, FieldNames, InputUserError, PostalCodes } from '../../types/enums';
 import { Data } from '../../types/types';
-import { getElement, getElementCollection } from '../helpers/functions';
+import { getElementCollection } from '../helpers/functions';
 import { removeError, removeHelp, createError, createHelp } from './validationHelpers';
 import {
   dateFormatLength,
   isDateFormat,
+  isPasswordFormat,
   isLessMinAge,
   isMaxLength,
   isOverMaxLength,
   hasLetters,
   hasNumbers,
   hasNumbersAndDots,
-  isWithinLengthLimit,
   hasLowerLetters,
   hasUpperLetters,
   isEmailFormat,
@@ -19,7 +20,6 @@ import {
   hasLSpaces,
   hasTSpaces,
 } from './validationChecks';
-import { FieldNames, InputUserError } from '../../types/enums';
 
 class Validator {
   private billingCountry: string | null;
@@ -47,7 +47,6 @@ class Validator {
   public validateRealTime(element: HTMLInputElement): void {
     this.removeLabels(element);
     const { value } = element;
-    const loginBtn = getElement('.login__button');
 
     if (value) {
       switch (element.dataset.type) {
@@ -64,25 +63,45 @@ class Validator {
           if (!hasNumbersAndDots(value)) {
             createError(element, InputUserError.DateSyntaxError);
           } else if (isMaxLength(value, dateFormatLength) && !isDateFormat(value)) {
-            createError(element, InputUserError.DataError);
+            createError(element, InputUserError.InvalidDataError);
           } else if (isMaxLength(value, dateFormatLength) && isDateFormat(value) && isLessMinAge(value, this.minAge)) {
             createError(element, `User must be at least ${this.minAge} years old`);
           } else if (isOverMaxLength(value, dateFormatLength)) {
-            createError(element, InputUserError.DateFormatError);
+            createError(element, InputUserError.TooManyCharactersError);
           }
 
           break;
-        case FieldNames.Email:
+        case FieldNames.Password:
+          if (isOverMaxLength(value, passwordFormatLength)) {
+            if (!isPasswordFormat(value)) {
+              removeError(element);
+              const passwordErors = [];
+
+              if (!hasNumbers(value)) {
+                passwordErors.push('1 number');
+              }
+
+              if (!hasLowerLetters(value)) {
+                passwordErors.push('1 lowercase letter');
+              }
+
+              if (!hasUpperLetters(value)) {
+                passwordErors.push('1 uppercase letter');
+              }
+
+              const errorString = `Must contain at least: ${passwordErors.join(', ')}`;
+              createError(element, errorString);
+            }
+          }
+          break;
+        case FieldNames.LoginEmail:
           if (!isEmailFormat(value)) {
             createError(element, InputUserError.EmailError);
-            loginBtn.setAttribute('disabled', 'disabled');
-          } else {
-            loginBtn.removeAttribute('disabled');
           }
           break;
         case FieldNames.LoginPassword:
           if (
-            isWithinLengthLimit(value, passwordFormatLength) ||
+            isLessLengthLimit(value, passwordFormatLength) ||
             hasLSpaces(value) ||
             hasTSpaces(value) ||
             !hasLowerLetters(value) ||
@@ -90,12 +109,9 @@ class Validator {
             !hasUpperLetters(value)
           ) {
             createError(element, InputUserError.PasswordError);
-            loginBtn.setAttribute('disabled', 'disabled');
-          } else {
-            loginBtn.removeAttribute('disabled');
           }
           break;
-        case FieldNames.PostaCode:
+        case FieldNames.PostalCode:
           if (element.classList.contains('billing-adress__input')) {
             this.currentValidateCountry = this.billingCountry;
           } else if (element.classList.contains('shipping-adress__input')) {
@@ -120,6 +136,30 @@ class Validator {
     }
   }
 
+  public setCountryFromSelectValue(category: string | null, element: HTMLSelectElement): void {
+    removeError(element);
+
+    if (category === AdressCategories.Billing) {
+      this.billingCountry = element.value;
+    } else if (category === AdressCategories.Shipping) {
+      this.shippingCountry = element.value;
+    }
+
+    switch (element.value) {
+      case Countries.Belarus:
+        this.postalCodeLength = PostalCodes.Belarus;
+        break;
+      case Countries.Spain:
+        this.postalCodeLength = PostalCodes.Spain;
+        break;
+      case Countries.Netherlands:
+        this.postalCodeLength = PostalCodes.Netherlands;
+        break;
+      default:
+        this.postalCodeLength = null;
+    }
+  }
+
   public validateFocusOut(element: HTMLInputElement): void {
     removeHelp(element);
     const { value } = element;
@@ -127,7 +167,9 @@ class Validator {
 
     if (!value) {
       this.removeLabels(element);
+      return;
     }
+
     switch (element.dataset.type) {
       case FieldNames.Email:
         if (!isEmailFormat(value)) {
@@ -136,16 +178,16 @@ class Validator {
         break;
       case FieldNames.Age:
         if (isLessLengthLimit(value, dateFormatLength) && parent && !parent.classList.contains('form-item--error')) {
-          createError(element, InputUserError.BirthdayError);
+          createError(element, InputUserError.BirthdayFormatError);
         }
         break;
       case FieldNames.Password:
-        if (isWithinLengthLimit(value, passwordFormatLength)) {
+        if (isLessLengthLimit(value, passwordFormatLength)) {
           removeError(element);
-          createError(element, InputUserError.PasswordError);
+          createError(element, InputUserError.PasswordLengthError);
         }
         break;
-      case FieldNames.PostaCode:
+      case FieldNames.PostalCode:
         if (element.classList.contains('billing-adress__input')) {
           this.currentValidateCountry = this.billingCountry;
         } else if (element.classList.contains('shipping-adress__input')) {
@@ -163,54 +205,6 @@ class Validator {
         break;
       default:
     }
-  }
-
-  public isValidForm(): boolean {
-    let isValid = true;
-
-    const formElements = getElementCollection('.form-item-element');
-
-    formElements.forEach((element) => {
-      const formElement = element as HTMLInputElement | HTMLSelectElement;
-
-      if (formElement.value === '' && !formElement.getAttribute('disabled')) {
-        createError(formElement, InputUserError.FieldError);
-      }
-      if (formElement.value === '' && formElement.classList.contains('select')) {
-        createError(formElement, InputUserError.CountryError);
-      }
-
-      if (formElement.closest('.form-item')?.classList.contains('.form-item--error') || formElement.value === '') {
-        isValid = false;
-      }
-    });
-    return isValid;
-  }
-
-  public validateSubmit(): void {
-    this.isValidForm();
-  }
-
-  public createCommonData(elements: NodeListOf<Element>): Data {
-    const commonData: Data = {};
-
-    elements.forEach((element) => {
-      const commonDataElement = element as HTMLInputElement;
-      commonData[`${commonDataElement.getAttribute('data-type')}`] = commonDataElement.value;
-    });
-
-    return commonData;
-  }
-
-  public createAdressData(elements: NodeListOf<Element>): Data {
-    const adressData: Data = {};
-
-    elements.forEach((element) => {
-      const adressDataElement = element as HTMLInputElement | HTMLSelectElement;
-      adressData[`${adressDataElement.getAttribute('data-type')}`] = adressDataElement.value;
-    });
-
-    return adressData;
   }
 }
 

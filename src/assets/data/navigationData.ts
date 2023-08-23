@@ -1,8 +1,8 @@
 export const headerLinks = [
-  { text: 'tea collections', href: '/#tea_collections' },
+  { text: 'tea collections', href: '#' },
   { text: 'accessories', href: '#' },
-  { text: 'blog', href: '/#blog' },
-  { text: 'contact us', href: '/#contact' },
+  { text: 'blog', href: '#' },
+  { text: 'contact us', href: '#' },
 ];
 
 export const footerLinks = {
@@ -24,7 +24,7 @@ export const footerLinks = {
   customerServiceLinks: [
     {
       text: `Ordering and payment`,
-      href: '#',
+      href: '',
     },
     { text: 'Delivery', href: '#' },
     { text: `Terms & Conditions`, href: '#' },

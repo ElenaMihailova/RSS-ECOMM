@@ -4,7 +4,7 @@ import {
   type HttpMiddlewareOptions,
   PasswordAuthMiddlewareOptions,
   Client,
-  TokenCache,
+  AuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 
 const projectKey = process.env.CTP_PROJECT_KEY as string;
@@ -16,7 +16,25 @@ const httpMiddlewareOptions: HttpMiddlewareOptions = {
   fetch,
 };
 
-const buildClientWithPasswordFlow = (options: PasswordAuthMiddlewareOptions): Client => {
+const authMiddlewareOptions: AuthMiddlewareOptions = {
+  host: process.env.CTP_AUTH_URL as string,
+  projectKey: process.env.CTP_PROJECT_KEY as string,
+  credentials: {
+    clientId: process.env.CTP_CLIENT_ID as string,
+    clientSecret: process.env.CTP_CLIENT_SECRET as string,
+  },
+  scopes,
+  fetch,
+};
+
+export const ctpClient = new ClientBuilder()
+  .withProjectKey(projectKey) // .withProjectKey() is not required if the projectKey is included in authMiddlewareOptions
+  .withClientCredentialsFlow(authMiddlewareOptions)
+  .withHttpMiddleware(httpMiddlewareOptions)
+  .withLoggerMiddleware() // Include middleware for logging
+  .build();
+
+export const buildClientWithPasswordFlow = (options: PasswordAuthMiddlewareOptions): Client => {
   const client = new ClientBuilder()
     .withProjectKey(projectKey) // .withProjectKey() is not required if the projectKey is included in authMiddlewareOptions
     .withPasswordFlow(options)
@@ -25,5 +43,3 @@ const buildClientWithPasswordFlow = (options: PasswordAuthMiddlewareOptions): Cl
 
   return client;
 };
-
-export default buildClientWithPasswordFlow;
