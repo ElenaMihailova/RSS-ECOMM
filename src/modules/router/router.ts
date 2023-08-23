@@ -28,6 +28,7 @@ class Router {
     this.navigate(url);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private navigate(url: string): void {
     const urlString = window.location.pathname.slice(1);
 

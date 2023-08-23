@@ -1,0 +1,250 @@
+@import '../../../style/sass/variables.scss';
+$color-error: #ff0000;
+$font-Montserrat: Montserrat;
+
+.registration-page {
+  font-family: Montserrat;
+  color: $color-primary;
+}
+
+.registration-page__container {
+  display: flex;
+  justify-content: center;
+  padding: 72px;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.registration-page__content {
+  max-width: 1280px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.registration-form-container {
+  background-color: $color-background-variant;
+  padding: 36px 36px 48px 36px;
+  max-width: 552px;
+  width: 100%;
+}
+
+.login-title,
+.form-title {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.login-title__title,
+.form-title__title {
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 32px;
+  letter-spacing: 0.11px;
+}
+
+.form-description {
+  font-weight: 400;
+  font-size: 16px;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+}
+
+.registration-form {
+  padding-top: 19px;
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+}
+
+.adresses-container,
+.adress-container,
+.common-data-container {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.adress-container,
+.common-data-container {
+  padding-top: 10px;
+}
+
+.adress-container__description {
+  font-weight: 500;
+}
+
+.form-item {
+  position: relative;
+  display: flex;
+  height: 60px;
+  flex-direction: column;
+}
+
+.registration-form__input {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.registration-form__input::placeholder {
+  padding: 0px;
+}
+
+.registration-form__input[has-icon='true'] {
+  padding-left: 43px;
+}
+
+.registration-form__input,
+.select {
+  width: 100%;
+  max-width: 476px;
+  height: 56px;
+  padding-left: 16px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+  cursor: auto;
+}
+
+.select {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-bottom: 0px;
+}
+
+.input-icon {
+  position: absolute;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+  padding-top: 4px;
+}
+
+.input-icon[position='start'] {
+  left: 10px;
+  top: 12px;
+}
+
+.name-input-icon,
+.surname-input-icon {
+  background: url(../../../assets/image/sprite.svg#person);
+}
+
+.age-input-icon {
+  background: url(../../../assets/image/calendar-icon.svg);
+}
+
+.email-input-icon {
+  background: url(../../../assets/image/test/mail.svg);
+}
+
+.password-input-icon {
+  cursor: pointer;
+  background: url(../../../assets/image/password-icon.svg);
+}
+
+.password-input-btn {
+  background-color: transparent;
+  border: none;
+  position: absolute;
+  background-color: $color-background;
+  top: 20px;
+  right: 20px;
+  padding: 1px 0px;
+  z-index: 5;
+  font-size: 0.9rem;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+input[type='checkbox']:disabled {
+  cursor: default;
+}
+
+.adress-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 10px 0px;
+}
+
+.adress-checkbox {
+  line-height: 1;
+}
+
+.registration-form__button {
+  width: 100%;
+  max-width: 476px;
+  height: 66px;
+  margin-top: 20px;
+}
+
+.form-item--help,
+.form-item--error {
+  margin-bottom: 13px;
+  padding: 57px 0px 20px 3px;
+}
+
+.form-item label {
+  position: absolute;
+  display: block;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.16px;
+  padding-top: 6px;
+}
+
+.form-item--error .input,
+.form-item--error .select {
+  border: 2px solid $color-error;
+  outline: none;
+}
+
+.form-item--error label {
+  color: $color-error;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 456px;
+  padding: 32px 28px 48px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  height: 240px;
+  background-color: $color-background-variant;
+}
+
+.login-container__button {
+  width: 100%;
+  padding: 10px 24px;
+  max-width: 392px;
+  height: 56px;
+}
+
+@media (max-width: 1200px) {
+  .registration-page__content {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 550px) {
+  .registration-page__container {
+    padding-right: calc((100vw - 390px) / (550 - 390) * (68 - 0) + 0px);
+    padding-left: calc((100vw - 390px) / (550 - 390) * (68 - 0) + 0px);
+  }
+}

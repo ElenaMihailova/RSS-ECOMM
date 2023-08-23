@@ -4,6 +4,11 @@ export const getDateFromString = (dateString: string): Date => {
   return new Date(dateString.replace(/(\d+).(\d+).(\d+)/, '$3/$2/$1'));
 };
 
+export const getDateISOStringWithoutTime = (date: Date): string => {
+  const ISOstring = date.toISOString();
+  return ISOstring.slice(0, ISOstring.indexOf('T'));
+};
+
 export const getAgeFromDateString = (dateString: string): number => {
   const currentDate = new Date();
   const currentDateWithoutTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());

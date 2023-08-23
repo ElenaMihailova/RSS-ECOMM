@@ -38,9 +38,6 @@ export const isOverMinAge = (string: string, minAge: number): boolean => Boolean
 
 export const isLessMinAge = (string: string, minAge: number): boolean => Boolean(getAgeFromDateString(string) < minAge);
 
-export const isWithinLengthLimit = (string: string, maxLength: number): boolean =>
-  Boolean(string.length > 0 && string.length < maxLength);
-
 export const isLessLengthLimit = (string: string, maxLength: number): boolean =>
   Boolean(string.length > 0 && string.length < maxLength);
 

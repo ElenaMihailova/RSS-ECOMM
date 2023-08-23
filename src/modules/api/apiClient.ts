@@ -1,8 +1,29 @@
-import Toastify from 'toastify-js';
-import { createApiBuilderFromCtpClient, CustomerSignInResult } from '@commercetools/platform-sdk';
-import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
+import { CustomerSignInResult, MyCustomerDraft, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
-import buildClientWithPasswordFlow from './buildClient';
+import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
+import Toastify from 'toastify-js';
+import { buildClientWithPasswordFlow, ctpClient } from './buildClient';
+
+const apiProjectRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
+  projectKey: process.env.CTP_PROJECT_KEY as string,
+});
+
+export const createCustomer = async (data: MyCustomerDraft): Promise<MyCustomerDraft | Error> => {
+  try {
+    const res = await apiProjectRoot
+      .me()
+      .signup()
+      .post({
+        body: data,
+      })
+      .execute();
+    const resData = await res.body.customer;
+    return resData as MyCustomerDraft;
+  } catch (err) {
+    console.error();
+    return err as Error;
+  }
+};
 
 export const createApiRootWithPasswordFlow = (options: PasswordAuthMiddlewareOptions): ByProjectKeyRequestBuilder => {
   const apiRoot = createApiBuilderFromCtpClient(buildClientWithPasswordFlow(options)).withProjectKey({
@@ -17,7 +38,7 @@ export const loginUser = async (
   password: string,
 ): Promise<CustomerSignInResult | object> => {
   let resData = {};
-  const res = await root
+  await root
     .login()
     .post({
       body: {

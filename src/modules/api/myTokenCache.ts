@@ -1,8 +1,4 @@
-import {
-  TokenCache,
-  TokenCacheOptions,
-  TokenStore,
-} from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
+import { TokenCache, TokenStore } from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
 
 class MyTokenCache implements TokenCache {
   public myCaсhe: TokenStore = {
@@ -11,11 +7,11 @@ class MyTokenCache implements TokenCache {
     refreshToken: '',
   };
 
-  public set(cache: TokenStore, options?: TokenCacheOptions): void {
+  public set(cache: TokenStore): void {
     this.myCaсhe = cache;
   }
 
-  public get(options?: TokenCacheOptions): TokenStore {
+  public get(): TokenStore {
     return this.myCaсhe;
   }
 }

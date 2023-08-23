@@ -25,7 +25,7 @@ const desktopMenuTemplate = (linksHtml: string): string => `
       </a>
     </li>
     <li>
-      <a href="registration.html" class="registration">
+      <a href="" class="registration--desktop">
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
           <use xlink:href="./image/sprite.svg#add_person"></use>
         </svg>

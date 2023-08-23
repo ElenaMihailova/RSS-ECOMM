@@ -13,6 +13,7 @@ import createLayout from '../components/createLayout';
 import { headerLinks, footerLinks } from '../../assets/data/navigationData';
 import mainContent from '../templates/mainContent';
 import setupHeaderListeners from '../components/setupHeaderListeners';
+import RegistrationController from '../pages/registration/registrationPageController';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -27,14 +28,18 @@ class App {
 
   private footerData: FooterLinksType = footerLinks;
 
+  private registrationController: RegistrationController | null;
+
   constructor() {
     this.main = null;
     this.loginController = null;
+    this.registrationController = null;
     const routes = this.createRoutes();
     this.router = new Router(routes);
     this.createView();
     this.indexBtnHandler();
     this.loginBtnHandler();
+    this.registrationBtnHandler();
   }
 
   private createView(): void {
@@ -88,7 +93,13 @@ class App {
         callback: (): void => {
           if (this.main) {
             this.main.clearContent();
-            this.main.setContent(new RegistrationView().render());
+            if (getFromLS('token')) {
+              this.router.navigateFromButton('index');
+              return;
+            }
+            const registrationView = new RegistrationView();
+            this.main.setViewContent(registrationView);
+            this.registrationController = new RegistrationController(this.router, registrationView);
           }
         },
       },
@@ -125,10 +136,13 @@ class App {
     const loginSvg = getElement('.login-svg');
     const logoutSvg = getElement('.logout-svg');
     const tooltip = getElement('.tooltip--login');
+    const registrationBtn = getElement('.registration--desktop');
+    const registrationContainer = registrationBtn.closest('li');
 
     loginBtn.addEventListener('click', (e: Event): void => {
       e.preventDefault();
       if (getFromLS('token')) {
+        registrationContainer?.classList.remove('visually-hidden');
         logoutSvg.classList.add('visually-hidden');
         loginSvg.classList.remove('visually-hidden');
         tooltip.textContent = 'LOG IN';
@@ -138,6 +152,14 @@ class App {
       }
     });
   }
+
+
+  private registrationBtnHandler(): void {
+    if (getFromLS('token')) {
+      this.router.navigateFromButton(PageUrls.IndexPageUrl);
+    } else {
+      this.router.navigateFromButton(PageUrls.RegistrationPageUrl);
+    }
 
   private indexBtnHandler(): void {
     const indexBtn = getElement('.logo__link');
