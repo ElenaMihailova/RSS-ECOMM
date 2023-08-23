@@ -126,6 +126,7 @@ $font-Montserrat: Montserrat;
   top: 0;
   left: 0;
   margin-bottom: 0px;
+  color: $color-primary;
 }
 
 .input-icon {
@@ -166,6 +167,7 @@ $font-Montserrat: Montserrat;
   background-color: transparent;
   border: none;
   position: absolute;
+  color: $color-primary;
   background-color: $color-background;
   top: 20px;
   right: 20px;
