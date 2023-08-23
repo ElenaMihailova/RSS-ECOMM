@@ -67,14 +67,18 @@ class App {
     const loginSvg = getElement('.login-svg');
     const logoutSvg = getElement('.logout-svg');
     const tooltip = getElement('.tooltip--login');
+    const registrationBtn = getElement('.registration--desktop');
+    const registrationContainer = registrationBtn.closest('li');
 
     if (getFromLS('token')) {
       loginSvg.classList.add('visually-hidden');
       logoutSvg.classList.remove('visually-hidden');
+      registrationContainer?.classList.add('visually-hidden');
       tooltip.textContent = 'LOG OUT';
     } else {
       logoutSvg.classList.add('visually-hidden');
       loginSvg.classList.remove('visually-hidden');
+      registrationContainer?.classList.remove('visually-hidden');
       tooltip.textContent = 'LOG IN';
     }
 
