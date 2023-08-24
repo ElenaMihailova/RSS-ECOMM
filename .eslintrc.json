@@ -22,6 +22,7 @@
     "no-debugger": "off",
     "no-console": "off",
     "class-methods-use-this": "off",
+    "curly": ["error", "all"],
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/array-type": [
