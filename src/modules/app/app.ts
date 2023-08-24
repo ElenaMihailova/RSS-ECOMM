@@ -206,20 +206,17 @@ class App {
 
   private indexBtnHandler(): void {
     const indexBtn = getElement('.logo__link');
-
-    indexBtn.addEventListener('click', (e: Event): void => {
-      e.preventDefault();
-      this.router.navigateFromButton(PageUrls.IndexPageUrl);
-    });
+    indexBtn.addEventListener('click', this.btnMoveToIndexHandler.bind(this));
   }
 
   private homeBtnHandler(): void {
     const homeBtn = getElement('.home--button');
+    homeBtn.addEventListener('click', this.btnMoveToIndexHandler.bind(this));
+  }
 
-    homeBtn.addEventListener('click', (e: Event): void => {
-      e.preventDefault();
-      this.router.navigateFromButton(PageUrls.IndexPageUrl);
-    });
+  private btnMoveToIndexHandler(e: Event): void {
+    e.preventDefault();
+    this.router.navigateFromButton(PageUrls.IndexPageUrl);
   }
 }
 
