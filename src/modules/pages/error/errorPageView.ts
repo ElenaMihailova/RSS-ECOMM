@@ -1,6 +1,4 @@
-import { PageUrls } from '../../../assets/data/constants';
 import PageView from '../../core/pageView';
-import { getElement } from '../../helpers/functions';
 import Router from '../../router/router';
 import errorMarkup from '../../templates/ErrorTemplate';
 

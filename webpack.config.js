@@ -84,7 +84,6 @@ module.exports = ({ develop }) => ({
     new SpriteLoaderPlugin(),
     new webpack.DefinePlugin({
       'process.env': JSON.stringify(dotenv.parsed),
-      // 'process.env.NODE_ENV': JSON.stringify(isDevelopment? 'development':'production'),
     }),
     new SpriteLoaderPlugin(),
     ...esLintPlugin(develop),
