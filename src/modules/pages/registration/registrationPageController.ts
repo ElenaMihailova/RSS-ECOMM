@@ -7,6 +7,7 @@ import {
   CountryCodes,
   FieldNames,
   InputUserError,
+  SubmitMessages,
 } from '../../../types/enums';
 import { BaseAdress, CustomerData, FormAdressData } from '../../../types/interfaces';
 import { createApiRootWithPasswordFlow, createCustomer, loginUser } from '../../api/apiClient';
@@ -293,7 +294,7 @@ class RegistrationController {
         const errorMessage = `${responce.message}`;
 
         if (errorMessage.match(emailWord)) {
-          const inputErrorMessage = 'There is already an existing customer with the provided email';
+          const inputErrorMessage = InputUserError.ExistingEmailError;
           createError(emailInput, inputErrorMessage);
         }
 
@@ -302,7 +303,7 @@ class RegistrationController {
         return;
       }
 
-      const succesResponceMessage = 'Succesfully registered';
+      const succesResponceMessage = SubmitMessages.SuccesfullyRegistered;
 
       this.renderPopup(true, succesResponceMessage);
 

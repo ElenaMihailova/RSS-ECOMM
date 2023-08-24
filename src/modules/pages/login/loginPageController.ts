@@ -8,6 +8,7 @@ import { PageUrls } from '../../../assets/data/constants';
 import { getElement, setToLS } from '../../helpers/functions';
 import Router from '../../router/router';
 import Validator from '../../validation/validator';
+import { SubmitMessages } from '../../../types/enums';
 
 class LoginController {
   private validator: Validator;
@@ -73,7 +74,7 @@ class LoginController {
     loginBtn.addEventListener('click', async (): Promise<void> => {
       if (emailInput.value === '' || passwordInput.value === '') {
         Toastify({
-          text: 'Please enter your username and password',
+          text: SubmitMessages.EmptyLoginFields,
           className: 'toastify toastify-error',
           duration: 4000,
           newWindow: true,
