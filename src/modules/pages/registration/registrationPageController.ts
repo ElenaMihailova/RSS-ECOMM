@@ -196,12 +196,12 @@ class RegistrationController {
     adressDataElements.forEach((element) => {
       const data = baseAdressData as BaseAdress;
       const adressDataElement = element as HTMLInputElement | HTMLSelectElement;
-      const country = this.getCountry(adressDataElement.value);
+      const countryCode = this.getCountryCode(adressDataElement.value);
 
       switch (adressDataElement.getAttribute('data-type')) {
         case FieldNames.Country:
-          if (country) {
-            data.country = country;
+          if (countryCode) {
+            data.country = countryCode;
           }
           break;
         case FieldNames.City:
@@ -243,18 +243,18 @@ class RegistrationController {
     return adressData;
   }
 
-  public getCountry(value: string): string | undefined {
-    let country;
+  public getCountryCode(value: string): string | undefined {
+    let countryCode;
 
     if (value === Countries.Belarus) {
-      country = CountryCodes.Belarus;
+      countryCode = CountryCodes.Belarus;
     } else if (value === Countries.Spain) {
-      country = CountryCodes.Spain;
+      countryCode = CountryCodes.Spain;
     } else if (value === Countries.Netherlands) {
-      country = CountryCodes.Netherlands;
+      countryCode = CountryCodes.Netherlands;
     }
 
-    return country;
+    return countryCode;
   }
 
   public isValidForm(): boolean {
