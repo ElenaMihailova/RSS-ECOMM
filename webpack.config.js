@@ -27,7 +27,7 @@ module.exports = ({ develop }) => ({
   devtool: develop ? 'source-map' : false,
 
   entry: {
-    main: path.resolve(__dirname, './src/index.ts'),
+    main: path.resolve(__dirname, 'src', 'index.ts'),
   },
   module: {
     rules: [
@@ -61,12 +61,13 @@ module.exports = ({ develop }) => ({
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: '[name].js',
+    publicPath: '/',
     assetModuleFilename: 'assets/[name][ext]',
   },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'webpack Boilerplate',
-      template: path.resolve(__dirname, './src/index.html'),
+      template: path.resolve(__dirname, 'src' , 'index.html'),
       filename: 'index.html',
     }),
     new MiniCssExtractPlugin({
