@@ -24,6 +24,7 @@ import '../../../style/toastify.css';
 import { PageUrls } from '../../../assets/data/constants';
 import { emailWord } from '../../validation/regExpVariables';
 import MyTokenCache from '../../api/myTokenCache';
+import Controller from '../../controller/controller';
 
 class RegistrationController {
   private validator: Validator;
@@ -295,48 +296,49 @@ class RegistrationController {
 
       this.renderPopup(true, succesResponceMessage);
 
-      const tokenCache = new MyTokenCache();
-
       const email = emailInput.value;
       const password = passwordInput.value;
 
-      const options: PasswordAuthMiddlewareOptions = {
-        host: process.env.CTP_AUTH_URL as string,
-        projectKey: process.env.CTP_PROJECT_KEY as string,
-        credentials: {
-          clientId: process.env.CTP_CLIENT_ID as string,
-          clientSecret: process.env.CTP_CLIENT_SECRET as string,
-          user: {
-            username: email,
-            password,
-          },
-        },
-        tokenCache,
-        scopes: process.env.CTP_SCOPES?.split(' ') as string[],
-        fetch,
-      };
+      // const tokenCache = new MyTokenCache();
+      // const options: PasswordAuthMiddlewareOptions = {
+      //   host: process.env.CTP_AUTH_URL as string,
+      //   projectKey: process.env.CTP_PROJECT_KEY as string,
+      //   credentials: {
+      //     clientId: process.env.CTP_CLIENT_ID as string,
+      //     clientSecret: process.env.CTP_CLIENT_SECRET as string,
+      //     user: {
+      //       username: email,
+      //       password,
+      //     },
+      //   },
+      //   tokenCache,
+      //   scopes: process.env.CTP_SCOPES?.split(' ') as string[],
+      //   fetch,
+      // };
 
-      const apiRoot = createApiRootWithPasswordFlow(options);
-      const loginSvg = getElement('.login-svg');
-      const logoutSvg = getElement('.logout-svg');
-      const tooltip = getElement('.tooltip--login');
-      const registrationBtn = getElement('.registration--desktop');
-      const registrationContainer = registrationBtn.closest('li');
-      const registrationMobileBtn = getElement('.registration--mobile');
-      const registrationMobileContainer = registrationMobileBtn.closest('a');
+      // const apiRoot = createApiRootWithPasswordFlow(options);
+      // const loginSvg = getElement('.login-svg');
+      // const logoutSvg = getElement('.logout-svg');
+      // const tooltip = getElement('.tooltip--login');
+      // const registrationBtn = getElement('.registration--desktop');
+      // const registrationContainer = registrationBtn.closest('li');
+      // const registrationMobileBtn = getElement('.registration--mobile');
+      // const registrationMobileContainer = registrationMobileBtn.closest('a');
 
-      const login = await loginUser(apiRoot, email, password);
+      // const login = await loginUser(apiRoot, email, password);
 
-      if (Object.keys(login).length) {
-        const tokenInfo = tokenCache.get();
-        setToLS('token', tokenInfo.token);
-        registrationContainer?.classList.add('visually-hidden');
-        registrationMobileContainer?.classList.add('visually-hidden');
-        loginSvg.classList.add('visually-hidden');
-        logoutSvg.classList.remove('visually-hidden');
-        tooltip.textContent = 'LOG OUT';
-        this.router.navigateFromButton(PageUrls.IndexPageUrl);
-      }
+      // if (Object.keys(login).length) {
+      //   const tokenInfo = tokenCache.get();
+      //   setToLS('token', tokenInfo.token);
+      //   registrationContainer?.classList.add('visually-hidden');
+      //   registrationMobileContainer?.classList.add('visually-hidden');
+      //   loginSvg.classList.add('visually-hidden');
+      //   logoutSvg.classList.remove('visually-hidden');
+      //   tooltip.textContent = 'LOG OUT';
+      //   this.router.navigateFromButton(PageUrls.IndexPageUrl);
+      // }
+
+      Controller.loginAction(email, password, this.router);
 
       this.router.navigateFromButton(PageUrls.IndexPageUrl);
     }

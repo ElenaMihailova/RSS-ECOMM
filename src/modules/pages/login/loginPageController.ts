@@ -8,6 +8,7 @@ import { PageUrls } from '../../../assets/data/constants';
 import { getElement, setToLS } from '../../helpers/functions';
 import Router from '../../router/router';
 import Validator from '../../validation/validator';
+import Controller from '../../controller/controller';
 
 class LoginController {
   private validator: Validator;
@@ -89,45 +90,7 @@ class LoginController {
       }
 
       if (emailInput.value !== '' && passwordInput.value !== '') {
-        const email = emailInput.value;
-        const password = passwordInput.value;
-        const tokenCache = new MyTokenCache();
-        const options: PasswordAuthMiddlewareOptions = {
-          host: process.env.CTP_AUTH_URL as string,
-          projectKey: process.env.CTP_PROJECT_KEY as string,
-          credentials: {
-            clientId: process.env.CTP_CLIENT_ID as string,
-            clientSecret: process.env.CTP_CLIENT_SECRET as string,
-            user: {
-              username: email,
-              password,
-            },
-          },
-          tokenCache,
-          scopes: process.env.CTP_SCOPES?.split(' ') as string[],
-          fetch,
-        };
-
-        const apiRoot = createApiRootWithPasswordFlow(options);
-        const login = await loginUser(apiRoot, email, password);
-        const loginSvg = getElement('.login-svg');
-        const logoutSvg = getElement('.logout-svg');
-        const tooltip = getElement('.tooltip--login');
-        const registrationBtn = getElement('.registration--desktop');
-        const registrationContainer = registrationBtn.closest('li');
-        const registrationMobileBtn = getElement('.registration--mobile');
-        const registrationMobileContainer = registrationMobileBtn.closest('a');
-
-        if (Object.keys(login).length) {
-          const tokenInfo = tokenCache.get();
-          setToLS('token', tokenInfo.token);
-          this.router.navigateFromButton(PageUrls.IndexPageUrl);
-          loginSvg.classList.add('visually-hidden');
-          registrationContainer?.classList.add('visually-hidden');
-          registrationMobileContainer?.classList.add('visually-hidden');
-          logoutSvg.classList.remove('visually-hidden');
-          tooltip.textContent = 'LOG OUT';
-        }
+        Controller.loginAction(emailInput.value, passwordInput.value, this.router);
       }
     });
   }

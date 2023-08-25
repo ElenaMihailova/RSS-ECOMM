@@ -8,28 +8,21 @@ class Router {
     this.routes = routes;
 
     window.addEventListener('DOMContentLoaded', (): void => {
-      const path = window.location.pathname.slice(1);
-      this.navigateFromBrowser(path);
+      this.navigate();
     });
 
     window.addEventListener('popstate', (): void => {
-      const path = window.location.pathname.slice(1);
-      this.navigateFromBrowser(path);
+      this.navigate();
     });
   }
 
   public navigateFromButton(url: string): void {
     window.history.pushState({}, '', `/${url}`);
 
-    this.navigate(url);
+    this.navigate();
   }
 
-  private navigateFromBrowser(url: string): void {
-    this.navigate(url);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private navigate(url: string): void {
+  private navigate(): void {
     const urlString = window.location.pathname.slice(1);
 
     const res = { path: '', resource: '' };
