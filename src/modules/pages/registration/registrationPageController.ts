@@ -1,4 +1,3 @@
-import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import Toastify from 'toastify-js';
 import {
   AdressCategories,
@@ -10,8 +9,8 @@ import {
   SubmitMessages,
 } from '../../../types/enums';
 import { BaseAdress, CustomerData, FormAdressData } from '../../../types/interfaces';
-import { createApiRootWithPasswordFlow, createCustomer, loginUser } from '../../api/apiClient';
-import { getElement, getElementCollection, setToLS } from '../../helpers/functions';
+import { createCustomer } from '../../api/apiClient';
+import { getElement, getElementCollection } from '../../helpers/functions';
 import Router from '../../router/router';
 import {
   createError,
@@ -24,7 +23,6 @@ import RegistrationView from './registrationPageView';
 import '../../../style/toastify.css';
 import { PageUrls } from '../../../assets/data/constants';
 import { emailWord } from '../../validation/regExpVariables';
-import MyTokenCache from '../../api/myTokenCache';
 import Controller from '../../controller/controller';
 
 class RegistrationController {

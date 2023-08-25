@@ -1,18 +1,11 @@
 import './loginPage.scss';
 import '../../../style/toastify.css';
 import Toastify from 'toastify-js';
-import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2/dist/declarations/src/types/sdk';
-import { createApiRootWithPasswordFlow, loginUser } from '../../api/apiClient';
-import MyTokenCache from '../../api/myTokenCache';
-import { PageUrls } from '../../../assets/data/constants';
 import { getElement, setToLS } from '../../helpers/functions';
 import Router from '../../router/router';
 import Validator from '../../validation/validator';
-<<<<<<< HEAD
 import Controller from '../../controller/controller';
-=======
 import { SubmitMessages } from '../../../types/enums';
->>>>>>> df9cd999ee107f5ba7dd2b2925ab71ef822597e2
 
 class LoginController {
   private validator: Validator;
