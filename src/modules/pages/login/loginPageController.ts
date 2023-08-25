@@ -8,6 +8,7 @@ import { PageUrls } from '../../../assets/data/constants';
 import { getElement, setToLS } from '../../helpers/functions';
 import Router from '../../router/router';
 import Validator from '../../validation/validator';
+import { SubmitMessages } from '../../../types/enums';
 
 class LoginController {
   private validator: Validator;
@@ -31,31 +32,27 @@ class LoginController {
     const passwordContainer: HTMLDivElement = getElement('.login__password-input-container');
     const passwordInput: HTMLInputElement = getElement('.login__password-input');
     const showPasswordButton: HTMLButtonElement = getElement('.login__showpassword-button');
-    const loginBtn: HTMLButtonElement = getElement('.login__button');
 
-    emailInput.addEventListener('input', (e: Event) => {
-      e.preventDefault();
-      this.validateInput(emailInput);
-      if (document.querySelector('.form-item--error')) {
-        loginBtn.setAttribute('disabled', 'disabled');
-      } else {
-        loginBtn.removeAttribute('disabled');
-      }
-    });
+    emailInput.addEventListener('input', (e) => this.toggleLoginBtnDisable(e, emailInput));
 
-    passwordContainer.addEventListener('input', (e: Event): void => {
-      e.preventDefault();
-      this.validateInput(passwordInput);
-      if (document.querySelector('.form-item--error')) {
-        loginBtn.setAttribute('disabled', 'disabled');
-      } else {
-        loginBtn.removeAttribute('disabled');
-      }
-    });
+    passwordContainer.addEventListener('input', (e) => this.toggleLoginBtnDisable(e, passwordInput));
 
     showPasswordButton.addEventListener('click', () => {
       this.togglePasswordView();
     });
+  }
+
+  private toggleLoginBtnDisable(e: Event, inputEl: HTMLInputElement): void {
+    e.preventDefault();
+    this.validateInput(inputEl);
+
+    const loginBtn: HTMLButtonElement = getElement('.login__button');
+
+    if (document.querySelector('.form-item--error')) {
+      loginBtn.setAttribute('disabled', 'disabled');
+    } else {
+      loginBtn.removeAttribute('disabled');
+    }
   }
 
   private validateInput(inputEl: HTMLInputElement): void {
@@ -77,7 +74,7 @@ class LoginController {
     loginBtn.addEventListener('click', async (): Promise<void> => {
       if (emailInput.value === '' || passwordInput.value === '') {
         Toastify({
-          text: 'Please enter your username and password',
+          text: SubmitMessages.EmptyLoginFields,
           className: 'toastify toastify-error',
           duration: 4000,
           newWindow: true,
