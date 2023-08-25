@@ -1,0 +1,164 @@
+.menu {
+  width: 267px;
+  background-color: $color-on-primary;
+  padding: 16px;
+  padding-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  z-index: 5;
+}
+
+#menu {
+  display: none;
+}
+
+.menu__user {
+  list-style: none;
+  padding: 0;
+}
+
+.menu__user li {
+  margin-right: 8px;
+}
+
+.menu__user a {
+  display: flex;
+  font-family: $font-monserrat;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  padding: 0;
+  text-decoration: none;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 2px;
+  color: $color-primary;
+}
+
+.menu__user svg {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: $color-primary;
+  transition: stroke $trans-default;
+}
+
+.menu__user p {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5px;
+}
+
+.menu__user span {
+  font-family: $font-monserrat;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+}
+
+.menu__nav {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.menu__nav a {
+  text-transform: uppercase;
+  text-decoration: none;
+  color: $color-primary;
+  padding: 12px;
+  display: block;
+  transition: transform $trans-default;
+
+  &:hover,
+  &:active {
+    transform: scale(1.1);
+  }
+}
+
+.menu--desktop {
+  flex-direction: row;
+  width: auto;
+  padding-right: 0;
+}
+
+.menu__nav--desktop {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.menu__user--desktop {
+  display: flex;
+  width: fit-content;
+  flex-shrink: 0;
+
+  a {
+    padding: 12px;
+    position: relative;
+  }
+}
+
+.menu__nav--desktop a {
+  transition: transform $trans-default;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.menu__user a:hover {
+  svg {
+    stroke: $color-secondary;
+  }
+}
+
+.menu__user div {
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+
+  span {
+    text-transform: none;
+  }
+}
+
+.tooltip {
+  visibility: hidden;
+  z-index: 1;
+  opacity: 0.4;
+  padding: 10px;
+  width: fit-content;
+  display: block;
+  background-color: $color-on-primary;
+  color: $color-secondary;
+  position: absolute;
+  top: -70%;
+  left: -25%;
+  border-radius: 9px;
+  transform: translateY(9px);
+  transition: all $trans-default;
+  border: 1px solid $color-secondary;
+}
+
+.menu__user--desktop a:hover .tooltip {
+  visibility: visible;
+  transform: translateY(-10px);
+  opacity: 1;
+  transition: 0.3s linear;
+  animation: odsoky 1s ease-in-out infinite alternate;
+}
+@keyframes odsoky {
+  0% {
+    transform: translateY(6px);
+  }
+
+  100% {
+    transform: translateY(1px);
+  }
+}

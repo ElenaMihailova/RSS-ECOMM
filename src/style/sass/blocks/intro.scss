@@ -1,0 +1,35 @@
+.intro__wrapper {
+  aspect-ratio: 393/393;
+
+  @include vp-768 {
+    flex: 0 0 50%;
+  }
+}
+
+.intro {
+  padding-bottom: 16px;
+
+  @include vp-768 {
+    display: flex;
+    padding-bottom: 96px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+}
+
+.intro__img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.intro__text {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @include vp-768 {
+    gap: 30px;
+  }
+}

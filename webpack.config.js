@@ -4,7 +4,11 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { ESLint } = require('eslint');
 const ESLintPlugin = require('eslint-webpack-plugin');
-
+const CopyPlugin = require('copy-webpack-plugin');
+const dotenv = require('dotenv').config({ path: __dirname + '/.env' });
+const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
+const isDevelopment = process.env.NODE_ENV !== 'production';
+const webpack = require('webpack');
 const devServer = (isDev) =>
   !isDev
     ? {}
@@ -12,17 +16,18 @@ const devServer = (isDev) =>
         devServer: {
           open: true,
           port: 8080,
+          historyApiFallback: true,
         },
       };
 
-const esLintPlugin = (isDev) =>
-isDev ? [] : [new ESLintPlugin({ extensions: ['ts', 'js'] })];
+const esLintPlugin = (isDev) => (isDev ? [] : [new ESLintPlugin({ extensions: ['ts', 'js'] })]);
 
 module.exports = ({ develop }) => ({
   mode: develop ? 'development' : 'production',
-  devtool: 'inline-source-map',
+  devtool: develop ? 'source-map' : false,
+
   entry: {
-    main: path.resolve(__dirname, './src/index.ts'),
+    main: path.resolve(__dirname, 'src', 'index.ts'),
   },
   module: {
     rules: [
@@ -41,34 +46,47 @@ module.exports = ({ develop }) => ({
       },
       {
         test: /\.(scss|css)$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'sass-loader',
-        ],
-    },
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-sprite-loader',
+      },
     ],
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    fallback: { crypto: false },
   },
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: '[name].js',
+    publicPath: '/',
     assetModuleFilename: 'assets/[name][ext]',
   },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'webpack Boilerplate',
-      template: path.resolve(__dirname, './src/index.html'), 
-      filename: 'index.html', 
+      template: path.resolve(__dirname, 'src' , 'index.html'),
+      filename: 'index.html',
     }),
     new MiniCssExtractPlugin({
       filename: 'index.css',
     }),
+    new CopyPlugin({
+      patterns: [
+        { from: 'src/assets/image', to: 'image' },
+        { from: 'src/assets/image/favicon', to: 'image' },
+        { from: 'src/assets/fonts', to: 'fonts' }
+      ],
+    }),
     new CleanWebpackPlugin(),
+    new SpriteLoaderPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(dotenv.parsed),
+    }),
+    new SpriteLoaderPlugin(),
     ...esLintPlugin(develop),
   ],
-
   ...devServer(develop),
 });
