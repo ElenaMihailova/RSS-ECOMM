@@ -91,28 +91,6 @@ class RegistrationView extends PageView {
     });
   }
 
-  public renderPopup(succes: boolean): void {
-    const type = succes ? 'succes' : 'error';
-    const text = succes ? 'Succesfully registered!' : 'The customer with this email is already registered!';
-    const popup = createElement({
-      tagName: 'div',
-      classNames: ['popup', `${type}-popup`],
-      parent: document.body,
-    });
-
-    const popupContent = createElement({
-      tagName: 'div',
-      classNames: ['popup-content', `${type}-popup-content`],
-      text,
-      parent: popup,
-    });
-
-    popup.addEventListener('click', (): void => {
-      popup.remove();
-      popupContent.remove();
-    });
-  }
-
   private renderFormItems(container: HTMLElement, data: FormItems[]): HTMLElement {
     data.forEach((item) => {
       const formItem = createElement({

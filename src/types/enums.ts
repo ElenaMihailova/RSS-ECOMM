@@ -34,6 +34,12 @@ export enum InputUserError {
   PasswordLengthError = 'Must contain at least 8 characters',
   EmptyFieldError = 'Please, fill out this field',
   CountryError = 'Please, select your country',
+  ExistingEmailError = 'There is already an existing customer with the provided email',
+}
+
+export enum SubmitMessages {
+  SuccesfullyRegistered = 'Succesfully registered',
+  EmptyLoginFields = 'Please enter your username and password',
 }
 
 export enum FieldNames {

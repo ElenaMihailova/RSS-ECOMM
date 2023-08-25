@@ -7,6 +7,7 @@ import {
   CountryCodes,
   FieldNames,
   InputUserError,
+  SubmitMessages,
 } from '../../../types/enums';
 import { BaseAdress, CustomerData, FormAdressData } from '../../../types/interfaces';
 import { createApiRootWithPasswordFlow, createCustomer, loginUser } from '../../api/apiClient';
@@ -197,15 +198,12 @@ class RegistrationController {
     adressDataElements.forEach((element) => {
       const data = baseAdressData as BaseAdress;
       const adressDataElement = element as HTMLInputElement | HTMLSelectElement;
+      const countryCode = this.getCountryCode(adressDataElement.value);
 
       switch (adressDataElement.getAttribute('data-type')) {
         case FieldNames.Country:
-          if (adressDataElement.value === Countries.Belarus) {
-            data.country = CountryCodes.Belarus;
-          } else if (adressDataElement.value === Countries.Spain) {
-            data.country = CountryCodes.Spain;
-          } else if (adressDataElement.value === Countries.Netherlands) {
-            data.country = CountryCodes.Netherlands;
+          if (countryCode) {
+            data.country = countryCode;
           }
           break;
         case FieldNames.City:
@@ -247,6 +245,20 @@ class RegistrationController {
     return adressData;
   }
 
+  public getCountryCode(value: string): string | undefined {
+    let countryCode;
+
+    if (value === Countries.Belarus) {
+      countryCode = CountryCodes.Belarus;
+    } else if (value === Countries.Spain) {
+      countryCode = CountryCodes.Spain;
+    } else if (value === Countries.Netherlands) {
+      countryCode = CountryCodes.Netherlands;
+    }
+
+    return countryCode;
+  }
+
   public isValidForm(): boolean {
     let isValid = true;
 
@@ -283,7 +295,7 @@ class RegistrationController {
         const errorMessage = `${responce.message}`;
 
         if (errorMessage.match(emailWord)) {
-          const inputErrorMessage = 'There is already an existing customer with the provided email';
+          const inputErrorMessage = InputUserError.ExistingEmailError;
           createError(emailInput, inputErrorMessage);
         }
 
@@ -292,7 +304,7 @@ class RegistrationController {
         return;
       }
 
-      const succesResponceMessage = 'Succesfully registered';
+      const succesResponceMessage = SubmitMessages.SuccesfullyRegistered;
 
       this.renderPopup(true, succesResponceMessage);
 

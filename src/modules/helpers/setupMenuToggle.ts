@@ -6,7 +6,9 @@ export default function setupMenuToggle(menuButtonId: string, menuId: string): v
     if (menu && (menu.style.display === 'none' || menu.style.display === '')) {
       menu.style.display = 'flex';
     } else {
-      if (menu) menu.style.display = 'none';
+      if (menu) {
+        menu.style.display = 'none';
+      }
       if (menuButton && 'checked' in menuButton) {
         menuButton.checked = false;
       }
