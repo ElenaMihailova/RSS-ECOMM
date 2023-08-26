@@ -8,7 +8,7 @@ import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
 import LoginController from '../pages/login/loginPageController';
 import { getElement, getFromLS, removeFromLS } from '../helpers/functions';
-import { FooterLinksType, NavLink } from '../../types/nav.types';
+import { FooterLinks, NavLink } from '../../types/nav.types';
 import createLayout from '../components/createLayout';
 import { headerLinks, footerLinks } from '../../assets/data/navigationData';
 import mainContent from '../templates/mainContent';
@@ -28,7 +28,7 @@ class App {
 
   private headerData: NavLink[] = headerLinks;
 
-  private footerData: FooterLinksType = footerLinks;
+  private footerData: FooterLinks = footerLinks;
 
   private registrationController: RegistrationController | null;
 

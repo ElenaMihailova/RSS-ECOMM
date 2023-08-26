@@ -1,5 +1,5 @@
 import { generateLink } from '../helpers/renderHelpers';
-import { NavLink, FooterLinksType } from '../../types/nav.types';
+import { NavLink, FooterLinks } from '../../types/nav.types';
 import desktopMenuTemplate from '../templates/DesktopMenuTemplate';
 import mobileMenuTemplate from '../templates/MobileMenuModule';
 import headerTemplate from '../templates/HeaderTemplate';
@@ -24,7 +24,7 @@ export const createFooter = ({
   collectionLinks = [],
   learnLinks = [],
   customerServiceLinks = [],
-}: FooterLinksType): string => {
+}: FooterLinks): string => {
   const collectionHtml = collectionLinks.map((item) => generateLink(item.text, item.href)).join('');
   const learnHtml = learnLinks.map((item) => generateLink(item.text, item.href)).join('');
   const customerServiceHtml = customerServiceLinks.map((item) => generateLink(item.text, item.href)).join('');
