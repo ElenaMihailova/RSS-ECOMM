@@ -14,6 +14,8 @@ import { headerLinks, footerLinks } from '../../assets/data/navigationData';
 import mainContent from '../templates/mainContent';
 import setupHeaderListeners from '../components/setupHeaderListeners';
 import RegistrationController from '../pages/registration/registrationPageController';
+import ProfileController from '../pages/profile/profilePageController';
+import ProfileView from '../pages/profile/profilePageView';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -30,10 +32,13 @@ class App {
 
   private registrationController: RegistrationController | null;
 
+  private profileController: ProfileController | null;
+
   constructor() {
     this.main = null;
     this.loginController = null;
     this.registrationController = null;
+    this.profileController = null;
     const routes = this.createRoutes();
     this.router = new Router(routes);
     this.createView();
@@ -46,10 +51,11 @@ class App {
   private createView(): void {
     const layout = createLayout(this.headerData, this.footerData);
     App.container.append(layout.header, layout.footer);
-
     const loginSvg = getElement('.login-svg');
     const logoutSvg = getElement('.logout-svg');
     const tooltip = getElement('.tooltip--login');
+    const profileBtn = getElement('.profile--desktop');
+    const profileContainer = profileBtn.closest('li');
     const registrationBtn = getElement('.registration--desktop');
     const registrationContainer = registrationBtn.closest('li');
     const registrationMobileBtn = getElement('.registration--mobile');
@@ -60,11 +66,13 @@ class App {
       logoutSvg.classList.remove('visually-hidden');
       registrationContainer?.classList.add('visually-hidden');
       registrationMobileContainer?.classList.add('visually-hidden');
+      profileContainer?.classList.remove('visually-hidden');
       tooltip.textContent = 'LOG OUT';
     } else {
       logoutSvg.classList.add('visually-hidden');
       loginSvg.classList.remove('visually-hidden');
       registrationContainer?.classList.remove('visually-hidden');
+      profileContainer?.classList.add('visually-hidden');
       registrationMobileContainer?.classList.remove('visually-hidden');
       tooltip.textContent = 'LOG IN';
     }
@@ -102,10 +110,12 @@ class App {
         callback: (): void => {
           if (this.main) {
             this.main.clearContent();
+
             if (getFromLS('token')) {
               this.router.navigateFromButton(PageUrls.IndexPageUrl);
               return;
             }
+
             const registrationView = new RegistrationView();
             this.main.setViewContent(registrationView);
             this.registrationController = new RegistrationController(this.router, registrationView);
@@ -129,12 +139,29 @@ class App {
         },
       },
       {
+        path: `${PageUrls.ProfilePageUrl}`,
+        callback: (): void => {
+          if (this.main) {
+            this.main.clearContent();
+
+            if (!getFromLS('token')) {
+              this.router.navigateFromButton(PageUrls.LoginPageUrl);
+              return;
+            }
+
+            this.main.setViewContent(new ProfileView());
+            this.profileController = new ProfileController(this.router);
+          }
+        },
+      },
+      {
         path: `${PageUrls.ErrorPageUrl}`,
         callback: (): void => {
           if (this.main) {
             this.main.clearContent();
             this.main.setContent(new ErrorView(this.router).render());
           }
+
           this.homeBtnHandler();
         },
       },
@@ -146,6 +173,8 @@ class App {
     const loginSvg = getElement('.login-svg');
     const logoutSvg = getElement('.logout-svg');
     const tooltip = getElement('.tooltip--login');
+    const profileBtn = getElement('.profile--desktop');
+    const profileContainer = profileBtn.closest('li');
     const registrationBtn = getElement('.registration--desktop');
     const registrationContainer = registrationBtn.closest('li');
     const registrationMobileBtn = getElement('.registration--mobile');
@@ -158,8 +187,13 @@ class App {
         registrationMobileContainer?.classList.remove('visually-hidden');
         logoutSvg.classList.add('visually-hidden');
         loginSvg.classList.remove('visually-hidden');
+        profileContainer?.classList.add('visually-hidden');
         tooltip.textContent = 'LOG IN';
         removeFromLS('token');
+
+        if (window.location.pathname.slice(1) === PageUrls.ProfilePageUrl) {
+          this.router.navigateFromButton(PageUrls.IndexPageUrl);
+        }
       } else {
         this.router.navigateFromButton(PageUrls.LoginPageUrl);
       }

@@ -30,6 +30,8 @@ class Controller {
     const logoutSvg = getElement('.logout-svg');
     const tooltip = getElement('.tooltip--login');
     const registrationBtn = getElement('.registration--desktop');
+    const profileBtn = getElement('.profile--desktop');
+    const profileContainer = profileBtn.closest('li');
     const registrationContainer = registrationBtn.closest('li');
     const registrationMobileBtn = getElement('.registration--mobile');
     const registrationMobileContainer = registrationMobileBtn.closest('a');
@@ -42,6 +44,7 @@ class Controller {
       registrationContainer?.classList.add('visually-hidden');
       registrationMobileContainer?.classList.add('visually-hidden');
       logoutSvg.classList.remove('visually-hidden');
+      profileContainer?.classList.remove('visually-hidden');
       tooltip.textContent = 'LOG OUT';
     }
   }
