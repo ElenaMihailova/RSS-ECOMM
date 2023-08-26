@@ -14,6 +14,8 @@ import { headerLinks, footerLinks } from '../../assets/data/navigationData';
 import mainContent from '../templates/mainContent';
 import setupHeaderListeners from '../components/setupHeaderListeners';
 import RegistrationController from '../pages/registration/registrationPageController';
+import CatalogView from '../pages/catalog/catalogPageView';
+import catalogContent from '../templates/CatalogTemplate';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -94,6 +96,15 @@ class App {
           if (this.main) {
             this.main.clearContent();
             this.main.setContent(new IndexView(mainContent).render());
+          }
+        },
+      },
+      {
+        path: `${PageUrls.CatalogPageUrl}`,
+        callback: (): void => {
+          if (this.main) {
+            this.main.clearContent();
+            this.main.setContent(new CatalogView(catalogContent).render());
           }
         },
       },

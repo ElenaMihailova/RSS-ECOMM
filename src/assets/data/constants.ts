@@ -2,6 +2,7 @@ export const ButtonsNamesAndUrls: { [key: string]: string } = {
   Index: 'index',
   Login: 'login',
   Registration: 'registration',
+  Catalog: 'catalog',
 };
 
 export const enum PageUrls {
@@ -9,4 +10,5 @@ export const enum PageUrls {
   LoginPageUrl = 'login',
   RegistrationPageUrl = 'registration',
   ErrorPageUrl = 'not-found',
+  CatalogPageUrl = 'catalog',
 }

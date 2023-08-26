@@ -1,5 +1,5 @@
 export const headerLinks = [
-  { text: 'tea collections', href: '#' },
+  { text: 'tea collections', href: '/catalog' },
   { text: 'accessories', href: '#' },
   { text: 'blog', href: '#' },
   { text: 'contact us', href: '#' },
