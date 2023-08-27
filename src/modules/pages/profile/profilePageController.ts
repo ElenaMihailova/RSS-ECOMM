@@ -1,4 +1,5 @@
 import { CustomerDraft } from '@commercetools/platform-sdk';
+import { PageUrls } from '../../../assets/data/constants';
 import {
   updateDateOfBirth,
   updateFirstName,
@@ -7,7 +8,7 @@ import {
   getUpdatedVersion,
   updateEmailAdress,
 } from '../../api/apiClient';
-import { getCookie, getElementCollection } from '../../helpers/functions';
+import { getCookie, getElement, getElementCollection } from '../../helpers/functions';
 import Router from '../../router/router';
 
 class ProfileController {
@@ -22,8 +23,22 @@ class ProfileController {
   }
 
   public async runHandlers(): Promise<void> {
+    this.pageBtnsHandlers();
     await this.addBtnHandlers();
     await this.addValues();
+  }
+
+  private pageBtnsHandlers(): void {
+    const profileBtn = getElement('.profile-button');
+    const addressesBtn = getElement('.addresses-button');
+
+    profileBtn.addEventListener('click', (): void => {
+      this.router.navigateFromButton(PageUrls.ProfilePageUrl);
+    });
+
+    addressesBtn.addEventListener('click', (): void => {
+      this.router.navigateFromButton(`${PageUrls.ProfilePageUrl}/${PageUrls.AddressesPageUrl}`);
+    });
   }
 
   public async addBtnHandlers(): Promise<void> {

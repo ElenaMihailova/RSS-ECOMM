@@ -15,6 +15,11 @@ export const enum ProfileDataBtns {
   Password = 'Change password',
 }
 
+export const enum ProfilePageBtns {
+  Profile = 'Your profile',
+  Addresses = 'Your addresses',
+}
+
 export const enum Countries {
   Belarus = 'Belarus',
   Spain = 'Spain',

@@ -16,6 +16,9 @@ import setupHeaderListeners from '../components/setupHeaderListeners';
 import RegistrationController from '../pages/registration/registrationPageController';
 import ProfileController from '../pages/profile/profilePageController';
 import ProfileView from '../pages/profile/profilePageView';
+import AddressesView from '../pages/profile/addressesPageView';
+import { ProfileDataCategories } from '../../types/enums';
+import { personalData, contactData, passwordData } from '../pages/profile/profileItemsData';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -34,11 +37,14 @@ class App {
 
   private profileController: ProfileController | null;
 
+  private profilePage: ProfileView | null;
+
   constructor() {
     this.main = null;
     this.loginController = null;
     this.registrationController = null;
     this.profileController = null;
+    this.profilePage = null;
     const routes = this.createRoutes();
     this.router = new Router(routes);
     this.createView();
@@ -141,16 +147,36 @@ class App {
       {
         path: `${PageUrls.ProfilePageUrl}`,
         callback: (): void => {
-          if (this.main) {
+          if (this.profilePage) {
+            const profileContent: HTMLElement = getElement('.profile-page__content');
+
+            profileContent.innerHTML = '';
+
+            this.profilePage.renderUserDataContainer(profileContent, ProfileDataCategories.Personal, personalData);
+            this.profilePage.renderUserDataContainer(profileContent, ProfileDataCategories.Contact, contactData);
+            this.profilePage.renderUserDataContainer(profileContent, ProfileDataCategories.Password, passwordData);
+          } else if (this.main) {
             this.main.clearContent();
 
             if (!getFromLS('token')) {
               this.router.navigateFromButton(PageUrls.LoginPageUrl);
               return;
             }
-
-            this.main.setViewContent(new ProfileView());
+            this.profilePage = new ProfileView();
+            this.main.setViewContent(this.profilePage);
             this.profileController = new ProfileController(this.router);
+          }
+        },
+      },
+      {
+        path: `${PageUrls.ProfilePageUrl}/${PageUrls.AddressesPageUrl}`,
+        callback: (): void => {
+          if (this.profilePage) {
+            const profileContent: HTMLElement = getElement('.profile-page__content');
+            const addressesPage = new AddressesView();
+
+            profileContent.innerHTML = '';
+            profileContent.append(addressesPage.render());
           }
         },
       },

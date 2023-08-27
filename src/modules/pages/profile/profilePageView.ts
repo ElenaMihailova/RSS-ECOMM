@@ -3,7 +3,7 @@ import { createElement } from '../../helpers/functions';
 import './profilePage.scss';
 import { ProfileData, ProfileDataItem } from '../../../types/interfaces';
 import { contactData, passwordData, personalData } from './profileItemsData';
-import { ProfileDataCategories } from '../../../types/enums';
+import { ProfileDataCategories, ProfilePageBtns } from '../../../types/enums';
 
 class ProfileView extends PageView {
   public authorizedCustomerID: string | undefined;
@@ -20,6 +20,8 @@ class ProfileView extends PageView {
       parent: this.container,
     });
 
+    this.renderPageButtons(profilePageContainer);
+
     const profilePageContent = createElement({
       tagName: 'div',
       classNames: ['profile-page__content', 'profile-content'],
@@ -33,7 +35,7 @@ class ProfileView extends PageView {
     return this.container;
   }
 
-  private async renderUserDataContainer(container: HTMLElement, category: string, data: ProfileData): Promise<void> {
+  public async renderUserDataContainer(container: HTMLElement, category: string, data: ProfileData): Promise<void> {
     const dataContainer = createElement({
       tagName: 'div',
       classNames: ['profile-data', `${category}-data`],
@@ -93,6 +95,30 @@ class ProfileView extends PageView {
     });
 
     return container;
+  }
+
+  private renderPageButtons(container: HTMLElement): void {
+    const btnsContainer = createElement({
+      tagName: 'div',
+      classNames: ['buttons__content'],
+      parent: container,
+    });
+
+    const profileBtn = createElement({
+      tagName: 'button',
+      classNames: ['profile-button'],
+      attributes: [{ type: 'button' }],
+      text: ProfilePageBtns.Profile,
+      parent: btnsContainer,
+    });
+
+    const addressesBtn = createElement({
+      tagName: 'button',
+      classNames: ['addresses-button'],
+      attributes: [{ type: 'button' }],
+      text: ProfilePageBtns.Addresses,
+      parent: btnsContainer,
+    });
   }
 }
 

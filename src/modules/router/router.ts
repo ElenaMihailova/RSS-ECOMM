@@ -30,6 +30,8 @@ class Router {
     const path = urlString.split('/');
     [res.path = '', res.resource = ''] = path;
 
+    console.log(res);
+
     this.urlHandler(res);
   }
 
