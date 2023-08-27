@@ -1,7 +1,7 @@
 import './loginPage.scss';
 import '../../../style/toastify.css';
 import Toastify from 'toastify-js';
-import { getElement, setToLS } from '../../helpers/functions';
+import { getElement } from '../../helpers/functions';
 import Router from '../../router/router';
 import Validator from '../../validation/validator';
 import Controller from '../../controller/controller';

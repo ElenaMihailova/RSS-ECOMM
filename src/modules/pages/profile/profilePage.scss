@@ -1,0 +1,23 @@
+.profile-page__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 40px;
+}
+
+.profile-data,
+.profile-data-form,
+.profile-page__content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.profile-data-title {
+  text-align: center;
+}
+
+.profile-input--hidden {
+  outline: none;
+  border: none;
+}

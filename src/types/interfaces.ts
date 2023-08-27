@@ -20,6 +20,17 @@ export interface FormItems {
   btn?: InputBtn;
 }
 
+export interface ProfileData {
+  title: string;
+  button: string;
+  dataItems?: ProfileDataItem[];
+}
+
+export interface ProfileDataItem {
+  label: string;
+  input: FormItems;
+}
+
 export interface SelectOption {
   text: string;
   attributes?: AttrSet[];

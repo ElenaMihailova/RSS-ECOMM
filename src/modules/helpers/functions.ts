@@ -1,4 +1,4 @@
-import { AttrSet } from '../../types/types';
+import { AttrSet, CoockieOptions } from '../../types/types';
 
 export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
   tagName: T;
@@ -98,4 +98,44 @@ export const parseLS = (item: string): number[] | null => {
 
 export const createSvgElement = (className: string, id: string): string => {
   return `<svg class=${className} width='24' height='24' viewBox='0 0 24 24'><use href="./image/sprite.svg#${id}" /></svg>`;
+};
+
+export const setCookie = (name: string, value: string, options?: CoockieOptions): void => {
+  const cookieOptions = options || {};
+
+  let { expires } = cookieOptions;
+
+  if (typeof expires === 'number' && expires) {
+    const d = new Date();
+    d.setTime(d.getTime() + expires * 1000);
+    // eslint-disable-next-line no-multi-assign
+    expires = cookieOptions.expires = d;
+  }
+  if (expires && (<Date>expires).toUTCString) {
+    cookieOptions.expires = (<Date>expires).toUTCString();
+  }
+
+  const cookieValue = encodeURIComponent(value);
+
+  let updatedCookie = `${name}=${cookieValue}`;
+
+  let propName: keyof CoockieOptions;
+
+  // eslint-disable-next-line no-restricted-syntax, guard-for-in
+  for (propName in cookieOptions) {
+    updatedCookie += `; ${propName}`;
+    const propValue = cookieOptions[propName];
+    if (propValue !== true) {
+      updatedCookie += `=${propValue}`;
+    }
+  }
+
+  document.cookie = updatedCookie;
+};
+
+export const getCookie = (name: string): string | undefined => {
+  const matches = document.cookie.match(
+    new RegExp(`(?:^|; )${name.replace(/([\\.$?*|{}\\(\\)\\[\]\\\\/\\+^])/g, '\\$1')}=([^;]*)`),
+  );
+  return matches ? decodeURIComponent(matches[1]) : undefined;
 };

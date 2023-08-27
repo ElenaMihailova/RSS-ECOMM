@@ -3,6 +3,7 @@ import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import Toastify from 'toastify-js';
 import { buildClientWithPasswordFlow, ctpClient } from './buildClient';
+import { BaseAdress, CustomerData } from '../../types/interfaces';
 
 const apiProjectRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
   projectKey: process.env.CTP_PROJECT_KEY as string,
@@ -23,6 +24,151 @@ export const createCustomer = async (data: MyCustomerDraft): Promise<MyCustomerD
     console.error();
     return err as Error;
   }
+};
+
+export const getCustomerByID = async (ID: string): Promise<BaseAdress | object> => {
+  try {
+    const res = await apiProjectRoot.customers().withId({ ID }).get().execute();
+    const resData = await res.body;
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
+export const updateFirstName = async (
+  customerId: string,
+  value: string,
+  customerVersion: number,
+): Promise<BaseAdress | object> => {
+  try {
+    const res = await apiProjectRoot
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version: customerVersion,
+          actions: [
+            {
+              action: 'setFirstName',
+              firstName: value,
+            },
+          ],
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
+export const updateLastName = async (
+  customerId: string,
+  value: string,
+  customerVersion: number,
+): Promise<BaseAdress | object> => {
+  try {
+    const res = await apiProjectRoot
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version: customerVersion,
+          actions: [
+            {
+              action: 'setLastName',
+              lastName: value,
+            },
+          ],
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
+export const updateDateOfBirth = async (
+  customerId: string,
+  value: string,
+  customerVersion: number,
+): Promise<BaseAdress | object> => {
+  try {
+    const res = await apiProjectRoot
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version: customerVersion,
+          actions: [
+            {
+              action: 'setDateOfBirth',
+              dateOfBirth: value,
+            },
+          ],
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
+export const updateEmailAdress = async (
+  customerId: string,
+  value: string,
+  customerVersion: number,
+): Promise<BaseAdress | object> => {
+  try {
+    const res = await apiProjectRoot
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version: customerVersion,
+          actions: [
+            {
+              action: 'changeEmail',
+              email: value,
+            },
+          ],
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
+export const getUpdatedCustomer = async (customerID: string): Promise<MyCustomerDraft> => {
+  const updatedCustomersData: MyCustomerDraft | object = await getCustomerByID(customerID);
+  const data = updatedCustomersData as MyCustomerDraft;
+  return data;
+};
+
+export const getUpdatedVersion = async (customerID: string): Promise<number | undefined> => {
+  const updatedCustomersData: CustomerData | object = await getCustomerByID(customerID);
+  const data = updatedCustomersData as CustomerData;
+  const { version } = data;
+
+  if (version) {
+    return version;
+  }
+
+  return version;
 };
 
 export const createApiRootWithPasswordFlow = (options: PasswordAuthMiddlewareOptions): ByProjectKeyRequestBuilder => {

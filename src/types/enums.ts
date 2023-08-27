@@ -3,6 +3,18 @@ export const enum AdressCategories {
   Billing = 'billing',
 }
 
+export const enum ProfileDataCategories {
+  Personal = 'personal',
+  Contact = 'contact',
+  Password = 'password',
+}
+
+export const enum ProfileDataBtns {
+  Personal = 'Change personal data',
+  Contact = 'Change contact information',
+  Password = 'Change password',
+}
+
 export const enum Countries {
   Belarus = 'Belarus',
   Spain = 'Spain',

@@ -1,8 +1,9 @@
+import { CustomerSignInResult } from '@commercetools/platform-sdk';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { PageUrls } from '../../assets/data/constants';
 import { createApiRootWithPasswordFlow, loginUser } from '../api/apiClient';
 import MyTokenCache from '../api/myTokenCache';
-import { getElement, setToLS } from '../helpers/functions';
+import { getElement, setCookie, setToLS } from '../helpers/functions';
 import Router from '../router/router';
 
 class Controller {
@@ -37,6 +38,9 @@ class Controller {
     const registrationMobileContainer = registrationMobileBtn.closest('a');
 
     if (Object.keys(login).length) {
+      const loginData = login as CustomerSignInResult;
+      console.log(loginData.customer.id);
+      setCookie('userID', loginData.customer.id);
       const tokenInfo = tokenCache.get();
       setToLS('token', tokenInfo.token);
       router.navigateFromButton(PageUrls.IndexPageUrl);

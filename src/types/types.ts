@@ -1,3 +1,10 @@
+export type CoockieOptions = {
+  expires?: Date | number | string;
+  path?: string;
+  domain?: string;
+  secure?: boolean;
+};
+
 export type RouteAction = {
   path: string;
   callback: () => void;
