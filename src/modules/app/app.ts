@@ -46,6 +46,7 @@ class App {
     this.loginBtnHandler();
     this.registrationBtnHandler();
     this.loginMobileBtnHandler();
+    this.profileBtnHandler();
   }
 
   private createView(): void {
@@ -234,6 +235,18 @@ class App {
         this.router.navigateFromButton(PageUrls.IndexPageUrl);
       } else {
         this.router.navigateFromButton(PageUrls.RegistrationPageUrl);
+      }
+    });
+  }
+
+  private profileBtnHandler(): void {
+    const profileBtn = getElement('.profile--desktop');
+    profileBtn.addEventListener('click', (e: Event): void => {
+      e.preventDefault();
+      if (getFromLS('token')) {
+        this.router.navigateFromButton(PageUrls.ProfilePageUrl);
+      } else {
+        this.router.navigateFromButton(PageUrls.IndexPageUrl);
       }
     });
   }

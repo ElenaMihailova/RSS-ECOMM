@@ -36,7 +36,7 @@ const desktopMenuTemplate = (linksHtml: string): string => `
      </a>
     </li>
     <li>
-    <a href="profile" class="profile profile--desktop">
+    <a href="javascript:void(0)" class="profile profile--desktop">
       <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
         <use xlink:href="./image/sprite.svg#person"></use>
       </svg>
