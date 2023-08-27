@@ -1,8 +1,15 @@
 export const headerLinks = [
-  { text: 'tea collections', href: '#' },
-  { text: 'accessories', href: '#' },
-  { text: 'blog', href: '#' },
-  { text: 'contact us', href: '#' },
+  { text: 'tea collections', href: '', className: 'catalog__link' },
+  { text: 'accessories', href: '', className: 'accessories__link' },
+  { text: 'blog', href: '', className: 'blog__link' },
+  { text: 'contact us', href: '', className: 'contact__link' },
+];
+
+export const mobileHeaderLinks = [
+  { text: 'tea collections', href: '', className: 'catalog__link--mobile' },
+  { text: 'accessories', href: '', className: 'accessories__link--mobile' },
+  { text: 'blog', href: '', className: 'blog__link--mobile' },
+  { text: 'contact us', href: '', className: 'contact__link--mobile' },
 ];
 
 export const footerLinks = {

@@ -10,10 +10,12 @@ import LoginController from '../pages/login/loginPageController';
 import { getElement, getFromLS, removeFromLS } from '../helpers/functions';
 import { FooterLinksType, NavLink } from '../../types/nav.types';
 import createLayout from '../components/createLayout';
-import { headerLinks, footerLinks } from '../../assets/data/navigationData';
+import { headerLinks, footerLinks, mobileHeaderLinks } from '../../assets/data/navigationData';
 import mainContent from '../templates/mainContent';
 import setupHeaderListeners from '../components/setupHeaderListeners';
 import RegistrationController from '../pages/registration/registrationPageController';
+import CatalogView from '../pages/catalog/catalogPageView';
+import CatalogController from '../pages/catalog/catalogPageController';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -26,14 +28,19 @@ class App {
 
   private headerData: NavLink[] = headerLinks;
 
+  private mobileHeaderData: NavLink[] = mobileHeaderLinks;
+
   private footerData: FooterLinksType = footerLinks;
 
   private registrationController: RegistrationController | null;
+
+  private catalogController: CatalogController | null;
 
   constructor() {
     this.main = null;
     this.loginController = null;
     this.registrationController = null;
+    this.catalogController = null;
     const routes = this.createRoutes();
     this.router = new Router(routes);
     this.createView();
@@ -41,10 +48,11 @@ class App {
     this.loginBtnHandler();
     this.registrationBtnHandler();
     this.loginMobileBtnHandler();
+    this.catalogBtnHandler();
   }
 
   private createView(): void {
-    const layout = createLayout(this.headerData, this.footerData);
+    const layout = createLayout(this.headerData, this.mobileHeaderData, this.footerData);
     App.container.append(layout.header, layout.footer);
 
     const loginSvg = getElement('.login-svg');
@@ -138,6 +146,16 @@ class App {
           this.homeBtnHandler();
         },
       },
+      {
+        path: `${PageUrls.CatalogPageUrl}`,
+        callback: (): void => {
+          if (this.main) {
+            this.main.clearContent();
+            this.main.setViewContent(new CatalogView());
+            this.catalogController = new CatalogController(this.router);
+          }
+        },
+      },
     ];
   }
 
@@ -217,6 +235,15 @@ class App {
   private btnMoveToIndexHandler(e: Event): void {
     e.preventDefault();
     this.router.navigateFromButton(PageUrls.IndexPageUrl);
+  }
+
+  private catalogBtnHandler(): void {
+    const catalogBtn = getElement('.catalog__link');
+    catalogBtn.addEventListener('click', (e: Event): void => {
+      console.log(catalogBtn);
+      e.preventDefault();
+      this.router.navigateFromButton(PageUrls.CatalogPageUrl);
+    });
   }
 }
 

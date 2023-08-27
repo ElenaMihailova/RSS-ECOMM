@@ -1,12 +1,25 @@
-import { CustomerSignInResult, MyCustomerDraft, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import {
+  CustomerSignInResult,
+  MyCustomerDraft,
+  createApiBuilderFromCtpClient,
+  ProductPagedQueryResponse,
+  Product,
+} from '@commercetools/platform-sdk';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import Toastify from 'toastify-js';
 import { buildClientWithPasswordFlow, ctpClient } from './buildClient';
 
-const apiProjectRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
+export const apiProjectRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
   projectKey: process.env.CTP_PROJECT_KEY as string,
 });
+
+export const createApiRootWithPasswordFlow = (options: PasswordAuthMiddlewareOptions): ByProjectKeyRequestBuilder => {
+  const apiRoot = createApiBuilderFromCtpClient(buildClientWithPasswordFlow(options)).withProjectKey({
+    projectKey: process.env.CTP_PROJECT_KEY as string,
+  });
+  return apiRoot;
+};
 
 export const createCustomer = async (data: MyCustomerDraft): Promise<MyCustomerDraft | Error> => {
   try {
@@ -23,13 +36,6 @@ export const createCustomer = async (data: MyCustomerDraft): Promise<MyCustomerD
     console.error();
     return err as Error;
   }
-};
-
-export const createApiRootWithPasswordFlow = (options: PasswordAuthMiddlewareOptions): ByProjectKeyRequestBuilder => {
-  const apiRoot = createApiBuilderFromCtpClient(buildClientWithPasswordFlow(options)).withProjectKey({
-    projectKey: process.env.CTP_PROJECT_KEY as string,
-  });
-  return apiRoot;
 };
 
 export const loginUser = async (
@@ -61,6 +67,22 @@ export const loginUser = async (
         position: 'center',
         stopOnFocus: true,
       }).showToast();
+    });
+
+  return resData;
+};
+
+export const getProducts = async (): Promise<Product[] | object> => {
+  let resData = {};
+  await apiProjectRoot
+    .products()
+    .get()
+    .execute()
+    .then((r) => {
+      resData = r.body.results;
+    })
+    .catch((e) => {
+      console.error(e.message);
     });
 
   return resData;

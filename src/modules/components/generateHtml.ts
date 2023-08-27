@@ -5,16 +5,24 @@ import mobileMenuTemplate from '../templates/MobileMenuModule';
 import headerTemplate from '../templates/HeaderTemplate';
 import footerTemplate from '../templates/FooterTemplate';
 
-export const createHeader = (navLinks: NavLink[]): string => {
+export const createHeader = (navLinks: NavLink[], mobileNavLinks: NavLink[]): string => {
   const linksHtml = navLinks
     .map((link) => {
       return link.href === '#'
-        ? `<li><a class='titleMonserrat titleMonserrat--small' onclick="event.preventDefault();" href="${link.href}">${link.text}</a></li>`
-        : `<li><a class='titleMonserrat titleMonserrat--small' href="${link.href}">${link.text}</a></li>`;
+        ? `<li><a class='titleMonserrat titleMonserrat--small' href=>${link.text}</a></li>`
+        : `<li><a class='titleMonserrat titleMonserrat--small ${link.className}' href="#">${link.text}</a></li>`;
     })
     .join('');
 
-  const mobilMenuHtml = mobileMenuTemplate(linksHtml);
+  const mobileLinksHtml = navLinks
+    .map((link) => {
+      return link.href === '#'
+        ? `<li><a class='titleMonserrat titleMonserrat--small' href=>${link.text}</a></li>`
+        : `<li><a class='titleMonserrat titleMonserrat--small' href="#">${link.text}</a></li>`;
+    })
+    .join('');
+
+  const mobilMenuHtml = mobileMenuTemplate(mobileLinksHtml);
   const desktopMenuHtml = desktopMenuTemplate(linksHtml);
 
   return headerTemplate(mobilMenuHtml, desktopMenuHtml);

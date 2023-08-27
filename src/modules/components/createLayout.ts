@@ -4,9 +4,10 @@ import { createFooter, createHeader } from './generateHtml';
 
 const createLayout = (
   headerData: NavLink[],
+  mobileHeaderData: NavLink[],
   footerData: FooterLinksType,
 ): { header: HTMLElement; footer: HTMLElement } => {
-  const headerHtml = createHeader(headerData);
+  const headerHtml = createHeader(headerData, mobileHeaderData);
   const footerHtml = createFooter(footerData);
 
   addHTML('header', ['header'], headerHtml);

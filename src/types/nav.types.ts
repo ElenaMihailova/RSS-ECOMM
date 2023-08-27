@@ -1,6 +1,7 @@
 export type NavLink = {
   text: string;
   href: string;
+  className?: string;
 };
 
 export type FooterLinksType = {
