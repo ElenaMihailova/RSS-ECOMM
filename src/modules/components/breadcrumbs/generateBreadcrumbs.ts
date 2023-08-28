@@ -19,7 +19,7 @@ export default function generateBreadcrumbs(links: BreadcrumbItem[]): string {
 
     if (index !== links.length - 1) {
       breadcrumbsHTML += `
-        <li>/</li>`;
+      <li>/</li>`;
     }
   });
 

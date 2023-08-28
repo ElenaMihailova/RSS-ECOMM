@@ -1,5 +1,5 @@
 import { generateLink } from '../helpers/renderHelpers';
-import { NavLink, FooterLinks } from '../../types/nav.types';
+import { NavLink, FooterLinks } from './layout/nav.types';
 import desktopMenuTemplate from '../templates/DesktopMenuTemplate';
 import mobileMenuTemplate from '../templates/MobileMenuModule';
 import headerTemplate from '../templates/HeaderTemplate';
@@ -9,7 +9,7 @@ export const createHeader = (navLinks: NavLink[]): string => {
   const linksHtml = navLinks
     .map((link) => {
       return link.href === '#'
-        ? `<li><a class='titleMonserrat titleMonserrat--small' onclick="event.preventDefault();" href="${link.href}">${link.text}</a></li>`
+        ? `<li><a class='titleMonserrat titleMonserrat--small no-active' onclick="event.preventDefault();" href="${link.href}">${link.text}</a></li>`
         : `<li><a class='titleMonserrat titleMonserrat--small' href="${link.href}">${link.text}</a></li>`;
     })
     .join('');
