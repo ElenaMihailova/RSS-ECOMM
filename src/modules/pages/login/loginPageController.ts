@@ -1,11 +1,10 @@
 import './loginPage.scss';
 import '../../../style/toastify.css';
-import Toastify from 'toastify-js';
-import { getElement } from '../../helpers/functions';
+import { getElement, renderPopup } from '../../helpers/functions';
 import Router from '../../router/router';
 import Validator from '../../validation/validator';
 import Controller from '../../controller/controller';
-import { SubmitMessages } from '../../../types/enums';
+import { PopupMessages } from '../../../types/enums';
 
 class LoginController {
   private validator: Validator;
@@ -70,18 +69,8 @@ class LoginController {
 
     loginBtn.addEventListener('click', async (): Promise<void> => {
       if (emailInput.value === '' || passwordInput.value === '') {
-        Toastify({
-          text: SubmitMessages.EmptyLoginFields,
-          className: 'toastify toastify-error',
-          duration: 4000,
-          newWindow: true,
-          close: true,
-          gravity: 'bottom',
-          position: 'center',
-          stopOnFocus: true,
-        }).showToast();
+        renderPopup(false, PopupMessages.EmptyLoginFields);
       }
-
       if (emailInput.value !== '' && passwordInput.value !== '') {
         Controller.loginAction(emailInput.value, passwordInput.value, this.router);
       }

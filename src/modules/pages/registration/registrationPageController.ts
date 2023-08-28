@@ -1,4 +1,3 @@
-import Toastify from 'toastify-js';
 import {
   AdressCategories,
   CheckboxNames,
@@ -6,11 +5,11 @@ import {
   CountryCodes,
   FieldNames,
   InputUserError,
-  SubmitMessages,
+  PopupMessages,
 } from '../../../types/enums';
 import { BaseAdress, CustomerData, FormAdressData } from '../../../types/interfaces';
 import { createCustomer } from '../../api/apiClient';
-import { getElement, getElementCollection } from '../../helpers/functions';
+import { getElement, getElementCollection, renderPopup } from '../../helpers/functions';
 import Router from '../../router/router';
 import {
   createError,
@@ -297,14 +296,14 @@ class RegistrationController {
           createError(emailInput, inputErrorMessage);
         }
 
-        this.renderPopup(false, errorMessage);
+        renderPopup(false, errorMessage);
 
         return;
       }
 
-      const succesResponceMessage = SubmitMessages.SuccesfullyRegistered;
+      const succesResponceMessage = PopupMessages.SuccesfullyRegistered;
 
-      this.renderPopup(true, succesResponceMessage);
+      renderPopup(true, succesResponceMessage);
 
       const email = emailInput.value;
       const password = passwordInput.value;
@@ -313,21 +312,6 @@ class RegistrationController {
 
       this.router.navigateFromButton(PageUrls.IndexPageUrl);
     }
-  }
-
-  public renderPopup(succes: boolean, message: string): void {
-    const className = succes ? 'toastify-succes' : 'toastify-error';
-
-    Toastify({
-      text: `${message}`,
-      className: `toastify ${className}`,
-      duration: 4000,
-      newWindow: true,
-      close: true,
-      gravity: 'bottom',
-      position: 'center',
-      stopOnFocus: true,
-    }).showToast();
   }
 
   private addLoginBtnHandler(): void {

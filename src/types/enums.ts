@@ -51,14 +51,18 @@ export enum InputUserError {
   EmailError = 'A correctly formatted email address: example@email.com',
   BirthdayFormatError = 'Please enter your date of birth in the format: DD.MM.YYYY',
   PasswordLengthError = 'Must contain at least 8 characters',
-  EmptyFieldError = 'Please, fill out this field',
-  CountryError = 'Please, select your country',
+  EmptyFieldError = 'Please fill out this field',
+  CountryError = 'Please select your country',
   ExistingEmailError = 'There is already an existing customer with the provided email',
 }
 
-export enum SubmitMessages {
-  SuccesfullyRegistered = 'Succesfully registered',
-  EmptyLoginFields = 'Please enter your username and password',
+export enum PopupMessages {
+  SuccesfullyRegistered = 'Succesfully registered!',
+  EmptyLoginFields = 'Please enter your username and password!',
+  PersonalDataUpdated = 'Your personal data has been succesfully updated!',
+  ContactDataUpdated = 'Your contact information has been succesfully updated!',
+  PasswordChanged = 'Your password has been changed!',
+  ProfileCorrectData = 'Please enter the correct data!',
 }
 
 export enum FieldNames {

@@ -7,10 +7,16 @@ import {
   getUpdatedVersion,
   updateEmailAdress,
 } from '../../api/apiClient';
-import { getCookie, getElementCollection } from '../../helpers/functions';
+import { getCookie, getElementCollection, renderPopup } from '../../helpers/functions';
 import Router from '../../router/router';
 import Validator from '../../validation/validator';
-import { FieldNames, InputUserError, ProfileDataBtns, ProfileDataCategories } from '../../../types/enums';
+import {
+  FieldNames,
+  InputUserError,
+  PopupMessages,
+  ProfileDataBtns,
+  ProfileDataCategories,
+} from '../../../types/enums';
 import {
   createError,
   getDateDMYFormatFromIsoString,
@@ -23,17 +29,21 @@ class ProfileController {
 
   private validator: Validator;
 
+  public authorizedCustomerVersion: number | undefined;
+
   public authorizedCustomerID: string | undefined;
 
   constructor(router: Router) {
     this.router = router;
     this.validator = new Validator();
     this.authorizedCustomerID = getCookie('userID') || undefined;
+    this.authorizedCustomerVersion = 0;
     this.addValues();
     this.runHandlers();
   }
 
   public async runHandlers(): Promise<void> {
+    await this.setCurrentCustomerVersion();
     this.addFormInputHandlers();
     await this.addBtnHandlers();
   }
@@ -56,19 +66,46 @@ class ProfileController {
     });
   }
 
+  public async setCurrentCustomerVersion(): Promise<void> {
+    if (!this.authorizedCustomerID) {
+      return;
+    }
+
+    const version = await getUpdatedVersion(this.authorizedCustomerID);
+
+    if (!version) {
+      return;
+    }
+
+    this.authorizedCustomerVersion = version;
+  }
+
   public async addBtnHandlers(): Promise<void> {
     const buttons = getElementCollection(`.profile-btn-submit`);
-    console.log(buttons);
 
     buttons.forEach(async (element) => {
       const button = element as HTMLButtonElement;
       button.addEventListener('click', async (e: Event) => {
         e.preventDefault();
+        const category = button.getAttribute('category');
         const inputs = getElementCollection(`.${button.getAttribute('category')}-data-item__input`);
-        if (this.isValidData(inputs)) {
-          this.toggleInputsEditMode(inputs);
-          this.toggleBtnEditMode(button);
-          await this.updateData(inputs);
+
+        if (!this.isValidData(inputs)) {
+          renderPopup(false, PopupMessages.ProfileCorrectData);
+          return;
+        }
+
+        this.toggleInputsEditMode(inputs);
+        this.toggleBtnEditMode(button);
+        const oldCustomerVersion = this.authorizedCustomerVersion;
+        await this.updateData(inputs);
+
+        if (
+          !button.classList.contains('profile-btn-submit--edit-mode') &&
+          Number(oldCustomerVersion) < Number(this.authorizedCustomerVersion) &&
+          category
+        ) {
+          this.renderSuccesPopup(category);
         }
       });
     });
@@ -109,18 +146,29 @@ class ProfileController {
     }
   }
 
+  public renderSuccesPopup(category: string): void {
+    switch (category) {
+      case ProfileDataCategories.Personal:
+        renderPopup(true, PopupMessages.PersonalDataUpdated);
+        break;
+      case ProfileDataCategories.Contact:
+        renderPopup(true, PopupMessages.ContactDataUpdated);
+        break;
+      case ProfileDataCategories.Password:
+        renderPopup(true, PopupMessages.PasswordChanged);
+        break;
+      default:
+    }
+  }
+
   public async updateData(inputs: NodeListOf<Element>): Promise<void> {
     // eslint-disable-next-line no-restricted-syntax
     for await (const element of inputs) {
       const input = element as HTMLInputElement;
 
-      if (!this.authorizedCustomerID) {
-        return;
-      }
+      const version = this.authorizedCustomerVersion;
 
-      const version = await getUpdatedVersion(this.authorizedCustomerID);
-
-      if (!version) {
+      if (!version || !this.authorizedCustomerID) {
         return;
       }
 
@@ -143,18 +191,22 @@ class ProfileController {
           break;
         default:
       }
+
+      await this.setCurrentCustomerVersion();
     }
   }
 
   public async addValues(): Promise<void> {
     const personalDataInputs = getElementCollection('.profile-input');
 
-    personalDataInputs.forEach(async (element) => {
-      if (!this.authorizedCustomerID) {
-        return;
-      }
-      const data = await getUpdatedCustomer(this.authorizedCustomerID);
-      const dataResult = data as CustomerDraft;
+    if (!this.authorizedCustomerID) {
+      return;
+    }
+
+    const data = await getUpdatedCustomer(this.authorizedCustomerID);
+    const dataResult = data as CustomerDraft;
+
+    personalDataInputs.forEach((element) => {
       const personalDataInput = element as HTMLInputElement;
       switch (personalDataInput.dataset.type) {
         case FieldNames.Name:
@@ -178,15 +230,16 @@ class ProfileController {
     let isValid = true;
 
     inputs.forEach((element) => {
-      const input = element as HTMLInputElement | HTMLSelectElement;
+      const input = element as HTMLInputElement;
 
       const parentElement = input.closest('.form-item');
 
-      if (input.value === '' || parentElement?.classList.contains('form-item--error')) {
+      if (parentElement?.classList.contains('form-item--error')) {
         isValid = false;
       }
 
       if (!input.value) {
+        isValid = false;
         createError(input, InputUserError.EmptyFieldError);
       }
     });

@@ -1,3 +1,4 @@
+import Toastify from 'toastify-js';
 import { AttrSet, CoockieOptions } from '../../types/types';
 
 export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
@@ -138,4 +139,19 @@ export const getCookie = (name: string): string | undefined => {
     new RegExp(`(?:^|; )${name.replace(/([\\.$?*|{}\\(\\)\\[\]\\\\/\\+^])/g, '\\$1')}=([^;]*)`),
   );
   return matches ? decodeURIComponent(matches[1]) : undefined;
+};
+
+export const renderPopup = (succes: boolean, message: string): void => {
+  const className = succes ? 'toastify-succes' : 'toastify-error';
+
+  Toastify({
+    text: `${message}`,
+    className: `toastify ${className}`,
+    duration: 4000,
+    newWindow: true,
+    close: true,
+    gravity: 'bottom',
+    position: 'center',
+    stopOnFocus: true,
+  }).showToast();
 };

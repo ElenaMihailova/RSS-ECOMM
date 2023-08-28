@@ -39,7 +39,6 @@ class Controller {
 
     if (Object.keys(login).length) {
       const loginData = login as CustomerSignInResult;
-      console.log(loginData.customer.id);
       setCookie('userID', loginData.customer.id);
       const tokenInfo = tokenCache.get();
       setToLS('token', tokenInfo.token);
