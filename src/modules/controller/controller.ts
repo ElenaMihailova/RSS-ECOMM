@@ -3,7 +3,7 @@ import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { PageUrls } from '../../assets/data/constants';
 import { createApiRootWithPasswordFlow, loginUser } from '../api/apiClient';
 import MyTokenCache from '../api/myTokenCache';
-import { getElement, setCookie, setToLS } from '../helpers/functions';
+import { getElement, setToLS } from '../helpers/functions';
 import Router from '../router/router';
 
 class Controller {
@@ -39,7 +39,7 @@ class Controller {
 
     if (Object.keys(login).length) {
       const loginData = login as CustomerSignInResult;
-      setCookie('userID', loginData.customer.id);
+      setToLS('userID', loginData.customer.id);
       const tokenInfo = tokenCache.get();
       setToLS('token', tokenInfo.token);
       router.navigateFromButton(PageUrls.IndexPageUrl);

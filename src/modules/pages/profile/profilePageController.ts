@@ -7,7 +7,7 @@ import {
   getUpdatedVersion,
   updateEmailAdress,
 } from '../../api/apiClient';
-import { getCookie, getElementCollection, renderPopup } from '../../helpers/functions';
+import { getFromLS, getElementCollection, renderPopup } from '../../helpers/functions';
 import Router from '../../router/router';
 import Validator from '../../validation/validator';
 import {
@@ -36,7 +36,7 @@ class ProfileController {
   constructor(router: Router) {
     this.router = router;
     this.validator = new Validator();
-    this.authorizedCustomerID = getCookie('userID') || undefined;
+    this.authorizedCustomerID = getFromLS('userID') || undefined;
     this.authorizedCustomerVersion = 0;
     this.addValues();
     this.runHandlers();
