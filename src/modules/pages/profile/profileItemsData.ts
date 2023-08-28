@@ -1,9 +1,9 @@
-import { ProfileDataBtns } from '../../../types/enums';
+import { ProfileDataBtns, ProfileInputLabels } from '../../../types/enums';
 import { ProfileData, ProfileDataItem } from '../../../types/interfaces';
 
 export const personalDataItems: ProfileDataItem[] = [
   {
-    label: 'Name',
+    label: ProfileInputLabels.Name,
     input: {
       tagName: 'input',
       attributes: [{ 'data-type': 'name' }, { type: 'text' }],
@@ -11,7 +11,7 @@ export const personalDataItems: ProfileDataItem[] = [
     },
   },
   {
-    label: 'Surname',
+    label: ProfileInputLabels.Surname,
     input: {
       tagName: 'input',
       attributes: [{ 'data-type': 'surname' }, { type: 'text' }],
@@ -19,7 +19,7 @@ export const personalDataItems: ProfileDataItem[] = [
     },
   },
   {
-    label: 'Age',
+    label: ProfileInputLabels.DateOfBirth,
     input: {
       tagName: 'input',
       attributes: [{ 'data-type': 'age' }, { type: 'text' }],
@@ -29,14 +29,14 @@ export const personalDataItems: ProfileDataItem[] = [
 ];
 
 export const personalData: ProfileData = {
-  title: ProfileDataBtns.Personal,
-  button: 'Change personal data',
+  title: 'Personal data',
+  button: ProfileDataBtns.Personal,
   dataItems: personalDataItems,
 };
 
 export const contactDataItems: ProfileDataItem[] = [
   {
-    label: 'Email-adress',
+    label: ProfileInputLabels.Email,
     input: {
       tagName: 'input',
       attributes: [{ 'data-type': 'email' }, { type: 'text' }],
@@ -46,12 +46,12 @@ export const contactDataItems: ProfileDataItem[] = [
 ];
 
 export const contactData: ProfileData = {
-  title: ProfileDataBtns.Contact,
-  button: 'Change contact information',
+  title: 'Contact information',
+  button: ProfileDataBtns.Contact,
   dataItems: contactDataItems,
 };
 
 export const passwordData: ProfileData = {
-  title: ProfileDataBtns.Password,
-  button: 'Change password',
+  title: 'Password',
+  button: ProfileDataBtns.Password,
 };

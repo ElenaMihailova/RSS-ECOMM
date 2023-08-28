@@ -1,18 +1,25 @@
-export const enum AdressCategories {
-  Shipping = 'shipping',
-  Billing = 'billing',
-}
-
 export const enum ProfileDataCategories {
   Personal = 'personal',
   Contact = 'contact',
   Password = 'password',
 }
 
+export const enum ProfileInputLabels {
+  Name = 'Name:',
+  Surname = 'Surname:',
+  DateOfBirth = 'Date of birth:',
+  Email = 'Email:',
+}
+
 export const enum ProfileDataBtns {
   Personal = 'Change personal data',
   Contact = 'Change contact information',
   Password = 'Change password',
+}
+
+export const enum AdressCategories {
+  Shipping = 'shipping',
+  Billing = 'billing',
 }
 
 export const enum Countries {

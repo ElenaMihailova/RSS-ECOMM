@@ -33,7 +33,7 @@ class ProfileView extends PageView {
     return this.container;
   }
 
-  private async renderUserDataContainer(container: HTMLElement, category: string, data: ProfileData): Promise<void> {
+  private renderUserDataContainer(container: HTMLElement, category: string, data: ProfileData): void {
     const dataContainer = createElement({
       tagName: 'div',
       classNames: ['profile-data', `${category}-data`],
@@ -43,7 +43,7 @@ class ProfileView extends PageView {
     createElement({
       tagName: 'span',
       text: data.title,
-      classNames: ['title', 'profile-data-title', `${category}-data__title`],
+      classNames: ['title', 'profile-data-title'],
       parent: dataContainer,
     });
 
@@ -62,7 +62,7 @@ class ProfileView extends PageView {
       classNames: [`${category}-data__btn-submit`, 'profile-btn-submit'],
       attributes: [{ category: `${category}` }],
       text: data.button,
-      parent: dataForm,
+      parent: dataContainer,
     });
   }
 
@@ -75,9 +75,15 @@ class ProfileView extends PageView {
       });
 
       createElement({
-        tagName: 'label',
-        classNames: [`${category}-data-item__label`, 'profile-label'],
+        tagName: 'p',
+        classNames: [`${category}-data-item__label`, 'profile-data-label'],
         text: item.label,
+        parent: dataItem,
+      });
+
+      const formItem = createElement({
+        tagName: 'div',
+        classNames: [`${category}-data-item__form-item`, 'profile-form-item', 'form-item'],
         parent: dataItem,
       });
 
@@ -85,11 +91,11 @@ class ProfileView extends PageView {
         tagName: 'input',
         classNames: [`${category}-data-item__input`, 'profile-input', 'input'],
         attributes: item.input.attributes,
-        parent: dataItem,
+        parent: formItem,
       });
 
       dataItemInput.classList.add('profile-input--hidden');
-      dataItemInput.readOnly = true;
+      dataItemInput.disabled = true;
     });
 
     return container;
