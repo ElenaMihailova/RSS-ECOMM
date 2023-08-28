@@ -116,6 +116,7 @@ class RegistrationController {
       this.isCommonAdress = commonAdressCheckbox.checked;
       this.registrationView.toggleBillingAdressView();
       this.addFormSelectHandlers();
+      this.addFormInputHandlers();
     });
   }
 
