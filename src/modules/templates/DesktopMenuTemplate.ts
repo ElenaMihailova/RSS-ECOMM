@@ -40,7 +40,7 @@ const desktopMenuTemplate = (linksHtml: string): string => `
         <svg class="login-svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
           <use xlink:href="./image/sprite.svg#person"></use>
         </svg>
-        <svg class="logout-svg visually-hidden" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <svg class="logout-svg visually-hidden" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
           <use xlink:href="./image/sprite.svg#logout"></use>
         </svg>
         <div class="tooltip tooltip--login">
