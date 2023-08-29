@@ -1,4 +1,4 @@
-export const catalogItemsMain = [
+const catalogItemsMain = [
   { image: './image/black.png', name: 'BLACK TEA' },
   { image: './image/green.png', name: 'GREEN TEA' },
   { image: './image/white.png', name: 'WHITE TEA' },
@@ -7,6 +7,4 @@ export const catalogItemsMain = [
   { image: './image/oolong.png', name: 'OOLONG' },
 ];
 
-export const catalogItems = [
-  { image: './image/item.png', name: 'Ceylon Ginger Cinnamon chai tea', price: '4.85', weight: '50' },
-];
+export default catalogItemsMain;

@@ -3,7 +3,7 @@ import introSection from './IntroSectionModule';
 import blogSection from './BlogSectionModule';
 import featuresSection from './FeaturesSectionModule';
 import orderSection from './OrderSectionModule';
-import { catalogItemsMain } from '../../assets/data/catalogItems';
+import catalogItemsMain from '../../assets/data/catalogItems';
 
 const catalogSection = createCatalogSection(catalogItemsMain);
 
