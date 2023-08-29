@@ -54,9 +54,7 @@
     "@commercetools/sdk-client-v2": "^2.2.0",
     "dotenv": "^16.3.1",
     "dotenv-defaults": "^5.0.2",
-    "netlify-plugin-bundle-env": "^0.3.2",
     "netlify-plugin-contextual-env": "^0.3.0",
-    "netlify-plugin-inline-functions-env": "^1.0.9",
     "toastify-js": "^1.12.0"
   }
 }
