@@ -5,7 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { ESLint } = require('eslint');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const dotenv = require('dotenv').config({ path: __dirname + '/.env' });
+const dotenv = require('dotenv-defaults').config({ path: __dirname + '/.env' });
 const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const webpack = require('webpack');
