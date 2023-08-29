@@ -9,9 +9,9 @@ export default function generateCatalogList(productData: ProductCardData[]): str
     )
     .join('');
 
-  return `<section class="container">
+  return `
   <ol class='catalog__list'>
   ${productCards}
   </ol>
-</section>`;
+`;
 }
