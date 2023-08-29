@@ -4,7 +4,6 @@ import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/dec
 import Toastify from 'toastify-js';
 import { buildClientWithPasswordFlow, ctpClient } from './buildClient';
 
-console.log(process.env.CTP_PROJECT_KEY);
 const apiProjectRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
   projectKey: process.env.CTP_PROJECT_KEY as string,
 });
