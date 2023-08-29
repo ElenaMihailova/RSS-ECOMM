@@ -3,4 +3,4 @@
   to = "/"
   status = 200
 [[plugins]]
-  package = "netlify-plugin-contextual-env"
+  package = "netlify-plugin-bundle-env"
