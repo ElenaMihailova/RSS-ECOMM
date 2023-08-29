@@ -77,7 +77,7 @@ module.exports = ({ develop }) => ({
       patterns: [
         { from: 'src/assets/image', to: 'image' },
         { from: 'src/assets/image/favicon', to: 'image' },
-        { from: 'src/assets/fonts', to: 'fonts' }
+        { from: 'src/assets/fonts', to: 'assets/fonts' }
       ],
     }),
     new CleanWebpackPlugin(),

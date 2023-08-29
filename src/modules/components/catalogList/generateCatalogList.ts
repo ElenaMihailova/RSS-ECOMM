@@ -5,7 +5,7 @@ export default function generateCatalogList(productData: ProductCardData[]): str
   const productCards = productData
     .map(
       (product) => `
-  <li class="catalog__item">${generateProductCard(product)}</li>`,
+  <li class="catalog__item card">${generateProductCard(product)}</li>`,
     )
     .join('');
 
