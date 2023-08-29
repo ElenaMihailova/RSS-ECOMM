@@ -1,30 +1,29 @@
 @font-face {
-    font-family: 'Prosto One';
-    src:
-      url('./assets/fonts/ProstoOne-Regular.woff2') format('woff2'),
-      url('./assets/fonts/ProstoOne-Regular.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-  }
-  
-  @font-face {
-    font-family: 'Montserrat';
-    src:
-      url('./assets/fonts/Montserrat-Regular.woff2') format('woff2'),
-      url('./assets/fonts/Montserrat-Regular.woff2') format('woff');
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-  }
-  
-  @font-face {
-    font-family: 'Montserrat';
-    src:
-      url('./assets/fonts/Montserrat-Medium.woff2') format('woff2'),
-      url('./assets/fonts/Montserrat-Medium.woff') format('woff');
-    font-style: normal;
-    font-weight: 500;
-    font-display: swap;
-  }
-  
+  font-family: 'Prosto One';
+  src:
+    url('./assets/fonts/ProstoOne-Regular.woff2') format('woff2'),
+    url('./assets/fonts/ProstoOne-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src:
+    url('./assets/fonts/Montserrat-Regular.woff2') format('woff2'),
+    url('./assets/fonts/Montserrat-Regular.woff2') format('woff');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src:
+    url('./assets/fonts/Montserrat-Medium.woff2') format('woff2'),
+    url('./assets/fonts/Montserrat-Medium.woff') format('woff');
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
