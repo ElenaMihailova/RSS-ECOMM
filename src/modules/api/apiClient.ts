@@ -4,6 +4,9 @@ import {
   createApiBuilderFromCtpClient,
   ProductPagedQueryResponse,
   Product,
+  ApiRoot,
+  Category,
+  ProductProjection,
 } from '@commercetools/platform-sdk';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
@@ -77,6 +80,193 @@ export const getProducts = async (): Promise<Product[] | object> => {
   await apiProjectRoot
     .products()
     .get()
+    .execute()
+    .then((r) => {
+      resData = r.body.results;
+    })
+    .catch((e) => {
+      console.error(e.message);
+    });
+
+  return resData;
+};
+
+export const getCategoryId = async (name: string): Promise<string | object> => {
+  let resData: string | object = {};
+  await apiProjectRoot
+    .categories()
+    .get({
+      queryArgs: {
+        where: `name(en-US="${name}")`,
+      },
+    })
+    .execute()
+    .then((r) => {
+      resData = r.body.results[0].id;
+    })
+    .catch((e) => {
+      console.error(e.message);
+    });
+  return resData;
+};
+
+export const getProductByCategory = async (id: string | object): Promise<ProductProjection[] | object> => {
+  let resData = {};
+  await apiProjectRoot
+    .productProjections()
+    .search()
+    .get({
+      queryArgs: {
+        filter: `categories.id:"${id}"`,
+      },
+    })
+    .execute()
+    .then((r) => {
+      resData = r.body.results;
+    })
+    .catch((e) => {
+      console.error(e.message);
+    });
+
+  return resData;
+};
+
+export const filterProductsByOrigin = async (country: string): Promise<ProductProjection[] | object> => {
+  let resData = {};
+  await apiProjectRoot
+    .productProjections()
+    .search()
+    .get({
+      queryArgs: {
+        filter: [`variants.attributes.Origin.en-US:"${country}"`],
+      },
+    })
+    .execute()
+    .then((r) => {
+      resData = r.body.results;
+    })
+    .catch((e) => {
+      console.error(e.message);
+    });
+
+  return resData;
+};
+
+export const filterProductsByFlavor = async (flavor: string): Promise<ProductProjection[] | object> => {
+  let resData = {};
+  await apiProjectRoot
+    .productProjections()
+    .search()
+    .get({
+      queryArgs: {
+        filter: [`variants.attributes.Flavor.en-US:"${flavor}"`],
+      },
+    })
+    .execute()
+    .then((r) => {
+      resData = r.body.results;
+    })
+    .catch((e) => {
+      console.error(e.message);
+    });
+
+  return resData;
+};
+
+export const sortProductsByNameAsc = async (): Promise<ProductProjection[] | object> => {
+  let resData = {};
+  await apiProjectRoot
+    .productProjections()
+    .search()
+    .get({
+      queryArgs: {
+        sort: ['name.en-us asc'],
+      },
+    })
+    .execute()
+    .then((r) => {
+      resData = r.body.results;
+    })
+    .catch((e) => {
+      console.error(e.message);
+    });
+
+  return resData;
+};
+
+export const sortProductsByNameDesc = async (): Promise<ProductProjection[] | object> => {
+  let resData = {};
+  await apiProjectRoot
+    .productProjections()
+    .search()
+    .get({
+      queryArgs: {
+        sort: ['name.en-us desc'],
+      },
+    })
+    .execute()
+    .then((r) => {
+      resData = r.body.results;
+    })
+    .catch((e) => {
+      console.error(e.message);
+    });
+
+  return resData;
+};
+
+export const sortProductsByPriceAsc = async (): Promise<ProductProjection[] | object> => {
+  let resData = {};
+  await apiProjectRoot
+    .productProjections()
+    .search()
+    .get({
+      queryArgs: {
+        sort: ['price asc'],
+      },
+    })
+    .execute()
+    .then((r) => {
+      resData = r.body.results;
+    })
+    .catch((e) => {
+      console.error(e.message);
+    });
+
+  return resData;
+};
+
+export const sortProductsByPriceDesc = async (): Promise<ProductProjection[] | object> => {
+  let resData = {};
+  await apiProjectRoot
+    .productProjections()
+    .search()
+    .get({
+      queryArgs: {
+        sort: ['price desc'],
+      },
+    })
+    .execute()
+    .then((r) => {
+      resData = r.body.results;
+    })
+    .catch((e) => {
+      console.error(e.message);
+    });
+
+  return resData;
+};
+
+export const searchProducts = async (str: string): Promise<ProductProjection[] | object> => {
+  let resData = {};
+  await apiProjectRoot
+    .productProjections()
+    .search()
+    .get({
+      queryArgs: {
+        'text.en-us': str.toLowerCase(),
+      },
+    })
     .execute()
     .then((r) => {
       resData = r.body.results;
