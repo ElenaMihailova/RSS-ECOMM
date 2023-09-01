@@ -20,6 +20,8 @@ import catalogContent from '../templates/CatalogTemplate';
 class App {
   private static container: HTMLElement = document.body;
 
+  public static routerInstance: Router | null = null;
+
   public router: Router;
 
   public main: Main | null;
@@ -46,10 +48,10 @@ class App {
   }
 
   private createView(): void {
-    const layout = createLayout(this.headerData, this.footerData);
+    const layout = createLayout(this.headerData, this.footerData, this.router);
     App.container.append(layout.header, layout.footer);
 
-    const loginSvg = getElement('.login-svg');
+    const loginSvg = getElement('.login svg');
     const logoutSvg = getElement('.logout-svg');
     const tooltip = getElement('.tooltip--login');
     const registrationBtn = getElement('.registration--desktop');
@@ -105,6 +107,8 @@ class App {
           if (this.main) {
             this.main.clearContent();
             this.main.setContent(new CatalogView(catalogContent).render());
+            const currentTime = new Date();
+            console.log('Текущее время:', currentTime);
           }
         },
       },
@@ -154,7 +158,7 @@ class App {
 
   private loginBtnHandler(): void {
     const loginBtn = getElement('.login--desktop');
-    const loginSvg = getElement('.login-svg');
+    const loginSvg = getElement('.login svg');
     const logoutSvg = getElement('.logout-svg');
     const tooltip = getElement('.tooltip--login');
     const registrationBtn = getElement('.registration--desktop');
@@ -173,6 +177,7 @@ class App {
         removeFromLS('token');
       } else {
         this.router.navigateFromButton(PageUrls.LoginPageUrl);
+        console.log(PageUrls.LoginPageUrl);
       }
     });
   }
@@ -180,7 +185,7 @@ class App {
   private loginMobileBtnHandler(): void {
     const loginMobileBtn = getElement('.login--mobile');
     const registrationBtn = getElement('.registration--desktop');
-    const loginSvg = getElement('.login-svg');
+    const loginSvg = getElement('.login svg');
     const logoutSvg = getElement('.logout-svg');
     const tooltip = getElement('.tooltip--login');
     const registrationContainer = registrationBtn.closest('li');

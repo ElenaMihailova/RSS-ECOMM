@@ -2,7 +2,7 @@ import PageView from '../../core/pageView';
 
 interface MainData {
   title: string;
-  content: string;
+  content: string | HTMLDivElement;
 }
 
 class CatalogView extends PageView {
@@ -13,7 +13,7 @@ class CatalogView extends PageView {
   constructor(catalogData: MainData) {
     super();
     this.title = catalogData.title;
-    this.content = catalogData.content;
+    this.content = catalogData.content instanceof HTMLDivElement ? catalogData.content.outerHTML : catalogData.content;
   }
 
   private insertMainInDOM(): void {

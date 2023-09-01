@@ -1,29 +1,52 @@
 import { BreadcrumbItem } from './breadcrumbItem';
+import { createElement } from '../../helpers/functions';
 
-export default function generateBreadcrumbs(links: BreadcrumbItem[]): string {
-  let breadcrumbsHTML = `
-    <nav aria-label="breadcrumbs" class="breadcrumbs container">
-      <ol class="breadcrumbs__list">`;
+function generateBreadcrumbs(links: BreadcrumbItem[]): HTMLElement {
+  const breadcrumbsNav = createElement({
+    tagName: 'nav',
+    attributes: [{ 'aria-label': 'breadcrumbs' }],
+    classNames: ['breadcrumbs', 'container'],
+  });
+
+  const breadcrumbsList = createElement({
+    tagName: 'ol',
+    classNames: ['breadcrumbs__list'],
+  });
+
   links.forEach((link, index) => {
+    const listItem = createElement({
+      tagName: 'li',
+      classNames: ['breadcrumbs__link'],
+    });
+
     if (!link.href) {
-      breadcrumbsHTML += `
-      <li class="breadcrumbs__link">
-        ${link.text}
-      </li>`;
+      listItem.innerText = link.text;
     } else {
-      breadcrumbsHTML += `
-      <li>
-        <a class="breadcrumbs__link" href="${link.href}">${link.text}</a>
-      </li>`;
+      const anchor = createElement({
+        tagName: 'a',
+        classNames: ['breadcrumbs__link'],
+        attributes: [{ href: link.href }],
+        text: link.text,
+      });
+
+      listItem.appendChild(anchor);
     }
 
+    breadcrumbsList.appendChild(listItem);
+
     if (index !== links.length - 1) {
-      breadcrumbsHTML += `
-      <li>/</li>`;
+      const separator = createElement({
+        tagName: 'li',
+        text: '/',
+      });
+
+      breadcrumbsList.appendChild(separator);
     }
   });
 
-  breadcrumbsHTML += '</ol></nav>';
+  breadcrumbsNav.appendChild(breadcrumbsList);
 
-  return breadcrumbsHTML;
+  return breadcrumbsNav;
 }
+
+export default generateBreadcrumbs;

@@ -1,17 +1,24 @@
 import generateProductCard from './generateProductCard';
 import { ProductCardData } from './productTypes';
+import { createElement } from '../../helpers/functions';
 
-export default function generateCatalogList(productData: ProductCardData[]): string {
-  const productCards = productData
-    .map(
-      (product) => `
-  <li class="catalog__item card">${generateProductCard(product)}</li>`,
-    )
-    .join('');
+export default function generateCatalogList(productData: ProductCardData[]): HTMLElement {
+  const catalogList = createElement({
+    tagName: 'ol',
+    classNames: ['catalog__list'],
+  });
 
-  return `
-  <ol class='catalog__list'>
-  ${productCards}
-  </ol>
-`;
+  productData.forEach((product) => {
+    const li = createElement({
+      tagName: 'li',
+      classNames: ['catalog__item', 'card'],
+    });
+
+    const productCard = generateProductCard(product);
+    li.appendChild(productCard);
+
+    catalogList.appendChild(li);
+  });
+
+  return catalogList;
 }

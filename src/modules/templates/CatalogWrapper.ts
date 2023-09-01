@@ -1,4 +1,5 @@
 import generateCatalogList from '../components/catalogList/generateCatalogList';
+import { createElement } from '../helpers/functions';
 
 const myProductData = [
   { image: 'path/to/image1.jpg', title: 'Продукт 1', price: 1000, link: '#' },
@@ -8,14 +9,33 @@ const myProductData = [
 
 const catalogList = generateCatalogList(myProductData);
 
-const catalogWrapper = `
-<section class="catalog__wrap container">
-  <div class="catalog__filter filter">здесь блок c фильтрами</div>
-  <div class="catalog__sort sorting">здесь блок c сортировкой</div>
-  <div class="catalog__items">
-  ${catalogList}
-  <div>  
-</section>
-`;
+const catalogWrapper = (): HTMLElement => {
+  const container = createElement({
+    tagName: 'section',
+    classNames: ['catalog__wrap', 'container'],
+  });
+
+  const filter = createElement({
+    tagName: 'div',
+    classNames: ['catalog__filter', 'filter'],
+    parent: container,
+  });
+
+  const sorting = createElement({
+    tagName: 'div',
+    classNames: ['catalog__sort', 'sorting'],
+    parent: container,
+  });
+
+  const items = createElement({
+    tagName: 'div',
+    classNames: ['catalog__items'],
+    parent: container,
+  });
+
+  items.appendChild(catalogList);
+
+  return container;
+};
 
 export default catalogWrapper;

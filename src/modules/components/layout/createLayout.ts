@@ -1,16 +1,27 @@
 import { NavLink, FooterLinks } from './nav.types';
-import { addHTML } from '../../helpers/renderHelpers';
 import { createFooter, createHeader } from '../generateHtml';
+import { createElement } from '../../helpers/functions';
+import Router from '../../router/router';
 
-const createLayout = (headerData: NavLink[], footerData: FooterLinks): { header: HTMLElement; footer: HTMLElement } => {
-  const headerHtml = createHeader(headerData);
+const createLayout = (
+  headerData: NavLink[],
+  footerData: FooterLinks,
+  router: Router,
+): { header: HTMLElement; footer: HTMLElement } => {
+  const headerHtml = createHeader(headerData, router);
   const footerHtml = createFooter(footerData);
 
-  addHTML('header', ['header'], headerHtml);
-  addHTML('footer', ['footer'], footerHtml);
+  const header = createElement({
+    tagName: 'header',
+    classNames: ['header'],
+  });
+  header.appendChild(headerHtml);
 
-  const header = addHTML('header', ['header'], headerHtml);
-  const footer = addHTML('footer', ['footer'], footerHtml);
+  const footer = createElement({
+    tagName: 'footer',
+    classNames: ['footer'],
+    html: footerHtml,
+  });
 
   return { header, footer };
 };
