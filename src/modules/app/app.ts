@@ -16,6 +16,7 @@ import setupHeaderListeners from '../components/setupHeaderListeners';
 import RegistrationController from '../pages/registration/registrationPageController';
 import CatalogView from '../pages/catalog/catalogPageView';
 import catalogContent from '../templates/CatalogTemplate';
+import { getProductProjections } from '../api/apiClient';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -98,6 +99,7 @@ class App {
           if (this.main) {
             this.main.clearContent();
             this.main.setContent(new IndexView(mainContent).render());
+            console.log(getProductProjections());
           }
         },
       },

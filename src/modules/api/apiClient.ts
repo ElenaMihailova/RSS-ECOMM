@@ -1,4 +1,13 @@
-import { CustomerSignInResult, MyCustomerDraft, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import {
+  CustomerSignInResult,
+  MyCustomerDraft,
+  createApiBuilderFromCtpClient,
+  ProductPagedQueryResponse,
+  Product,
+  ApiRoot,
+  Category,
+  ProductProjection,
+} from '@commercetools/platform-sdk';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import Toastify from 'toastify-js';
@@ -62,6 +71,23 @@ export const loginUser = async (
         stopOnFocus: true,
       }).showToast();
     });
+
+  return resData;
+};
+
+export const getProductProjections = async (): Promise<ProductProjection[] | object> => {
+  let resData = {};
+  await apiProjectRoot
+    .productProjections()
+    .get()
+    .execute()
+    .then((r) => {
+      resData = r.body.results;
+    })
+    .catch((e) => {
+      console.error(e.message);
+    });
+  console.log(resData);
 
   return resData;
 };

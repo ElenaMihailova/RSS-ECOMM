@@ -1,32 +1,23 @@
 import generateCatalogList from '../components/catalogList/generateCatalogList';
 import { createElement } from '../helpers/functions';
 
-const myProductData = [
-  { image: 'path/to/image1.jpg', title: 'Продукт 1', price: 1000, link: '#' },
-  { image: 'path/to/image2.jpg', title: 'Продукт 2', price: 2000, link: '#' },
-  { image: 'path/to/image3.jpg', title: 'Продукт 3', price: 3000, link: '#' },
-];
+const catalogWrapper = createElement({
+  tagName: 'section',
+  classNames: ['catalog__wrap', 'container'],
+});
 
-const catalogList = generateCatalogList(myProductData);
+const filter = createElement({
+  tagName: 'div',
+  classNames: ['catalog__filter', 'filter'],
+});
 
-const catalogWrapper = (): HTMLElement => {
-  const container = createElement({
-    tagName: 'section',
-    classNames: ['catalog__wrap', 'container'],
-  });
+catalogWrapper.appendChild(filter);
 
-  const filter = createElement({
-    tagName: 'div',
-    classNames: ['catalog__filter', 'filter'],
-    parent: container,
-  });
-
+const wrapSort = (): HTMLElement => {
   const wrap = createElement({
     tagName: 'div',
     classNames: ['catalog__sortSearch'],
-    parent: container,
   });
-
   const sorting = createElement({
     tagName: 'div',
     classNames: ['catalog__sort', 'sorting'],
@@ -39,15 +30,13 @@ const catalogWrapper = (): HTMLElement => {
     parent: wrap,
   });
 
-  const items = createElement({
-    tagName: 'div',
-    classNames: ['catalog__items'],
-    parent: container,
-  });
-
-  items.appendChild(catalogList);
-
-  return container;
+  return wrap;
 };
+
+catalogWrapper.appendChild(wrapSort());
+
+const catalogList = await generateCatalogList();
+
+catalogWrapper.appendChild(catalogList);
 
 export default catalogWrapper;

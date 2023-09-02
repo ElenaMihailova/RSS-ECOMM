@@ -99,3 +99,11 @@
     grid-area: items;
   }
 }
+
+.catalog__list--catalog .catalog__item {
+  flex: 0 0 30%;
+}
+
+.catalog__list--catalog {
+  max-width: 100%;
+}

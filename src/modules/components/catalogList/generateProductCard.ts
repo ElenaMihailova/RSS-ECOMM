@@ -1,8 +1,9 @@
 import { ProductCardData } from './productTypes';
 import { createElement } from '../../helpers/functions';
 
-// todo src для image
-export default function generateProductCard({ link, title, price }: ProductCardData): HTMLElement {
+export default function generateProductCard(productData: ProductCardData): HTMLElement {
+  const { link, imageUrl, title, price, description } = productData;
+
   const productCard = createElement({
     tagName: 'a',
     classNames: ['card__link'],
@@ -12,7 +13,7 @@ export default function generateProductCard({ link, title, price }: ProductCardD
   const imageCard = createElement({
     tagName: 'img',
     classNames: ['product-card__image'],
-    attributes: [{ alt: title, src: '' }],
+    attributes: [{ alt: title }, { src: imageUrl }],
   });
 
   const nameCard = createElement({
@@ -21,8 +22,16 @@ export default function generateProductCard({ link, title, price }: ProductCardD
     text: title,
   });
 
+  const descriptionCard = createElement({
+    tagName: 'p',
+    classNames: ['card__description'],
+    text: description,
+    parent: productCard,
+  });
+
   const priceWrap = createElement({
     tagName: 'div',
+    parent: productCard,
   });
 
   const priceCard = createElement({
@@ -48,7 +57,7 @@ export default function generateProductCard({ link, title, price }: ProductCardD
 
   productCard.appendChild(imageCard);
   productCard.appendChild(nameCard);
-  productCard.appendChild(priceWrap);
+  productCard.appendChild(descriptionCard);
 
   return productCard;
 }
