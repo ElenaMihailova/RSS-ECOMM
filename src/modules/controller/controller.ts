@@ -26,7 +26,7 @@ class Controller {
 
     const apiRoot = createApiRootWithPasswordFlow(options);
     const login = await loginUser(apiRoot, email, password);
-    const loginSvg = getElement('.login-svg');
+    const loginSvg = getElement('.login svg');
     const logoutSvg = getElement('.logout-svg');
     const tooltip = getElement('.tooltip--login');
     const registrationBtn = getElement('.registration--desktop');

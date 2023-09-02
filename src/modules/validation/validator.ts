@@ -48,7 +48,9 @@ class Validator {
     this.removeLabels(element);
     const { value } = element;
 
-    if (!value) return;
+    if (!value) {
+      return;
+    }
     switch (element.dataset.type) {
       case FieldNames.Name:
       case FieldNames.Surname:
