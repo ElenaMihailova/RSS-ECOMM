@@ -12,14 +12,16 @@ export default function generateProductCard(productData: ProductCardData): HTMLE
 
   const imageCard = createElement({
     tagName: 'img',
-    classNames: ['product-card__image'],
+    classNames: ['card__image'],
     attributes: [{ alt: title }, { src: imageUrl }],
+    parent: productCard,
   });
 
   const nameCard = createElement({
     tagName: 'h2',
     classNames: ['card__name'],
     text: title,
+    parent: productCard,
   });
 
   const descriptionCard = createElement({
@@ -37,27 +39,18 @@ export default function generateProductCard(productData: ProductCardData): HTMLE
   const priceCard = createElement({
     tagName: 'p',
     classNames: ['card__price'],
-    text: `${price} ₽`,
+    text: `€ ${price}`,
+    parent: priceWrap,
   });
 
   const weightCard = createElement({
     tagName: 'p',
     classNames: ['card__weight'],
     text: '50 g',
+    parent: priceWrap,
   });
 
-  const weightUnit = createElement({
-    tagName: 'span',
-  });
-
-  weightCard.appendChild(weightUnit);
-
-  priceWrap.appendChild(priceCard);
-  priceWrap.appendChild(weightCard);
-
-  productCard.appendChild(imageCard);
-  productCard.appendChild(nameCard);
-  productCard.appendChild(descriptionCard);
+  console.log(productCard);
 
   return productCard;
 }

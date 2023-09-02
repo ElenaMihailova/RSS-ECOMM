@@ -76,8 +76,6 @@
 }
 
 .catalog__filter {
-  background-color: aqua;
-
   @include vp-768 {
     grid-area: filter;
   }
@@ -85,7 +83,6 @@
 
 .catalog__sortSearch {
   @include vp-768 {
-    background-color: blueviolet;
     grid-area: sort;
   }
 }
@@ -105,5 +102,5 @@
 }
 
 .catalog__list--catalog {
-  max-width: 100%;
+  padding-left: 20px;
 }
