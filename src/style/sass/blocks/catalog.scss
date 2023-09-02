@@ -83,14 +83,15 @@
   }
 }
 
-.catalog__sort {
-  background-color: blueviolet;
-  align-self: end;
-
+.catalog__sortSearch {
   @include vp-768 {
+    background-color: blueviolet;
     grid-area: sort;
-    justify-self: flex-end;
   }
+}
+
+.catalog__sort {
+  align-self: end;
 }
 
 .catalog__items {

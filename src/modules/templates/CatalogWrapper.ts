@@ -21,10 +21,22 @@ const catalogWrapper = (): HTMLElement => {
     parent: container,
   });
 
+  const wrap = createElement({
+    tagName: 'div',
+    classNames: ['catalog__sortSearch'],
+    parent: container,
+  });
+
   const sorting = createElement({
     tagName: 'div',
     classNames: ['catalog__sort', 'sorting'],
-    parent: container,
+    parent: wrap,
+  });
+
+  const search = createElement({
+    tagName: 'div',
+    classNames: ['catalog__search', 'search'],
+    parent: wrap,
   });
 
   const items = createElement({

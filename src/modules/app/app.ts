@@ -107,8 +107,6 @@ class App {
           if (this.main) {
             this.main.clearContent();
             this.main.setContent(new CatalogView(catalogContent).render());
-            const currentTime = new Date();
-            console.log('Текущее время:', currentTime);
           }
         },
       },

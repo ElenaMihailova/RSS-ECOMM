@@ -1,6 +1,7 @@
 import { ProductCardData } from './productTypes';
 import { createElement } from '../../helpers/functions';
 
+// todo src для image
 export default function generateProductCard({ link, title, price }: ProductCardData): HTMLElement {
   const productCard = createElement({
     tagName: 'a',

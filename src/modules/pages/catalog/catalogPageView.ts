@@ -5,6 +5,7 @@ interface MainData {
   content: string | HTMLDivElement;
 }
 
+// todo класс похож на IndexPageView может можно вынести в общий класс и использовать его
 class CatalogView extends PageView {
   private title: string;
 

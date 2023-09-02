@@ -1,7 +1,7 @@
-import { BreadcrumbItem } from './breadcrumbItem';
+import { BreadcrumbsType } from './breadcrumbsType';
 import { createElement } from '../../helpers/functions';
 
-function generateBreadcrumbs(links: BreadcrumbItem[]): HTMLElement {
+function generateBreadcrumbs(links: BreadcrumbsType[]): HTMLElement {
   const breadcrumbsNav = createElement({
     tagName: 'nav',
     attributes: [{ 'aria-label': 'breadcrumbs' }],
