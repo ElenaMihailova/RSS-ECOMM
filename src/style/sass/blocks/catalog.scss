@@ -75,23 +75,89 @@
   }
 }
 
-.catalog__filter {
-  background-color: aqua;
+.catalog__navigation {
+  display: flex;
+  flex-direction: column;
 
   @include vp-768 {
     grid-area: filter;
   }
 }
 
+.hidden {
+  display: none;
+}
+
+.catalog__categories {
+  padding-bottom: 50px;
+}
+
+.catalog__categories-list {
+  padding-left: 0;
+}
+
+.category__item {
+  list-style-type: none;
+}
+
+.subcategory__item {
+  font-size: 0.8rem;
+  padding-left: 10px;
+}
+
+.category__link {
+  cursor: pointer;
+}
+
+.catalog__category-classic,
+.catalog__category-breakfast {
+  padding-bottom: 10px;
+}
+
+.catalog__filter {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-origin__title,
+.filter-flavor__title {
+  font-weight: 500;
+  padding-bottom: 5px;
+}
+
+.filter-origin__list,
+.filter-flavor__list {
+  padding-left: 0;
+}
+
+.filter-origin__list {
+  padding-bottom: 35px;
+}
+
+.filter-origin__item,
+.filter-flavor__item {
+  list-style-type: none;
+  padding: 5px 0;
+}
+
+.filter-origin__input,
+.filter-flavor__input {
+  margin-right: 10px;
+}
+
 .catalog__sortSearch {
+  display: flex;
+  justify-content: space-between;
+
   @include vp-768 {
-    background-color: blueviolet;
     grid-area: sort;
   }
 }
 
+
+
 .catalog__sort {
-  align-self: end;
+
 }
 
 .catalog__items {
