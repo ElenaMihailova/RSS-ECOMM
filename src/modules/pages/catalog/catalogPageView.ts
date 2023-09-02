@@ -1,6 +1,6 @@
 import PageView from '../../core/pageView';
 import { createElement } from '../../helpers/functions';
-import './catalogPage.scss';
+// import './catalogPage.scss';
 
 class CatalogView extends PageView {
   constructor() {

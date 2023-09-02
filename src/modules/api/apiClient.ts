@@ -75,21 +75,21 @@ export const loginUser = async (
   return resData;
 };
 
-export const getProducts = async (): Promise<Product[] | object> => {
-  let resData = {};
-  await apiProjectRoot
-    .products()
-    .get()
-    .execute()
-    .then((r) => {
-      resData = r.body.results;
-    })
-    .catch((e) => {
-      console.error(e.message);
-    });
+// export const getProducts = async (): Promise<Product[] | object> => {
+//   let resData = {};
+//   await apiProjectRoot
+//     .products()
+//     .get()
+//     .execute()
+//     .then((r) => {
+//       resData = r.body.results;
+//     })
+//     .catch((e) => {
+//       console.error(e.message);
+//     });
 
-  return resData;
-};
+//   return resData;
+// };
 
 export const getCategoryId = async (name: string): Promise<string | object> => {
   let resData: string | object = {};
@@ -267,6 +267,22 @@ export const searchProducts = async (str: string): Promise<ProductProjection[] |
         'text.en-us': str.toLowerCase(),
       },
     })
+    .execute()
+    .then((r) => {
+      resData = r.body.results;
+    })
+    .catch((e) => {
+      console.error(e.message);
+    });
+
+  return resData;
+};
+
+export const getProductProjections = async (): Promise<ProductProjection[] | object> => {
+  let resData = {};
+  await apiProjectRoot
+    .productProjections()
+    .get()
     .execute()
     .then((r) => {
       resData = r.body.results;

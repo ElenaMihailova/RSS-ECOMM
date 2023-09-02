@@ -51,7 +51,7 @@ class Router {
       return;
     }
 
-    route.callback();
+    route.callback(request.resource);
   }
 }
 

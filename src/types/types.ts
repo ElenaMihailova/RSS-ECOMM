@@ -1,6 +1,6 @@
 export type RouteAction = {
   path: string;
-  callback: () => void;
+  callback: (link?: string) => void;
 };
 
 export type UserRequest = {

@@ -1,4 +1,4 @@
-import { PageUrls } from '../../assets/data/constants';
+import { PageUrls, ProductName } from '../../assets/data/constants';
 import { RouteAction } from '../../types/types';
 import Router from '../router/router';
 import Main from '../core/main';
@@ -14,6 +14,9 @@ import { headerLinks, footerLinks } from '../../assets/data/navigationData';
 import mainContent from '../templates/mainContent';
 import setupHeaderListeners from '../components/setupHeaderListeners';
 import RegistrationController from '../pages/registration/registrationPageController';
+import CatalogView from '../pages/catalog/catalogPageView';
+import CatalogController from '../pages/catalog/catalogPageController';
+import ProductView from '../pages/product/productPageView';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -23,6 +26,8 @@ class App {
   public main: Main | null;
 
   private loginController: LoginController | null;
+
+  private catalogController: CatalogController | null;
 
   private headerData: NavLink[] = headerLinks;
 
@@ -34,6 +39,7 @@ class App {
     this.main = null;
     this.loginController = null;
     this.registrationController = null;
+    this.catalogController = null;
     const routes = this.createRoutes();
     this.router = new Router(routes);
     this.createView();
@@ -125,6 +131,26 @@ class App {
 
             this.main.setViewContent(new LoginView());
             this.loginController = new LoginController(this.router);
+          }
+        },
+      },
+      {
+        path: `${PageUrls.CatalogPageUrl}`,
+        callback: (): void => {
+          if (this.main) {
+            this.main.clearContent();
+            this.main.setViewContent(new CatalogView());
+            this.catalogController = new CatalogController(this.router);
+          }
+        },
+      },
+      {
+        path: `${PageUrls.CatalogPageUrl}/${ProductName}`,
+        callback: (product: string | undefined): void => {
+          if (this.main) {
+            this.main.clearContent();
+            this.main.setViewContent(new ProductView(product as string, this.router));
+            this.catalogController = new CatalogController(this.router);
           }
         },
       },

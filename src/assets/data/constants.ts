@@ -9,4 +9,7 @@ export const enum PageUrls {
   LoginPageUrl = 'login',
   RegistrationPageUrl = 'registration',
   ErrorPageUrl = 'not-found',
+  CatalogPageUrl = 'catalog',
 }
+
+export const ProductName = '{name}';

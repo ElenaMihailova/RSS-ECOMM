@@ -1,7 +1,12 @@
+import Router from '../router/router';
+
 abstract class PageView {
   protected container: HTMLElement;
 
-  constructor() {
+  protected id: string | undefined = '';
+
+  constructor(id?: string | undefined, router?: Router) {
+    this.id = id;
     this.container = document.createElement('div');
   }
 

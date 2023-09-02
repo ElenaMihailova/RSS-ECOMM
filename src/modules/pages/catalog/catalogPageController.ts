@@ -3,7 +3,7 @@ import {
   filterProductsByOrigin,
   getCategoryId,
   getProductByCategory,
-  getProducts,
+  getProductProjections,
   searchProducts,
   sortProductsByNameAsc,
   sortProductsByNameDesc,
@@ -20,16 +20,17 @@ class CatalogController {
     // this.viewProducts();
     // this.getCat('Black teas');
     // this.getProductsByCat('Black teas');
-    this.filterByOrigin('China');
+    // this.filterByOrigin('China');
     // this.sortProductsByName();
     // this.sortProductsByPrice();
     // this.searchProds('ceylon');
+    this.getProducts();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async viewProducts(): Promise<any> {
     const catalog: HTMLElement = getElement('.catalog__container');
-    const products = await getProducts();
+    const products = await getProductProjections();
     console.log(products);
     if (Array.isArray(products)) {
       products.forEach((product: Product) => {
@@ -111,6 +112,12 @@ class CatalogController {
 
   private async searchProds(str: string): Promise<ProductProjection[] | object> {
     const products = await searchProducts(str);
+    return products;
+  }
+
+  private async getProducts(): Promise<ProductProjection[] | object> {
+    const products = await getProductProjections();
+    console.log(products);
     return products;
   }
 }

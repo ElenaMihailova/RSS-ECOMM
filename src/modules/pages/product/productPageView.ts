@@ -1,9 +1,13 @@
 import PageView from '../../core/pageView';
 import { createElement } from '../../helpers/functions';
+import Router from '../../router/router';
 
 class ProductView extends PageView {
-  constructor() {
+  private router: Router;
+
+  constructor(id: string, router: Router) {
     super();
+    this.router = router;
     this.container.classList.add('product-page');
   }
 
