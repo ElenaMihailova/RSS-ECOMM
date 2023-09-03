@@ -8,7 +8,7 @@ const desktopMenuTemplate = (linksHtml: string): string => `
     <li>
       <a href="javascript:void(0)">
         <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-          <use xlink:href="./image/sprite.svg#search"></use>
+          <use xlink:href="../image/sprite.svg#search"></use>
         </svg>
         <div class="tooltip ">
           <p>Search</p>
@@ -18,7 +18,7 @@ const desktopMenuTemplate = (linksHtml: string): string => `
     <li>
       <a href="javascript:void(0)">
         <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-          <use xlink:href="./image/sprite.svg#card"></use>
+          <use xlink:href="../image/sprite.svg#card"></use>
         </svg>
         <div class="tooltip ">
           <p>Card</p>
@@ -28,7 +28,7 @@ const desktopMenuTemplate = (linksHtml: string): string => `
     <li>
       <a href="registration" class="registration registration--desktop">
         <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-          <use xlink:href="./image/sprite.svg#add_person"></use>
+          <use xlink:href="../image/sprite.svg#add_person"></use>
         </svg>
         <div class="tooltip ">
           <p>Sigh up</p>
@@ -38,7 +38,7 @@ const desktopMenuTemplate = (linksHtml: string): string => `
     <li>
     <a href="javascript:void(0)" class="profile profile--desktop">
       <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-        <use xlink:href="./image/sprite.svg#person"></use>
+        <use xlink:href="../image/sprite.svg#person"></use>
       </svg>
       <div class="tooltip ">
         <p>Profile</p>
@@ -48,10 +48,10 @@ const desktopMenuTemplate = (linksHtml: string): string => `
     <li>
       <a href="login" class="login login--desktop">
         <svg class="login-svg" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-          <use xlink:href="./image/sprite.svg#person"></use>
+          <use xlink:href="../image/sprite.svg#person"></use>
         </svg>
         <svg class="logout-svg visually-hidden" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
-          <use xlink:href="./image/sprite.svg#logout"></use>
+          <use xlink:href="../image/sprite.svg#logout"></use>
         </svg>
         <div class="tooltip tooltip--login">
           <p>Log in</p>
