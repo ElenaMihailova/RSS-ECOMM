@@ -1,6 +1,6 @@
 import { Flavors, Origins, SortOptions } from '../../assets/data/constants';
 import generateCatalogList from '../components/catalogList/generateCatalogList';
-import { createElement } from '../helpers/functions';
+import { createElement, createSvgElement } from '../helpers/functions';
 
 const myProductData = [
   { image: 'path/to/image1.jpg', title: 'Продукт 1', price: 1000, link: '#' },
@@ -238,17 +238,11 @@ const catalogWrapper = (): HTMLElement => {
     parent: container,
   });
 
-  const search = createElement({
-    tagName: 'div',
-    classNames: ['catalog__search', 'search'],
-    parent: wrap,
-  });
-
   const seachInput = createElement({
     tagName: 'input',
-    classNames: ['search__input'],
-    attributes: [{ type: 'text' }],
-    parent: search,
+    classNames: ['search__input', 'input'],
+    attributes: [{ type: 'search' }, { placeholder: 'Search....' }],
+    parent: wrap,
   });
 
   const sorting = createElement({
@@ -271,6 +265,10 @@ const catalogWrapper = (): HTMLElement => {
       parent: sortSelect,
     });
   }
+
+  const selectTitle = sortSelect.firstChild as HTMLElement;
+  selectTitle.setAttribute('selected', 'selected');
+  selectTitle.setAttribute('disabled', 'disabled');
 
   const items = createElement({
     tagName: 'div',

@@ -17,4 +17,4 @@ export const Origins = ['China', 'India', 'Morocco', 'Kenya', 'Japan'];
 
 export const Flavors = ['Spice', 'Floral', 'Citrus', 'Bright', 'Smooth', 'Sweet'];
 
-export const SortOptions = ['Name: A to Z', 'Name: Z to A', 'Price: Low to high', 'Price: High to low'];
+export const SortOptions = ['SORT BY', 'Name: A to Z', 'Name: Z to A', 'Price: Low to high', 'Price: High to low'];

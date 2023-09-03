@@ -67,7 +67,7 @@
   @include vp-768 {
     display: grid;
     grid-template-columns: 1fr 3fr;
-    grid-template-rows: auto;
+    grid-template-rows: auto 1fr;
     grid-auto-flow: row;
     grid-template-areas:
       'filter sort'
@@ -121,7 +121,7 @@
 
 .filter-origin__title,
 .filter-flavor__title {
-  font-weight: 500;
+  font-weight: 600;
   padding-bottom: 5px;
 }
 
@@ -142,7 +142,38 @@
 
 .filter-origin__input,
 .filter-flavor__input {
-  margin-right: 10px;
+  position: relative;
+  cursor: pointer;
+  margin-right: 15px;
+  background-color: white;
+  bottom: 2px;
+
+  &:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 0;
+    left: 0;
+    border: 1.5px solid black;
+    background-color: white;
+  }
+
+  &:checked:after {
+    content: "";
+    display: block;
+    width: 5px;
+    height: 10px;
+    border: solid black;
+    border-width: 0 1.5px 1.5px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    position: absolute;
+    top: 2px;
+    left: 6px;
+  }
 }
 
 .catalog__sortSearch {
@@ -154,10 +185,19 @@
   }
 }
 
-
-
 .catalog__sort {
+  position: relative;
+}
 
+.catalog__sort select {
+  height: 100%;
+  border: 1.5px solid black;
+  border: 0;
+  float: right;
+
+  &:active {
+    border: none;
+  }
 }
 
 .catalog__items {
