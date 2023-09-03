@@ -1,4 +1,11 @@
-import { Mode, ProfileDataBtnsTitles, ProfileDataContainersTitles, ProfileInputLabels } from '../../../types/enums';
+import {
+  FieldNames,
+  Mode,
+  PasswordTypes,
+  ProfileDataBtnsTitles,
+  ProfileDataContainersTitles,
+  ProfileFormELementsLabels,
+} from '../../../types/enums';
 import { AddressDetails, ProfileData, ProfileDataItem } from '../../../types/interfaces';
 import { ProfileAddressData } from '../../../types/types';
 import { getUpdatedCustomer } from '../../api/apiClient';
@@ -19,50 +26,50 @@ const passwordInputClassNames = ['password-data-item__element', 'profile-element
 
 export const personalDataItems: ProfileDataItem[] = [
   {
-    label: ProfileInputLabels.Name,
+    label: ProfileFormELementsLabels.Name,
     element: {
       tagName: 'input',
-      attributes: [{ 'data-type': 'name' }, { type: 'text' }],
+      attributes: [{ 'data-type': FieldNames.Name }, { type: 'text' }],
       classNames: personalDataInputClassNames,
     },
   },
   {
-    label: ProfileInputLabels.Surname,
+    label: ProfileFormELementsLabels.Surname,
     element: {
       tagName: 'input',
-      attributes: [{ 'data-type': 'surname' }, { type: 'text' }],
+      attributes: [{ 'data-type': FieldNames.Surname }, { type: 'text' }],
       classNames: personalDataInputClassNames,
     },
   },
   {
-    label: ProfileInputLabels.DateOfBirth,
+    label: ProfileFormELementsLabels.DateOfBirth,
     element: {
       tagName: 'input',
-      attributes: [{ 'data-type': 'age' }, { type: 'text' }],
+      attributes: [{ 'data-type': FieldNames.Age }, { type: 'text' }],
       classNames: personalDataInputClassNames,
     },
   },
 ];
 
 export const personalData: ProfileData = {
-  title: 'Personal data',
+  title: ProfileDataContainersTitles.Personal,
   buttonEdit: ProfileDataBtnsTitles.Personal,
   dataItems: personalDataItems,
 };
 
 export const contactDataItems: ProfileDataItem[] = [
   {
-    label: ProfileInputLabels.Email,
+    label: ProfileFormELementsLabels.Email,
     element: {
       tagName: 'input',
-      attributes: [{ 'data-type': 'email' }, { type: 'text' }],
+      attributes: [{ 'data-type': FieldNames.Email }, { type: 'text' }],
       classNames: contactDataInputClassNames,
     },
   },
 ];
 
 export const contactData: ProfileData = {
-  title: 'Contact information',
+  title: ProfileDataContainersTitles.Contact,
   buttonEdit: ProfileDataBtnsTitles.Contact,
   dataItems: contactDataItems,
 };
@@ -80,10 +87,10 @@ export const createAddressDataItems = (mode: string): ProfileDataItem[] => {
   }
 
   const country: ProfileDataItem = {
-    label: 'Country',
+    label: ProfileFormELementsLabels.Country,
     element: {
       tagName: 'select',
-      attributes: [{ 'data-type': 'country' }, { name: 'country' }],
+      attributes: [{ 'data-type': FieldNames.Country }, { name: 'country' }],
       classNames: dataItemSelectClassNames,
       options: [
         {
@@ -103,28 +110,28 @@ export const createAddressDataItems = (mode: string): ProfileDataItem[] => {
   };
 
   const city: ProfileDataItem = {
-    label: 'City',
+    label: ProfileFormELementsLabels.City,
     element: {
       tagName: 'input',
-      attributes: [{ 'data-type': 'city' }, { type: 'text' }],
+      attributes: [{ 'data-type': FieldNames.City }, { type: 'text' }],
       classNames: addressDataInputClassNames,
     },
   };
 
   const street: ProfileDataItem = {
-    label: 'Street',
+    label: ProfileFormELementsLabels.Street,
     element: {
       tagName: 'input',
-      attributes: [{ 'data-type': 'street' }, { type: 'text' }],
+      attributes: [{ 'data-type': FieldNames.Street }, { type: 'text' }],
       classNames: addressDataInputClassNames,
     },
   };
 
   const postalCode: ProfileDataItem = {
-    label: 'Postal Code',
+    label: ProfileFormELementsLabels.PostalCode,
     element: {
       tagName: 'input',
-      attributes: [{ 'data-type': 'postal-code' }, { type: 'text' }],
+      attributes: [{ 'data-type': FieldNames.PostalCode }, { type: 'text' }],
       classNames: addressDataInputClassNames,
     },
   };
@@ -201,39 +208,49 @@ export const createNewAddress = async (customerID: string): Promise<ProfileAddre
 
 export const passwordDataItems: ProfileDataItem[] = [
   {
-    label: 'Enter your old password',
-    element: {
-      tagName: 'input',
-      attributes: [{ 'data-type': 'password' }, { type: 'text' }, { 'password-type': 'old' }, { 'has-btn': 'true' }],
-      classNames: passwordInputClassNames,
-      btn: {
-        className: 'password-input-btn',
-        attributes: [{ type: 'button' }],
-        text: 'SHOW',
-      },
-    },
-  },
-  {
-    label: 'Enter your new password',
-    element: {
-      tagName: 'input',
-      attributes: [{ 'data-type': 'password' }, { type: 'text' }, { 'password-type': 'new' }, { 'has-btn': 'true' }],
-      classNames: passwordInputClassNames,
-      btn: {
-        className: 'password-input-btn',
-        attributes: [{ type: 'button' }],
-        text: 'SHOW',
-      },
-    },
-  },
-  {
-    label: 'Repeat your new password',
+    label: ProfileFormELementsLabels.CurrentPassword,
     element: {
       tagName: 'input',
       attributes: [
-        { 'data-type': 'password' },
-        { type: 'text' },
-        { 'password-type': 'repeat-new' },
+        { 'data-type': FieldNames.Password },
+        { type: 'password' },
+        { 'password-type': PasswordTypes.CurrentPassword },
+        { 'has-btn': 'true' },
+      ],
+      classNames: passwordInputClassNames,
+      btn: {
+        className: 'password-input-btn',
+        attributes: [{ type: 'button' }],
+        text: 'SHOW',
+      },
+    },
+  },
+  {
+    label: ProfileFormELementsLabels.NewPassword,
+    element: {
+      tagName: 'input',
+      attributes: [
+        { 'data-type': FieldNames.Password },
+        { type: 'password' },
+        { 'password-type': PasswordTypes.NewPassword },
+        { 'has-btn': 'true' },
+      ],
+      classNames: passwordInputClassNames,
+      btn: {
+        className: 'password-input-btn',
+        attributes: [{ type: 'button' }],
+        text: 'SHOW',
+      },
+    },
+  },
+  {
+    label: ProfileFormELementsLabels.NewPasswordConfirm,
+    element: {
+      tagName: 'input',
+      attributes: [
+        { 'data-type': FieldNames.Password },
+        { type: 'password' },
+        { 'password-type': PasswordTypes.NewPasswordConfirm },
         { 'has-btn': 'true' },
       ],
       classNames: passwordInputClassNames,
@@ -247,7 +264,7 @@ export const passwordDataItems: ProfileDataItem[] = [
 ];
 
 export const passwordData: ProfileData = {
-  title: 'Password',
-  buttonEdit: ProfileDataBtnsTitles.Password,
+  title: ProfileDataContainersTitles.Password,
+  buttonSave: ProfileDataBtnsTitles.Password,
   dataItems: passwordDataItems,
 };

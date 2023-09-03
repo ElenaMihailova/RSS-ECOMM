@@ -153,8 +153,6 @@ class Validator {
       this.currentValidateCountry = element.value;
     }
 
-    console.log(this.currentValidateCountry);
-
     switch (element.value) {
       case Countries.Belarus:
         this.postalCodeLength = PostalCodes.Belarus;

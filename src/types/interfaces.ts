@@ -96,3 +96,9 @@ export interface CustomerData {
   defaultBillingAddress?: number;
   billingAddresses?: number[];
 }
+
+export interface ChangePasswordData {
+  currentPassword: string;
+  newPassword: string;
+  newPasswordRepeat: string;
+}

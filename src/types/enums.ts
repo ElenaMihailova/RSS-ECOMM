@@ -5,11 +5,18 @@ export const enum ProfileDataCategories {
   Password = 'password',
 }
 
-export const enum ProfileInputLabels {
+export const enum ProfileFormELementsLabels {
   Name = 'Name:',
   Surname = 'Surname:',
   DateOfBirth = 'Date of birth:',
   Email = 'Email:',
+  Country = 'Country:',
+  City = 'City:',
+  Street = 'Street:',
+  PostalCode = 'Postal Code:',
+  CurrentPassword = 'Enter your current password',
+  NewPassword = 'Enter your new password',
+  NewPasswordConfirm = 'Confirm your new password',
 }
 
 export const enum Mode {
@@ -19,6 +26,9 @@ export const enum Mode {
 }
 
 export const enum ProfileDataContainersTitles {
+  Personal = 'Personal data',
+  Contact = 'Contact information',
+  Password = 'Password',
   SavedAddress = 'Saved address',
   NewAddress = 'Your new address',
 }
@@ -81,6 +91,7 @@ export enum InputUserError {
   PasswordLengthError = 'Must contain at least 8 characters',
   EmptyFieldError = 'Please fill out this field',
   CountryError = 'Please select your country',
+  ConfirmPasswordNoMatch = 'Does not match new password',
   ExistingEmailError = 'There is already an existing customer with the provided email',
 }
 
@@ -93,7 +104,8 @@ export enum PopupMessages {
   PersonalDataUpdated = 'Your personal data has been succesfully updated!',
   AddressDataUpdated = 'Your address has been succesfully updated!',
   ContactDataUpdated = 'Your contact information has been succesfully updated!',
-  PasswordChanged = 'Your password has been changed!',
+  NewPasswordsNoMatch = "New password fields don't match",
+  PasswordChanged = 'Your password has been successfully updated',
   ProfileCorrectData = 'Please enter the correct data!',
 }
 
@@ -109,6 +121,12 @@ export enum FieldNames {
   City = 'city',
   Street = 'street',
   PostalCode = 'postal-code',
+}
+
+export enum PasswordTypes {
+  CurrentPassword = 'current-password',
+  NewPassword = 'new-password',
+  NewPasswordConfirm = 'new-password-confirm',
 }
 
 export enum CheckboxNames {

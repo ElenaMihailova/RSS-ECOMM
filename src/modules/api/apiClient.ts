@@ -31,6 +31,33 @@ export const createCustomer = async (data: MyCustomerDraft): Promise<MyCustomerD
   }
 };
 
+export const changePassword = async (
+  customerId: string,
+  customerVersion: number,
+  currentPassword: string,
+  newPassword: string,
+): Promise<Customer | Error> => {
+  try {
+    const res = await apiProjectRoot
+      .customers()
+      .password()
+      .post({
+        body: {
+          id: customerId,
+          version: customerVersion,
+          currentPassword,
+          newPassword,
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    return resData;
+  } catch (err) {
+    console.error();
+    return err as Error;
+  }
+};
+
 export const getCustomerByID = async (ID: string): Promise<MyCustomerDraft | object> => {
   try {
     const res = await apiProjectRoot.customers().withId({ ID }).get().execute();
@@ -269,7 +296,6 @@ export const removeShippingAddress = async (
       })
       .execute();
     const resData = await res.body;
-    console.log(`delete shipping ${addressId}`, resData);
     return resData;
   } catch (err) {
     console.error(err);
@@ -299,7 +325,6 @@ export const removeBillingAddress = async (
       })
       .execute();
     const resData = await res.body;
-    console.log(`delete billing ${addressId}`, resData);
     return resData;
   } catch (err) {
     console.error(err);
@@ -329,7 +354,6 @@ export const addShippingAddress = async (
       })
       .execute();
     const resData = await res.body;
-    console.log(`добавили шипинг ${addressId}`, resData);
     return resData;
   } catch (err) {
     console.error(err);
@@ -359,7 +383,6 @@ export const addBillingAddress = async (
       })
       .execute();
     const resData = await res.body;
-    console.log(`добавили billing ${addressId}`, resData);
     return resData;
   } catch (err) {
     console.error(err);
@@ -389,7 +412,6 @@ export const setDefaultShippingAddress = async (
       })
       .execute();
     const resData = await res.body;
-    console.log(`добавили billing ${addressId}`, resData);
     return resData;
   } catch (err) {
     console.error(err);
@@ -419,7 +441,6 @@ export const setDefaultBillingAddress = async (
       })
       .execute();
     const resData = await res.body;
-    console.log(`добавили billing ${addressId}`, resData);
     return resData;
   } catch (err) {
     console.error(err);

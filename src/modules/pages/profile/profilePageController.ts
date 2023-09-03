@@ -16,6 +16,7 @@ import {
   setDefaultBillingAddress,
   addNewAddress,
   removeAddress,
+  changePassword,
 } from '../../api/apiClient';
 import {
   getFromLS,
@@ -39,16 +40,20 @@ import {
   Mode,
   ProfileDataContainersTitles,
   CheckboxTypes,
+  PasswordTypes,
+  InputUserError,
 } from '../../../types/enums';
 import {
+  createError,
   getDateDMYFormatFromIsoString,
   getDateFromString,
   getDateISOStringWithoutTime,
 } from '../../validation/validationHelpers';
 import ProfileView from './profilePageView';
 import { createAddressesData, createNewAddress } from './profileItemsData';
-import { BaseAddress, ProfileData } from '../../../types/interfaces';
+import { BaseAddress, ChangePasswordData, ProfileData } from '../../../types/interfaces';
 import {
+  clearInputFields,
   createNewBaseAdress,
   getAddressContainerMode,
   getAddressContainerSelector,
@@ -64,6 +69,7 @@ import {
   toggleBtnEditMode,
   toggleFormElementsEditMode,
 } from './profileHelpers';
+import { currentWord } from '../../validation/regExpVariables';
 
 class ProfileController {
   private router: Router;
@@ -110,6 +116,8 @@ class ProfileController {
         await this.addAddAddressBtnHandler();
         break;
       case `${PageUrls.ProfilePageUrl}/${PageUrls.ChangePasswordPageUrl}`:
+        this.addPasswordViewBtnsHandler();
+        this.addPasswordSaveBtnHandler();
         break;
       default:
     }
@@ -137,7 +145,6 @@ class ProfileController {
 
     changePasswodBtn.addEventListener('click', (): void => {
       this.router.navigateFromButton(`${PageUrls.ProfilePageUrl}/${PageUrls.ChangePasswordPageUrl}`);
-      this.addPasswordBtnHandler();
     });
   }
 
@@ -195,8 +202,6 @@ class ProfileController {
     const oldCustomerVersion = Number(this.authorizedCustomerVersion);
 
     await this.updateData(editButton, category, formElements);
-
-    console.log('old', Number(oldCustomerVersion), 'and new', Number(this.authorizedCustomerVersion));
 
     if (oldCustomerVersion < Number(this.authorizedCustomerVersion)) {
       renderUpdateSuccesPopup(category);
@@ -695,13 +700,100 @@ class ProfileController {
     removeBtn.addEventListener('click', this.removeAddressBtnHandler.bind(this));
   }
 
-  public addPasswordBtnHandler(): void {
-    const passwordBtn: HTMLButtonElement = getElement('.password-input-btn');
-    const passwordInput: HTMLInputElement = getElement('.password-input');
+  public addPasswordViewBtnsHandler(): void {
+    const passwordBtns: NodeListOf<Element> = getElementCollection('.password-input-btn');
+    passwordBtns.forEach((element) => {
+      const passwordBtn = element as HTMLButtonElement;
+      const container = passwordBtn.closest('.password-data-item__form-item');
+      const passwordInput = container?.querySelector('[data-type="password"]') as HTMLInputElement;
+      if (!passwordInput) {
+        return;
+      }
 
-    passwordBtn.addEventListener('click', () => {
-      togglePasswordView(passwordInput, passwordBtn);
+      passwordBtn.addEventListener('click', () => {
+        togglePasswordView(passwordInput, passwordBtn);
+      });
     });
+  }
+
+  private addPasswordSaveBtnHandler(): void {
+    const btnSave: HTMLButtonElement = getElement(`.password-data [type="${ProfileDataBtns.Save}"]`);
+
+    btnSave.addEventListener('click', async (e: Event) => {
+      e.preventDefault();
+      await this.updatePassword(btnSave);
+    });
+  }
+
+  public createPasswordData(passwordFormElements: NodeListOf<Element>): Partial<ChangePasswordData> {
+    const passwordData: Partial<ChangePasswordData> = {};
+
+    passwordFormElements.forEach((element) => {
+      const formElement = element as HTMLInputElement;
+
+      switch (formElement.getAttribute('password-type')) {
+        case PasswordTypes.CurrentPassword:
+          passwordData.currentPassword = formElement.value;
+          break;
+        case PasswordTypes.NewPassword:
+          passwordData.newPassword = formElement.value;
+          break;
+        case PasswordTypes.NewPasswordConfirm:
+          passwordData.newPasswordRepeat = formElement.value;
+          break;
+        default:
+      }
+    });
+
+    return passwordData;
+  }
+
+  public async updatePassword(button: HTMLButtonElement): Promise<void> {
+    if (!this.authorizedCustomerVersion || !this.authorizedCustomerID) {
+      return;
+    }
+
+    const passwordFormElements = getElementCollection(`[data-type="${FieldNames.Password}"]`);
+
+    if (!passwordFormElements) {
+      return;
+    }
+
+    const passwordData = this.createPasswordData(passwordFormElements);
+
+    if (!this.isValidData(button, passwordFormElements)) {
+      return;
+    }
+
+    if (passwordData.newPassword !== passwordData.newPasswordRepeat) {
+      const NewPasswordInput: HTMLInputElement = getElement(`[password-type="${PasswordTypes.NewPasswordConfirm}"]`);
+      createError(NewPasswordInput, InputUserError.ConfirmPasswordNoMatch);
+      renderPopup(false, PopupMessages.NewPasswordsNoMatch);
+      return;
+    }
+
+    const responce = await changePassword(
+      this.authorizedCustomerID,
+      this.authorizedCustomerVersion,
+      passwordData.currentPassword as string,
+      passwordData.newPassword as string,
+    );
+
+    if (responce instanceof Error) {
+      const errorMessage = `${responce.message}`;
+
+      if (errorMessage.match(currentWord)) {
+        const currentPasswordInput: HTMLInputElement = getElement(`[password-type="${PasswordTypes.CurrentPassword}"]`);
+        createError(currentPasswordInput, errorMessage);
+      }
+
+      renderPopup(false, errorMessage);
+      return;
+    }
+
+    renderUpdateSuccesPopup(ProfileDataCategories.Password);
+    clearInputFields(passwordFormElements);
+    await this.setCurrentCustomerVersion();
   }
 
   public isValidData(button: HTMLButtonElement, formElements: NodeListOf<Element>): boolean {

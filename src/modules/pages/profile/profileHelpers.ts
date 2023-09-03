@@ -171,6 +171,13 @@ export const toggleAdressDetailsView = (dataContainer: HTMLDivElement): void => 
   addressCheckboxes.classList.toggle('hidden');
 };
 
+export const clearInputFields = (inputFields: NodeListOf<Element>): void => {
+  inputFields.forEach((element) => {
+    const inputField = element as HTMLInputElement;
+    inputField.value = '';
+  });
+};
+
 export const renderUpdateSuccesPopup = (category: string): void => {
   switch (category) {
     case ProfileDataCategories.Personal:
