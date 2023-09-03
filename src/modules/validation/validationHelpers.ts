@@ -1,7 +1,7 @@
 import { createElement } from '../helpers/functions';
 
 export const getDateFromString = (dateString: string): Date => {
-  return new Date(dateString.replace(/(\d+).(\d+).(\d+)/, '$3/$2/$1'));
+  return new Date(Date.parse(dateString.replace(/(\d+).(\d+).(\d+)/, '$3-$2-$1')));
 };
 
 export const getDateISOStringWithoutTime = (date: Date): string => {
