@@ -16,7 +16,7 @@ import setupHeaderListeners from '../components/setupHeaderListeners';
 import RegistrationController from '../pages/registration/registrationPageController';
 import CatalogController from '../pages/catalog/catalogPageController';
 import catalogContent from '../templates/CatalogTemplate';
-// import CatalogView from '../pages/catalog/catalogPageView';
+import CatalogView from '../pages/catalog/catalogPageView';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -111,7 +111,7 @@ class App {
         callback: (): void => {
           if (this.main) {
             this.main.clearContent();
-            // this.main.setContent(new CatalogView(catalogContent).render());
+            this.main.setContent(new CatalogView(catalogContent).render());
             this.catalogController = new CatalogController(this.router);
           }
         },
