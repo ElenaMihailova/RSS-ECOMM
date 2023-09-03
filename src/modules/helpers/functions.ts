@@ -8,11 +8,12 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
   text?: string;
   html?: string;
   parent?: HTMLElement;
+  parentPrepend?: HTMLElement;
   href?: string;
   router?: Router;
   src?: string;
 }): HTMLElementTagNameMap[T] => {
-  const { tagName, classNames, attributes, text, parent, html, href, router, src } = elData;
+  const { tagName, classNames, attributes, text, parent, parentPrepend, html, href, router, src } = elData;
 
   const element: HTMLElementTagNameMap[T] = document.createElement(tagName);
 
@@ -42,6 +43,10 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
 
   if (parent) {
     parent.append(element);
+  }
+
+  if (parentPrepend) {
+    parentPrepend.prepend(element);
   }
 
   if (tagName === 'a' && href && router) {
