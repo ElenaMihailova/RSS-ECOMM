@@ -1,6 +1,5 @@
 //Global
 @import './style/sass/global/normalize';
-@import './style/sass/global/fonts';
 @import './style/sass/variables';
 @import './style/sass/mixins';
 @import './style/sass/global/common';
@@ -27,3 +26,5 @@
 @import './style/sass/blocks/menu';
 @import './style/sass/blocks/error';
 @import './style/sass/blocks/modal';
+@import './style/sass/blocks/catalogIntro';
+@import './style/sass/blocks/breadcrumbs';

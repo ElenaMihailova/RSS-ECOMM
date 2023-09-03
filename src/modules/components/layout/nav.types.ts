@@ -4,7 +4,7 @@ export type NavLink = {
   className?: string;
 };
 
-export type FooterLinksType = {
+export type FooterLinks = {
   collectionLinks: NavLink[];
   learnLinks: NavLink[];
   customerServiceLinks: NavLink[];

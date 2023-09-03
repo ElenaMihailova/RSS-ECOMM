@@ -1,27 +1,49 @@
 import PageView from '../../core/pageView';
-import { createElement } from '../../helpers/functions';
-import './catalogPage.scss';
 
+interface MainData {
+  title: string;
+  content: string | HTMLDivElement;
+}
+
+// todo класс похож на IndexPageView может можно вынести в общий класс и использовать его
 class CatalogView extends PageView {
-  constructor() {
+  private title: string;
+
+  private content: string;
+
+  constructor(catalogData: MainData) {
     super();
-    this.container.classList.add('catalog-page');
+    this.title = catalogData.title;
+    this.content = catalogData.content instanceof HTMLDivElement ? catalogData.content.outerHTML : catalogData.content;
+  }
+
+  private insertMainInDOM(): void {
+    const footer = document.querySelector('footer');
+    if (footer) {
+      footer.insertAdjacentElement('beforebegin', this.container);
+    } else {
+      document.body.appendChild(this.container);
+    }
+  }
+
+  public clearContent(): void {
+    this.container.innerHTML = '';
   }
 
   public render(): HTMLElement {
-    const catalogWrapper = createElement({
-      tagName: 'div',
-      classNames: ['catalog__wrapper'],
-      parent: this.container,
-    });
+    const contentContainer = document.createElement('div');
+    contentContainer.innerHTML = `
+      <h1 class="visually-hidden">${this.title}</h1>
+      ${this.content}
+    `;
+    return contentContainer;
+  }
 
-    const catalogContainer = createElement({
-      tagName: 'div',
-      classNames: ['catalog__container'],
-      parent: catalogWrapper,
-    });
-
-    return this.container;
+  public setContent(content: PageView): void {
+    const contentContainer = document.createElement('div');
+    contentContainer.append(content.render());
+    this.container.appendChild(contentContainer);
+    this.insertMainInDOM();
   }
 }
 
