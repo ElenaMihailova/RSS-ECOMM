@@ -2,27 +2,16 @@ import { PageUrls } from '../../assets/data/constants';
 import { RouteAction, UserRequest } from '../../types/types';
 
 class Router {
-  private static instance: Router | null = null;
-
   public routes: RouteAction[];
 
   constructor(routes: RouteAction[]) {
     this.routes = routes;
 
-    window.addEventListener('DOMContentLoaded', (): void => {
-      this.navigate();
-    });
+    this.navigate();
 
     window.addEventListener('popstate', (): void => {
       this.navigate();
     });
-  }
-
-  public static getInstance(routes: RouteAction[]): Router {
-    if (!Router.instance) {
-      Router.instance = new Router(routes);
-    }
-    return Router.instance;
   }
 
   public navigateToLink(url: string): void {
@@ -44,6 +33,7 @@ class Router {
 
     const path = urlString.split('/');
     [res.path = '', res.resource = ''] = path;
+    console.log(path);
 
     this.urlHandler(res);
   }
@@ -60,6 +50,7 @@ class Router {
     const pathForFind = request.resource === '' ? request.path : `${request.path}/${request.resource}`;
 
     const route = this.routes.find((item) => item.path === pathForFind);
+    console.log('Route', route);
 
     if (!route) {
       this.redirectToErrorPage();

@@ -87,7 +87,6 @@ export const getProductProjections = async (): Promise<ProductProjection[] | obj
     .catch((e) => {
       console.error(e.message);
     });
-  console.log(resData);
 
   return resData;
 };

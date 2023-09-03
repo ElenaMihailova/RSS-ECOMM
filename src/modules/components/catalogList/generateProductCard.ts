@@ -50,7 +50,5 @@ export default function generateProductCard(productData: ProductCardData): HTMLE
     parent: priceWrap,
   });
 
-  console.log(productCard);
-
   return productCard;
 }
