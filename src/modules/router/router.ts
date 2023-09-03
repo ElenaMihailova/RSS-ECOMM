@@ -7,8 +7,6 @@ class Router {
   constructor(routes: RouteAction[]) {
     this.routes = routes;
 
-    this.navigate();
-
     window.addEventListener('popstate', (): void => {
       this.navigate();
     });
@@ -26,14 +24,13 @@ class Router {
     this.navigate();
   }
 
-  private navigate(): void {
+  public navigate(): void {
     const urlString = window.location.pathname.slice(1);
 
     const res = { path: '', resource: '' };
 
     const path = urlString.split('/');
     [res.path = '', res.resource = ''] = path;
-    console.log(path);
 
     this.urlHandler(res);
   }

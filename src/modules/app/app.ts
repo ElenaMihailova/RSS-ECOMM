@@ -46,6 +46,7 @@ class App {
     this.loginBtnHandler();
     this.registrationBtnHandler();
     this.loginMobileBtnHandler();
+    this.router.navigate();
   }
 
   private createView(): void {
