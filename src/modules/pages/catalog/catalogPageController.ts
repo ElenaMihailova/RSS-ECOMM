@@ -1,153 +1,111 @@
-import { Product, ProductProjection } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product';
+import { ProductProjection } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product';
 import {
-  filterProductsByFlavor,
   filterProductsByOrigin,
   getCategoryId,
   getProductByCategory,
+  getProductProjections,
   searchProducts,
   sortProductsByNameAsc,
-  sortProductsByNameDesc,
   sortProductsByPriceAsc,
   sortProductsByPriceDesc,
 } from '../../api/apiClient';
-import { createElement, getElement } from '../../helpers/functions';
+import { getElement } from '../../helpers/functions';
 import Router from '../../router/router';
 
 class CatalogController {
   private router: Router;
 
-  private static oldState: ProductProjection[] | object = {};
+  private static currentState: ProductProjection[] | [] = [];
 
-  private static newState: ProductProjection[] | object = {};
+  private static newState: ProductProjection[] | [] = [];
 
   constructor(router: Router) {
     this.router = router;
-    // this.viewProducts();
-    // this.getCat('Black teas');
-    // this.getProductsByCat('Black teas');
-    // this.filterByOrigin('China');
-    // this.sortProductsByName();
-    // this.sortProductsByPrice();
-    // this.searchProds('ceylon');
   }
 
-  // private async viewProducts(): Promise<any> {
-  //   const catalog: HTMLElement = getElement('.catalog__container');
-  //   const products = await getProducts();
-  //   console.log(products);
-  //   if (Array.isArray(products)) {
-  //     products.forEach((product: Product) => {
-  //       const productContainer = createElement({
-  //         tagName: 'div',
-  //         classNames: [`product-${product.key}`],
-  //         parent: catalog,
-  //       });
+  public async filterProductsByCategory(
+    name: string,
+    currentProducts: ProductProjection[],
+  ): Promise<ProductProjection[] | []> {
+    const categoryId = await getCategoryId(name);
+    const products = (await getProductByCategory(categoryId)) as ProductProjection[];
+    const result = this.filterState(currentProducts, products);
 
-  //       createElement({
-  //         tagName: 'img',
-  //         classNames: [`product-${product.key}__image`],
-  //         // attributes: [{src: `${product.masterData.current.masterVariant.images[0]}`}],
-  //         parent: productContainer,
-  //       });
+    return result;
+  }
 
-  //       createElement({
-  //         tagName: 'p',
-  //         classNames: [`product-${product.key}__title`],
-  //         // text: product.masterData.current.metaTitle,
-  //         parent: productContainer,
-  //       });
+  public async filterProductsByAttribute(
+    filterParam: string,
+    filterMethod: (param: string) => Promise<ProductProjection[] | object>,
+    currentProducts: ProductProjection[],
+  ): Promise<ProductProjection[] | []> {
+    const products = (await filterMethod(filterParam)) as ProductProjection[];
+    const result = this.filterState(currentProducts, products);
 
-  //       createElement({
-  //         tagName: 'p',
-  //         classNames: [`product-${product.key}__description`],
-  //         // text: product.masterData.current.metaDescription,
-  //         parent: productContainer,
-  //       });
+    return result;
+  }
 
-  //       const productPriceContainer = createElement({
-  //         tagName: 'div',
-  //         classNames: [`product-${product.key}__price-container`],
-  //         parent: productContainer,
-  //       });
+  public async sortProducts(
+    currentProducts: ProductProjection[],
+    sortMethod: () => Promise<ProductProjection[] | object>,
+  ): Promise<ProductProjection[]> {
+    const products = (await sortMethod()) as ProductProjection[];
+    const result = this.filterState(products, currentProducts);
 
-  //       createElement({
-  //         tagName: 'p',
-  //         classNames: [`product-${product.key}__price`],
-  //         // text: product.masterData.current.masterVariant.price,
-  //         parent: productPriceContainer,
-  //       });
+    return result;
+  }
 
-  //       createElement({
-  //         tagName: 'img',
-  //         classNames: [`product-${product.key}__weight`],
-  //         // text: ,
-  //         parent: productPriceContainer,
-  //       });
-  //     });
-  //   }
+  public async searchProducts(str: string, currentProducts: ProductProjection[]): Promise<ProductProjection[] | []> {
+    const products = (await searchProducts(str)) as ProductProjection[];
+    const result = this.filterState(currentProducts, products);
+
+    return result;
+  }
+
+  private filterState(currentProducts: ProductProjection[], apiProducts: ProductProjection[]): ProductProjection[] {
+    const idsArr: string[] = [];
+    apiProducts.forEach((product) => idsArr.push(product.id));
+    const result: ProductProjection[] = [];
+    currentProducts.forEach((product) => {
+      const { id } = product;
+      if (idsArr.includes(id)) {
+        result.push(product);
+      }
+    });
+
+    return result;
+  }
+
+  // public categoriesListHandler(): void {
+  //   const categoryClassic = getElement('.catalog__category-classic');
+  //   const categoryBreakfast = getElement('.catalog__category-breakfast');
+  //   const categoryFall = getElement('.catalog__category-fall');
+  //   const categoryClassicList = getElement('.category-classic__list');
+  //   const categoryBreakfastList = getElement('.category-breakfast__list');
+  //   const categoryFallList = getElement('.category-fall__list');
+
+  //   categoryClassic.addEventListener('toggle', () => {
+  //     if (categoryClassicList.classList.contains('hidden')) {
+  //       categoryClassicList.classList.remove('hidden');
+  //     } else {
+  //       categoryClassicList.classList.add('hidden');
+  //     }
+  //   });
   // }
 
-  private async getCat(name: string): Promise<string | object> {
-    const categoryId = await getCategoryId(name);
-    return categoryId;
-  }
-
-  private async getProductsByCat(name: string): Promise<void> {
-    const categoryId = await getCategoryId(name);
-    const products = await getProductByCategory(categoryId);
-    if (products) {
-      CatalogController.newState = products;
-    }
-  }
-
-  private async filterByOrigin(country: string): Promise<void> {
-    const products = await filterProductsByOrigin(country);
-    if (products) {
-      CatalogController.newState = products;
-    }
-  }
-
-  private async filterByFlavor(flavor: string): Promise<void> {
-    const products = await filterProductsByFlavor(flavor);
-    if (products) {
-      CatalogController.newState = products;
-    }
-  }
-
-  private async sortProductsByNameAtoZ(): Promise<void> {
-    const products = await sortProductsByNameAsc();
-    if (products) {
-      CatalogController.newState = products;
-    }
-  }
-
-  private async sortProductsByNameZtoA(): Promise<void> {
-    const products = await sortProductsByNameDesc();
-    if (products) {
-      CatalogController.newState = products;
-    }
-  }
-
-  private async sortProductsByPriceUp(): Promise<void> {
-    const products = await sortProductsByPriceAsc();
-    if (products) {
-      CatalogController.newState = products;
-    }
-  }
-
-  private async sortProductsByPriceDown(): Promise<void> {
-    const products = await sortProductsByPriceDesc();
-    if (products) {
-      CatalogController.newState = products;
-    }
-  }
-
-  private async searchProds(str: string): Promise<void> {
-    const products = await searchProducts(str);
-    if (products) {
-      CatalogController.newState = products;
-    }
-  }
+  // public async test(): Promise<void> {
+  //   const products = await getProductProjections();
+  //   const newProducts = await this.filterProductsByCategory('Breakfast Teas', products as ProductProjection[]);
+  //   const sortnewProducts = await this.sortProducts(newProducts, sortProductsByPriceDesc);
+  //   const newsortProducts = await this.sortProducts(sortnewProducts, sortProductsByNameAsc);
+  //   console.log(newsortProducts);
+  //   const filternewsortProducts = await this.filterProductsByAttribute(
+  //     'India',
+  //     filterProductsByOrigin,
+  //     newsortProducts,
+  //   );
+  //   console.log(filternewsortProducts);
+  // }
 }
 
 export default CatalogController;
