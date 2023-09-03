@@ -6,15 +6,9 @@ export default async function generateCatalogList(): Promise<HTMLElement> {
   try {
     const productData = await getProductProjections();
 
-    const catalogItems = createElement({
-      tagName: 'div',
-      classNames: ['catalog__items'],
-    });
-
     const catalogList = createElement({
       tagName: 'ol',
       classNames: ['catalog__list', 'catalog__list--catalog'],
-      parent: catalogItems,
     });
 
     if (Array.isArray(productData)) {

@@ -88,7 +88,6 @@ class App {
       {
         path: ``,
         callback: (): void => {
-          console.log(this.main);
           if (this.main) {
             this.main.clearContent();
             this.main.setContent(new IndexView(mainContent).render());
@@ -98,7 +97,6 @@ class App {
       {
         path: `${PageUrls.IndexPageUrl}`,
         callback: (): void => {
-          console.log(this.main);
           if (this.main) {
             this.main.clearContent();
             this.main.setContent(new IndexView(mainContent).render());
@@ -111,7 +109,6 @@ class App {
           if (this.main) {
             this.main.clearContent();
             this.main.setContent(new CatalogView(catalogContent).render());
-            console.log('render catalog');
           }
         },
       },
@@ -180,7 +177,6 @@ class App {
         removeFromLS('token');
       } else {
         this.router.navigateFromButton(PageUrls.LoginPageUrl);
-        console.log(PageUrls.LoginPageUrl);
       }
     });
   }

@@ -9,7 +9,8 @@ const contentContainer = createElement({
 });
 
 contentContainer.appendChild(IntroCatalog);
-contentContainer.appendChild(catalogWrapper);
+const catalogWrapperElement = await catalogWrapper();
+contentContainer.appendChild(catalogWrapperElement);
 
 const catalogContent = {
   title: 'Catalog',

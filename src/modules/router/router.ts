@@ -47,7 +47,6 @@ class Router {
     const pathForFind = request.resource === '' ? request.path : `${request.path}/${request.resource}`;
 
     const route = this.routes.find((item) => item.path === pathForFind);
-    console.log('Route', route);
 
     if (!route) {
       this.redirectToErrorPage();
