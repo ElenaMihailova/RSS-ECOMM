@@ -75,22 +75,6 @@ export const loginUser = async (
   return resData;
 };
 
-export const getProducts = async (): Promise<Product[] | object> => {
-  let resData = {};
-  await apiProjectRoot
-    .products()
-    .get()
-    .execute()
-    .then((r) => {
-      resData = r.body.results;
-    })
-    .catch((e) => {
-      console.error(e.message);
-    });
-
-  return resData;
-};
-
 export const getCategoryId = async (name: string): Promise<string | object> => {
   let resData: string | object = {};
   await apiProjectRoot
