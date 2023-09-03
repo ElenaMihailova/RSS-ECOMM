@@ -1,6 +1,8 @@
 import {
   FieldNames,
+  InputUserError,
   Mode,
+  PasswordTypes,
   PopupMessages,
   ProfileDataBtns,
   ProfileDataBtnsTitles,
@@ -8,6 +10,8 @@ import {
 } from '../../../types/enums';
 import { BaseAddress } from '../../../types/interfaces';
 import { getCountryCode, getElement, getElementCollection, renderPopup } from '../../helpers/functions';
+import { currentWord, emailWord } from '../../validation/regExpVariables';
+import { createError } from '../../validation/validationHelpers';
 
 export const getAddressContainerSelector = (element: HTMLElement): string => {
   const addressID = element.closest('.address-data')?.getAttribute('address-id');
@@ -194,4 +198,22 @@ export const renderUpdateSuccesPopup = (category: string): void => {
       break;
     default:
   }
+};
+
+export const renderErrorResponsePopup = (category: string, response: Error): void => {
+  const errorMessage = `${response.message}`;
+
+  if (errorMessage.match(emailWord) && category === ProfileDataCategories.Contact) {
+    const inputErrorMessage = InputUserError.ExistingEmailError;
+    const emailIputElement: HTMLInputElement = getElement(`[data-type="${FieldNames.Email}"]`);
+    createError(emailIputElement, inputErrorMessage);
+    return;
+  }
+
+  if (errorMessage.match(currentWord) && category === ProfileDataCategories.Password) {
+    const currentPasswordInput: HTMLInputElement = getElement(`[password-type="${PasswordTypes.CurrentPassword}"]`);
+    createError(currentPasswordInput, errorMessage);
+  }
+
+  renderPopup(false, errorMessage);
 };

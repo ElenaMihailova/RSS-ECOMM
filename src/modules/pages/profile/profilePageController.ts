@@ -1,23 +1,7 @@
-import { Customer, CustomerDraft } from '@commercetools/platform-sdk';
+import { Customer, CustomerChangePassword, CustomerDraft, CustomerUpdate } from '@commercetools/platform-sdk';
+import { UpdateAction } from '@commercetools/sdk-client-v2';
 import { PageUrls } from '../../../assets/data/constants';
-import {
-  updateDateOfBirth,
-  updateFirstName,
-  updateLastName,
-  getUpdatedCustomer,
-  getUpdatedVersion,
-  updateEmailAddress,
-  updateAddress,
-  addShippingAddress,
-  removeShippingAddress,
-  addBillingAddress,
-  removeBillingAddress,
-  setDefaultShippingAddress,
-  setDefaultBillingAddress,
-  addNewAddress,
-  removeAddress,
-  changePassword,
-} from '../../api/apiClient';
+import { getUpdatedCustomer, getUpdatedVersion, changePassword, updateCustomer } from '../../api/apiClient';
 import {
   getFromLS,
   getElementCollection,
@@ -60,6 +44,7 @@ import {
   getAddressID,
   getFormElements,
   isAdressCategoryChecked,
+  renderErrorResponsePopup,
   renderUpdateSuccesPopup,
   setNewContainerTitle,
   setValueToCountrySelect,
@@ -69,7 +54,6 @@ import {
   toggleBtnEditMode,
   toggleFormElementsEditMode,
 } from './profileHelpers';
-import { currentWord } from '../../validation/regExpVariables';
 
 class ProfileController {
   private router: Router;
@@ -202,6 +186,10 @@ class ProfileController {
     const oldCustomerVersion = Number(this.authorizedCustomerVersion);
 
     await this.updateData(editButton, category, formElements);
+
+    if (!this.isValidData(editButton, formElements)) {
+      return;
+    }
 
     if (oldCustomerVersion < Number(this.authorizedCustomerVersion)) {
       renderUpdateSuccesPopup(category);
@@ -346,6 +334,31 @@ class ProfileController {
     });
   }
 
+  public async updateCustomerData(actions: UpdateAction[], withoutErrorMessages?: boolean): Promise<Customer | null> {
+    if (!this.authorizedCustomerVersion || !this.authorizedCustomerID) {
+      return null;
+    }
+
+    const updateRequestBody = {
+      version: this.authorizedCustomerVersion,
+      actions,
+    };
+
+    const response = await updateCustomer(this.authorizedCustomerID, updateRequestBody as CustomerUpdate);
+
+    if (response instanceof Error) {
+      if (!withoutErrorMessages) {
+        renderErrorResponsePopup(ProfileDataCategories.Contact, response);
+      }
+
+      return null;
+    }
+
+    await this.setCurrentCustomerVersion();
+
+    return response;
+  }
+
   private async addRemoveBtnsHandler(): Promise<void> {
     const removeBtns: NodeListOf<Element> = getElementCollection(
       `.address-data__btns [type="${ProfileDataBtns.Remove}"]`,
@@ -366,9 +379,17 @@ class ProfileController {
     }
 
     const container = getElement(`[address-id="${addressID}"]`);
-    const responce = await removeAddress(this.authorizedCustomerID, this.authorizedCustomerVersion, addressID);
 
-    if (!Object.keys(responce).length) {
+    const actions = [
+      {
+        action: 'removeAddress',
+        addressId: addressID,
+      },
+    ];
+
+    const response = await this.updateCustomerData(actions);
+
+    if (!response) {
       return;
     }
 
@@ -417,13 +438,20 @@ class ProfileController {
       return;
     }
 
-    const responce = await addNewAddress(this.authorizedCustomerID, this.authorizedCustomerVersion, newAddressData);
+    const actions = [
+      {
+        action: 'addAddress',
+        address: newAddressData,
+      },
+    ];
 
-    if (!Object.keys(responce).length) {
+    const response = await this.updateCustomerData(actions);
+
+    if (!response) {
       return;
     }
 
-    const customer = responce as Customer;
+    const customer = response;
     const newAdress = customer.addresses[customer.addresses.length - 1] || 0;
     const addressID = newAdress.id;
 
@@ -501,27 +529,45 @@ class ProfileController {
 
       const { value } = personalDataElement;
 
+      let actions;
+
       switch (personalDataElement.dataset.type) {
         case FieldNames.Name:
-          await updateFirstName(this.authorizedCustomerID, value, version);
+          actions = [
+            {
+              action: 'setFirstName',
+              firstName: value,
+            },
+          ];
           break;
         case FieldNames.Surname:
-          await updateLastName(this.authorizedCustomerID, value, version);
+          actions = [
+            {
+              action: 'setLastName',
+              lastName: value,
+            },
+          ];
           break;
         case FieldNames.Age:
-          await updateDateOfBirth(
-            this.authorizedCustomerID,
-            getDateISOStringWithoutTime(getDateFromString(value)),
-            version,
-          );
+          actions = [
+            {
+              action: 'setDateOfBirth',
+              dateOfBirth: getDateISOStringWithoutTime(getDateFromString(value)),
+            },
+          ];
           break;
         case FieldNames.Email:
-          await updateEmailAddress(this.authorizedCustomerID, value, version);
+          actions = [
+            {
+              action: 'changeEmail',
+              email: value,
+            },
+          ];
           break;
         default:
       }
 
-      await this.setCurrentCustomerVersion();
+      await this.updateCustomerData(actions as UpdateAction[]);
     }
   }
 
@@ -552,16 +598,22 @@ class ProfileController {
       }
     });
 
-    await updateAddress(
-      this.authorizedCustomerID,
-      this.authorizedCustomerVersion,
-      addressID,
-      updatedAddress as BaseAddress,
-    );
+    const actions = [
+      {
+        action: 'changeAddress',
+        addressId: addressID,
+        address: updatedAddress as BaseAddress,
+      },
+    ];
+
+    const responce = await this.updateCustomerData(actions);
+
+    if (!responce) {
+      return;
+    }
 
     await this.updateAddressCategories(addressID);
     await this.rerenderAddressDetails(this.authorizedCustomerID);
-    await this.setCurrentCustomerVersion();
   }
 
   public async updateAddressCategories(addressID: string): Promise<void> {
@@ -585,43 +637,55 @@ class ProfileController {
       const defaultShipping = defaultShippingAddressId === addressID;
       const defaultBilling = defaultBillingAddressId === addressID;
 
+      let id = addressID || undefined;
+      let action;
+
       switch (type) {
         case CheckboxTypes.AddressCategory:
           if (category === AddressCategories.Shipping) {
             if (!checkbox.checked && existsInShipping) {
-              await removeShippingAddress(this.authorizedCustomerID, this.authorizedCustomerVersion, addressID);
+              action = 'removeShippingAddressId';
             } else if (checkbox.checked && !existsInShipping) {
-              await addShippingAddress(this.authorizedCustomerID, this.authorizedCustomerVersion, addressID);
+              action = 'addShippingAddressId';
             }
           }
 
           if (category === AddressCategories.Billing) {
             if (!checkbox.checked && existsInBilling) {
-              await removeBillingAddress(this.authorizedCustomerID, this.authorizedCustomerVersion, addressID);
+              action = 'removeBillingAddressId';
             } else if (checkbox.checked && !existsInBilling) {
-              await addBillingAddress(this.authorizedCustomerID, this.authorizedCustomerVersion, addressID);
+              action = 'addBillingAddressId';
             }
           }
           break;
         case CheckboxTypes.DefaultAddress:
           if (category === AddressCategories.Shipping) {
             if (checkbox.checked && !defaultShipping) {
-              await setDefaultShippingAddress(this.authorizedCustomerID, this.authorizedCustomerVersion, addressID);
+              action = 'setDefaultShippingAddress';
             } else if (!checkbox.checked && defaultShipping) {
-              await setDefaultShippingAddress(this.authorizedCustomerID, this.authorizedCustomerVersion, undefined);
+              action = 'setDefaultShippingAddress';
+              id = undefined;
             }
           }
           if (category === AddressCategories.Billing) {
             if (checkbox.checked && !defaultBilling) {
-              await setDefaultBillingAddress(this.authorizedCustomerID, this.authorizedCustomerVersion, addressID);
+              action = 'setDefaultBillingAddress';
             } else if (!checkbox.checked && defaultBilling) {
-              await setDefaultBillingAddress(this.authorizedCustomerID, this.authorizedCustomerVersion, undefined);
+              action = 'setDefaultBillingAddress';
+              id = undefined;
             }
           }
           break;
         default:
       }
-      await this.setCurrentCustomerVersion();
+      const actions = [
+        {
+          action,
+          addressId: id,
+        },
+      ];
+
+      await this.updateCustomerData(actions as UpdateAction[], true);
     }
   }
 
@@ -772,22 +836,17 @@ class ProfileController {
       return;
     }
 
-    const responce = await changePassword(
-      this.authorizedCustomerID,
-      this.authorizedCustomerVersion,
-      passwordData.currentPassword as string,
-      passwordData.newPassword as string,
-    );
+    const customerChangePassword: CustomerChangePassword = {
+      id: this.authorizedCustomerID,
+      version: this.authorizedCustomerVersion,
+      currentPassword: passwordData.currentPassword as string,
+      newPassword: passwordData.newPassword as string,
+    };
 
-    if (responce instanceof Error) {
-      const errorMessage = `${responce.message}`;
+    const response = await changePassword(customerChangePassword);
 
-      if (errorMessage.match(currentWord)) {
-        const currentPasswordInput: HTMLInputElement = getElement(`[password-type="${PasswordTypes.CurrentPassword}"]`);
-        createError(currentPasswordInput, errorMessage);
-      }
-
-      renderPopup(false, errorMessage);
+    if (response instanceof Error) {
+      renderErrorResponsePopup(ProfileDataCategories.Password, response);
       return;
     }
 
