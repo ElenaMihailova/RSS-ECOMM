@@ -14,21 +14,32 @@ export interface ElementData {
 export interface FormItems {
   tagName: keyof HTMLElementTagNameMap;
   attributes?: AttrSet[];
-  classNames: string[];
+  classNames?: string[];
   options?: SelectOption[];
   icon?: Icon;
   btn?: InputBtn;
 }
 
 export interface ProfileData {
-  title: string;
-  button: string;
+  id?: string;
+  title?: string;
+  buttonEdit?: string;
+  buttonRemove?: string;
+  buttonSave?: string;
+  addressDetails?: AddressDetails;
   dataItems?: ProfileDataItem[];
+}
+
+export interface AddressDetails {
+  shippingAddress: boolean;
+  billingAddress: boolean;
+  isDefaultShippingAddress: boolean;
+  isDefaultBillingAddress: boolean;
 }
 
 export interface ProfileDataItem {
   label: string;
-  input: FormItems;
+  element: FormItems;
 }
 
 export interface SelectOption {
@@ -53,14 +64,14 @@ export interface Data {
   [key: string]: string;
 }
 
-export interface FormAdressData {
-  data?: BaseAdress;
+export interface FormAddressData {
+  data?: BaseAddress;
   category?: string;
   isDefault?: boolean;
   additionalCategory?: string;
 }
 
-export interface BaseAdress {
+export interface BaseAddress {
   id?: string;
   key?: string;
   country: string;
@@ -79,7 +90,7 @@ export interface CustomerData {
   lastName?: string;
   version?: number;
   dateOfBirth?: string;
-  addresses?: BaseAdress[];
+  addresses?: BaseAddress[];
   defaultShippingAddress?: number;
   shippingAddresses?: number[];
   defaultBillingAddress?: number;

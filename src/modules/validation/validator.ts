@@ -1,4 +1,4 @@
-import { AdressCategories, Countries, FieldNames, InputUserError, PostalCodes } from '../../types/enums';
+import { AddressCategories, Countries, FieldNames, InputUserError, PostalCodes } from '../../types/enums';
 import { removeError, removeHelp, createError, createHelp } from './validationHelpers';
 import {
   dateFormatLength,
@@ -20,6 +20,8 @@ import {
   isOnlyNumbers,
   isOverOrEqualMaxLength,
 } from './validationChecks';
+import { getElement } from '../helpers/functions';
+import { getAddressContainerSelector } from '../pages/profile/profileHelpers';
 
 class Validator {
   private billingCountry: string | null;
@@ -28,7 +30,7 @@ class Validator {
 
   private currentValidateCountry: string | null;
 
-  private postalCodeLength: number | null;
+  public postalCodeLength: number | null;
 
   private readonly minAge = 16;
 
@@ -116,9 +118,9 @@ class Validator {
           }
           break;
         case FieldNames.PostalCode:
-          if (element.classList.contains('billing-adress__input')) {
+          if (element.classList.contains('billing-address__input')) {
             this.currentValidateCountry = this.billingCountry;
-          } else if (element.classList.contains('shipping-adress__input')) {
+          } else if (element.classList.contains('shipping-address__input')) {
             this.currentValidateCountry = this.shippingCountry;
           }
 
@@ -140,14 +142,18 @@ class Validator {
     }
   }
 
-  public setCountryFromSelectValue(category: string | null, element: HTMLSelectElement): void {
-    removeError(element);
-
-    if (category === AdressCategories.Billing) {
+  public setCountryFromSelectValue(element: HTMLSelectElement, category?: string | null): void {
+    if (category === AddressCategories.Billing) {
       this.billingCountry = element.value;
-    } else if (category === AdressCategories.Shipping) {
+    } else if (category === AddressCategories.Shipping) {
       this.shippingCountry = element.value;
     }
+
+    if (!category) {
+      this.currentValidateCountry = element.value;
+    }
+
+    console.log(this.currentValidateCountry);
 
     switch (element.value) {
       case Countries.Belarus:
@@ -162,6 +168,37 @@ class Validator {
       default:
         this.postalCodeLength = null;
     }
+  }
+
+  public validateProfilePostalCode(selectElement: HTMLSelectElement): void {
+    this.setCountryFromSelectValue(selectElement);
+
+    const containerSelector = getAddressContainerSelector(selectElement);
+    const postalCodeInput: HTMLInputElement = getElement(`${containerSelector} [data-type="postal-code"]`);
+
+    removeError(postalCodeInput);
+    this.validateFocusOut(postalCodeInput);
+  }
+
+  public validateProfileFormELements(formELements: NodeListOf<Element>): boolean {
+    let isValid = true;
+
+    formELements.forEach((element) => {
+      const formELement = element as HTMLInputElement;
+
+      const parentElement = formELement.closest('.form-item');
+
+      if (parentElement?.classList.contains('form-item--error')) {
+        isValid = false;
+      }
+
+      if (!formELement.value) {
+        isValid = false;
+        createError(formELement, InputUserError.EmptyFieldError);
+      }
+    });
+
+    return isValid;
   }
 
   public validateFocusOut(element: HTMLInputElement): void {
@@ -192,9 +229,9 @@ class Validator {
         }
         break;
       case FieldNames.PostalCode:
-        if (element.classList.contains('billing-adress__input')) {
+        if (element.classList.contains('billing-address__input')) {
           this.currentValidateCountry = this.billingCountry;
-        } else if (element.classList.contains('shipping-adress__input')) {
+        } else if (element.classList.contains('shipping-address__input')) {
           this.currentValidateCountry = this.shippingCountry;
         }
         if (this.postalCodeLength) {

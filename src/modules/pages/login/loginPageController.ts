@@ -1,6 +1,6 @@
 import './loginPage.scss';
 import '../../../style/toastify.css';
-import { getElement, renderPopup } from '../../helpers/functions';
+import { getElement, renderPopup, togglePasswordView } from '../../helpers/functions';
 import Router from '../../router/router';
 import Validator from '../../validation/validator';
 import Controller from '../../controller/controller';
@@ -34,7 +34,7 @@ class LoginController {
     passwordContainer.addEventListener('input', (e) => this.toggleLoginBtnDisable(e, passwordInput));
 
     showPasswordButton.addEventListener('click', () => {
-      this.togglePasswordView();
+      togglePasswordView(passwordInput, showPasswordButton);
     });
   }
 
@@ -83,15 +83,6 @@ class LoginController {
     registrationBtn.addEventListener('click', () => {
       this.router.navigateFromButton('registration');
     });
-  }
-
-  private togglePasswordView(): void {
-    const showPasswordBtn: HTMLButtonElement = getElement('.login__showpassword-button');
-    const passwordInput: HTMLInputElement = getElement('.login__password-input');
-    const isVisible = passwordInput.getAttribute('type') === 'text';
-
-    showPasswordBtn.innerText = isVisible ? 'SHOW' : 'HIDE';
-    passwordInput.type = isVisible ? 'password' : 'text';
   }
 }
 

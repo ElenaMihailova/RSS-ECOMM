@@ -1,9 +1,14 @@
-import { CustomerSignInResult, MyCustomerDraft, createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import {
+  Customer,
+  CustomerSignInResult,
+  MyCustomerDraft,
+  createApiBuilderFromCtpClient,
+} from '@commercetools/platform-sdk';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import Toastify from 'toastify-js';
 import { buildClientWithPasswordFlow, ctpClient } from './buildClient';
-import { BaseAdress, CustomerData } from '../../types/interfaces';
+import { BaseAddress, CustomerData } from '../../types/interfaces';
 
 const apiProjectRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
   projectKey: process.env.CTP_PROJECT_KEY as string,
@@ -26,7 +31,7 @@ export const createCustomer = async (data: MyCustomerDraft): Promise<MyCustomerD
   }
 };
 
-export const getCustomerByID = async (ID: string): Promise<BaseAdress | object> => {
+export const getCustomerByID = async (ID: string): Promise<MyCustomerDraft | object> => {
   try {
     const res = await apiProjectRoot.customers().withId({ ID }).get().execute();
     const resData = await res.body;
@@ -41,7 +46,7 @@ export const updateFirstName = async (
   customerId: string,
   value: string,
   customerVersion: number,
-): Promise<BaseAdress | object> => {
+): Promise<MyCustomerDraft | object> => {
   try {
     const res = await apiProjectRoot
       .customers()
@@ -70,7 +75,7 @@ export const updateLastName = async (
   customerId: string,
   value: string,
   customerVersion: number,
-): Promise<BaseAdress | object> => {
+): Promise<MyCustomerDraft | object> => {
   try {
     const res = await apiProjectRoot
       .customers()
@@ -99,7 +104,7 @@ export const updateDateOfBirth = async (
   customerId: string,
   value: string,
   customerVersion: number,
-): Promise<BaseAdress | object> => {
+): Promise<MyCustomerDraft | object> => {
   try {
     const res = await apiProjectRoot
       .customers()
@@ -124,11 +129,11 @@ export const updateDateOfBirth = async (
   return {};
 };
 
-export const updateEmailAdress = async (
+export const updateEmailAddress = async (
   customerId: string,
   value: string,
   customerVersion: number,
-): Promise<BaseAdress | object> => {
+): Promise<MyCustomerDraft | object> => {
   try {
     const res = await apiProjectRoot
       .customers()
@@ -153,9 +158,278 @@ export const updateEmailAdress = async (
   return {};
 };
 
-export const getUpdatedCustomer = async (customerID: string): Promise<MyCustomerDraft> => {
+export const updateAddress = async (
+  customerId: string,
+  customerVersion: number,
+  addressId: string,
+  address: BaseAddress,
+): Promise<MyCustomerDraft | object> => {
+  try {
+    const res = await apiProjectRoot
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version: customerVersion,
+          actions: [
+            {
+              action: 'changeAddress',
+              addressId,
+              address,
+            },
+          ],
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
+export const addNewAddress = async (
+  customerId: string,
+  customerVersion: number,
+  address: BaseAddress,
+): Promise<Customer | object> => {
+  try {
+    const res = await apiProjectRoot
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version: customerVersion,
+          actions: [
+            {
+              action: 'addAddress',
+              address,
+            },
+          ],
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
+export const removeAddress = async (
+  customerId: string,
+  customerVersion: number,
+  addressId: string,
+): Promise<Customer | object> => {
+  try {
+    const res = await apiProjectRoot
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version: customerVersion,
+          actions: [
+            {
+              action: 'removeAddress',
+              addressId,
+            },
+          ],
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
+export const removeShippingAddress = async (
+  customerId: string,
+  customerVersion: number,
+  addressId: string,
+): Promise<MyCustomerDraft | object> => {
+  try {
+    const res = await apiProjectRoot
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version: customerVersion,
+          actions: [
+            {
+              action: 'removeShippingAddressId',
+              addressId,
+            },
+          ],
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    console.log(`delete shipping ${addressId}`, resData);
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
+export const removeBillingAddress = async (
+  customerId: string,
+  customerVersion: number,
+  addressId: string,
+): Promise<MyCustomerDraft | object> => {
+  try {
+    const res = await apiProjectRoot
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version: customerVersion,
+          actions: [
+            {
+              action: 'removeBillingAddressId',
+              addressId,
+            },
+          ],
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    console.log(`delete billing ${addressId}`, resData);
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
+export const addShippingAddress = async (
+  customerId: string,
+  customerVersion: number,
+  addressId: string,
+): Promise<MyCustomerDraft | object> => {
+  try {
+    const res = await apiProjectRoot
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version: customerVersion,
+          actions: [
+            {
+              action: 'addShippingAddressId',
+              addressId,
+            },
+          ],
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    console.log(`добавили шипинг ${addressId}`, resData);
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
+export const addBillingAddress = async (
+  customerId: string,
+  customerVersion: number,
+  addressId: string,
+): Promise<MyCustomerDraft | object> => {
+  try {
+    const res = await apiProjectRoot
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version: customerVersion,
+          actions: [
+            {
+              action: 'addBillingAddressId',
+              addressId,
+            },
+          ],
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    console.log(`добавили billing ${addressId}`, resData);
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
+export const setDefaultShippingAddress = async (
+  customerId: string,
+  customerVersion: number,
+  addressId: string | undefined,
+): Promise<MyCustomerDraft | object> => {
+  try {
+    const res = await apiProjectRoot
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version: customerVersion,
+          actions: [
+            {
+              action: 'setDefaultShippingAddress',
+              addressId,
+            },
+          ],
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    console.log(`добавили billing ${addressId}`, resData);
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
+export const setDefaultBillingAddress = async (
+  customerId: string,
+  customerVersion: number,
+  addressId: string | undefined,
+): Promise<MyCustomerDraft | object> => {
+  try {
+    const res = await apiProjectRoot
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version: customerVersion,
+          actions: [
+            {
+              action: 'setDefaultBillingAddress',
+              addressId,
+            },
+          ],
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    console.log(`добавили billing ${addressId}`, resData);
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
+export const getUpdatedCustomer = async (customerID: string): Promise<Customer> => {
   const updatedCustomersData: MyCustomerDraft | object = await getCustomerByID(customerID);
-  const data = updatedCustomersData as MyCustomerDraft;
+  const data = updatedCustomersData as Customer;
   return data;
 };
 

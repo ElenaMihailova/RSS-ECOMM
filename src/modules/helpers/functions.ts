@@ -1,5 +1,6 @@
 import Toastify from 'toastify-js';
 import { AttrSet } from '../../types/types';
+import { Countries, CountryCodes } from '../../types/enums';
 
 export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
   tagName: T;
@@ -114,4 +115,42 @@ export const renderPopup = (succes: boolean, message: string): void => {
     position: 'center',
     stopOnFocus: true,
   }).showToast();
+};
+
+export const getCountryFromCountryCode = (countryCode: string): string => {
+  if (countryCode === CountryCodes.Belarus) {
+    return Countries.Belarus;
+  }
+  if (countryCode === CountryCodes.Spain) {
+    return Countries.Spain;
+  }
+  if (countryCode === CountryCodes.Netherlands) {
+    return Countries.Netherlands;
+  }
+
+  return '';
+};
+
+export const getCountryCode = (value: string): string => {
+  if (value === Countries.Belarus) {
+    return CountryCodes.Belarus;
+  }
+  if (value === Countries.Spain) {
+    return CountryCodes.Spain;
+  }
+  if (value === Countries.Netherlands) {
+    return CountryCodes.Netherlands;
+  }
+
+  return '';
+};
+
+export const togglePasswordView = (passwordInput: HTMLInputElement, passwordBtn: HTMLButtonElement): void => {
+  const input = passwordInput;
+  const btn = passwordBtn;
+
+  const isVisible = input.getAttribute('type') === 'text';
+
+  btn.innerText = isVisible ? 'SHOW' : 'HIDE';
+  input.type = isVisible ? 'password' : 'text';
 };

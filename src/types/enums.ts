@@ -1,6 +1,7 @@
 export const enum ProfileDataCategories {
   Personal = 'personal',
   Contact = 'contact',
+  Address = 'address',
   Password = 'password',
 }
 
@@ -11,15 +12,42 @@ export const enum ProfileInputLabels {
   Email = 'Email:',
 }
 
-export const enum ProfileDataBtns {
+export const enum Mode {
+  Edit = 'edit',
+  Create = 'create',
+  View = 'view',
+}
+
+export const enum ProfileDataContainersTitles {
+  SavedAddress = 'Saved address',
+  NewAddress = 'Your new address',
+}
+
+export const enum ProfileDataBtnsTitles {
   Personal = 'Change personal data',
+  SaveAddress = 'Save address',
   Contact = 'Change contact information',
+  EditAddress = 'Edit',
+  RemoveAddress = 'Remove',
   Password = 'Change password',
 }
 
-export const enum AdressCategories {
+export const enum ProfileDataBtns {
+  Edit = 'edit',
+  Remove = 'remove',
+  Add = 'add',
+  Save = 'save',
+}
+
+export const enum AddressCategories {
   Shipping = 'shipping',
   Billing = 'billing',
+}
+
+export const enum ProfilePageBtnsTitles {
+  Profile = 'Profile',
+  Addresses = 'Addresses',
+  ChangePassword = 'Change password',
 }
 
 export const enum Countries {
@@ -59,7 +87,11 @@ export enum InputUserError {
 export enum PopupMessages {
   SuccesfullyRegistered = 'Succesfully registered!',
   EmptyLoginFields = 'Please enter your username and password!',
+  AddressSuccesfullyRemoved = 'Address was succesfully removed!',
+  AddressSuccesfullyCreated = 'Address was succesfully created!',
+  UnmarkedAdressCategory = 'Please mark the category of the address!',
   PersonalDataUpdated = 'Your personal data has been succesfully updated!',
+  AddressDataUpdated = 'Your address has been succesfully updated!',
   ContactDataUpdated = 'Your contact information has been succesfully updated!',
   PasswordChanged = 'Your password has been changed!',
   ProfileCorrectData = 'Please enter the correct data!',
@@ -80,6 +112,11 @@ export enum FieldNames {
 }
 
 export enum CheckboxNames {
-  DefaultAdress = 'default-adress',
-  UseAsBillingAdress = 'use-as-billing-adress',
+  DefaultAddress = 'default-address',
+  UseAsBillingAddress = 'use-as-billing-address',
+}
+
+export enum CheckboxTypes {
+  DefaultAddress = 'default-address',
+  AddressCategory = 'address-category',
 }

@@ -9,5 +9,7 @@ export const enum PageUrls {
   LoginPageUrl = 'login',
   RegistrationPageUrl = 'registration',
   ProfilePageUrl = 'profile',
+  AddressesPageUrl = 'addresses',
+  ChangePasswordPageUrl = 'change-password',
   ErrorPageUrl = 'not-found',
 }

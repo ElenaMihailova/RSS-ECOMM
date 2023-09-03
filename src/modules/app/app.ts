@@ -34,11 +34,14 @@ class App {
 
   private profileController: ProfileController | null;
 
+  private profilePage: ProfileView | null;
+
   constructor() {
     this.main = null;
     this.loginController = null;
     this.registrationController = null;
     this.profileController = null;
+    this.profilePage = null;
     const routes = this.createRoutes();
     this.router = new Router(routes);
     this.createView();
@@ -149,8 +152,40 @@ class App {
               this.router.navigateFromButton(PageUrls.LoginPageUrl);
               return;
             }
+            this.profilePage = new ProfileView();
+            this.main.setViewContent(this.profilePage);
+            this.profileController = new ProfileController(this.router);
+          }
+        },
+      },
+      {
+        path: `${PageUrls.ProfilePageUrl}/${PageUrls.AddressesPageUrl}`,
+        callback: (): void => {
+          if (this.main) {
+            this.main.clearContent();
 
-            this.main.setViewContent(new ProfileView());
+            if (!getFromLS('token')) {
+              this.router.navigateFromButton(PageUrls.LoginPageUrl);
+              return;
+            }
+            this.profilePage = new ProfileView();
+            this.main.setViewContent(this.profilePage);
+            this.profileController = new ProfileController(this.router);
+          }
+        },
+      },
+      {
+        path: `${PageUrls.ProfilePageUrl}/${PageUrls.ChangePasswordPageUrl}`,
+        callback: (): void => {
+          if (this.main) {
+            this.main.clearContent();
+
+            if (!getFromLS('token')) {
+              this.router.navigateFromButton(PageUrls.LoginPageUrl);
+              return;
+            }
+            this.profilePage = new ProfileView();
+            this.main.setViewContent(this.profilePage);
             this.profileController = new ProfileController(this.router);
           }
         },
@@ -192,8 +227,13 @@ class App {
         tooltip.textContent = 'LOG IN';
         removeFromLS('token');
 
-        if (window.location.pathname.slice(1) === PageUrls.ProfilePageUrl) {
-          this.router.navigateFromButton(PageUrls.IndexPageUrl);
+        switch (window.location.pathname.slice(1)) {
+          case PageUrls.ProfilePageUrl:
+          case `${PageUrls.ProfilePageUrl}/${PageUrls.AddressesPageUrl}`:
+          case `${PageUrls.ProfilePageUrl}/${PageUrls.ChangePasswordPageUrl}`:
+            this.router.navigateFromButton(PageUrls.IndexPageUrl);
+            break;
+          default:
         }
       } else {
         this.router.navigateFromButton(PageUrls.LoginPageUrl);
@@ -220,6 +260,15 @@ class App {
         logoutSvg.classList.add('visually-hidden');
         loginSvg.classList.remove('visually-hidden');
         tooltip.textContent = 'LOG IN';
+
+        switch (window.location.pathname.slice(1)) {
+          case PageUrls.ProfilePageUrl:
+          case `${PageUrls.ProfilePageUrl}/${PageUrls.AddressesPageUrl}`:
+          case `${PageUrls.ProfilePageUrl}/${PageUrls.ChangePasswordPageUrl}`:
+            this.router.navigateFromButton(PageUrls.IndexPageUrl);
+            break;
+          default:
+        }
       } else {
         this.router.navigateFromButton(PageUrls.LoginPageUrl);
       }

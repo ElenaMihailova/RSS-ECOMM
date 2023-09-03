@@ -63,8 +63,8 @@ $font-Montserrat: Montserrat;
   gap: 19px;
 }
 
-.adresses-container,
-.adress-container,
+.addresses-container,
+.address-container,
 .common-data-container {
   display: flex;
   flex-direction: column;
@@ -75,15 +75,15 @@ $font-Montserrat: Montserrat;
   padding-top: 10px;
 }
 
-.adress-container {
+.address-container {
   padding-top: 17px;
 }
 
-.adresses-container {
+.addresses-container {
   gap: 17px;
 }
 
-.adress-container__description {
+.address-container__description {
   font-weight: 500;
 }
 
@@ -145,24 +145,6 @@ $font-Montserrat: Montserrat;
   top: 12px;
 }
 
-.name-input-icon,
-.surname-input-icon {
-  background: url(../../../assets/image/sprite.svg#person);
-}
-
-.age-input-icon {
-  background: url(../../../assets/image/calendar-icon.svg);
-}
-
-.email-input-icon {
-  background: url(../../../assets/image/mail.svg);
-}
-
-.password-input-icon {
-  cursor: pointer;
-  background: url(../../../assets/image/password-icon.svg);
-}
-
 .password-input-btn {
   background-color: transparent;
   border: none;
@@ -182,14 +164,14 @@ input[type='checkbox']:disabled {
   cursor: default;
 }
 
-.adress-checkboxes {
+.address-checkboxes {
   display: flex;
   flex-direction: column;
   gap: 22px;
   padding: 10px 0px;
 }
 
-.adress-checkbox {
+.address-checkbox {
   line-height: 1;
 }
 
