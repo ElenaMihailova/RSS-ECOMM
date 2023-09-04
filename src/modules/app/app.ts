@@ -57,6 +57,7 @@ class App {
 
   private createView(): void {
     const layout = createLayout(this.headerData, this.footerData, this.router);
+
     App.container.append(layout.header, layout.footer);
 
     setMenuBtnsView();
@@ -165,22 +166,6 @@ class App {
     loginMobileBtn.addEventListener('click', this.btnMoveToLoginHandler.bind(this));
   }
 
-  private registrationBtnsHandlers(): void {
-    const registrationBtn = getElement('.registration--desktop');
-    const registrationMobileBtn = getElement('.registration--mobile');
-
-    registrationBtn.addEventListener('click', this.btnMoveToRegistrationHandler.bind(this));
-    registrationMobileBtn.addEventListener('click', this.btnMoveToRegistrationHandler.bind(this));
-  }
-
-  private profileBtnsHandlers(): void {
-    const profileBtn = getElement('.profile--desktop');
-    const profileMobileBtn = getElement('.profile--mobile');
-
-    profileBtn.addEventListener('click', this.btnMoveToProfileHandler.bind(this));
-    profileMobileBtn.addEventListener('click', this.btnMoveToProfileHandler.bind(this));
-  }
-
   private btnMoveToLoginHandler(e: Event): void {
     e.preventDefault();
     if (getFromLS('token')) {
@@ -192,14 +177,12 @@ class App {
     }
   }
 
-  private indexBtnHandler(): void {
-    const indexBtn = getElement('.logo__link');
-    indexBtn.addEventListener('click', this.btnMoveToIndexHandler.bind(this));
-  }
+  private registrationBtnsHandlers(): void {
+    const registrationBtn = getElement('.registration--desktop');
+    const registrationMobileBtn = getElement('.registration--mobile');
 
-  private homeBtnHandler(): void {
-    const homeBtn = getElement('.home--button');
-    homeBtn.addEventListener('click', this.btnMoveToIndexHandler.bind(this));
+    registrationBtn.addEventListener('click', this.btnMoveToRegistrationHandler.bind(this));
+    registrationMobileBtn.addEventListener('click', this.btnMoveToRegistrationHandler.bind(this));
   }
 
   private btnMoveToRegistrationHandler(e: Event): void {
@@ -208,10 +191,28 @@ class App {
     this.router.navigateFromButton(url);
   }
 
+  private profileBtnsHandlers(): void {
+    const profileBtn = getElement('.profile--desktop');
+    const profileMobileBtn = getElement('.profile--mobile');
+
+    profileBtn.addEventListener('click', this.btnMoveToProfileHandler.bind(this));
+    profileMobileBtn.addEventListener('click', this.btnMoveToProfileHandler.bind(this));
+  }
+
   private btnMoveToProfileHandler(e: Event): void {
     e.preventDefault();
     const url = getFromLS('token') ? PageUrls.ProfilePageUrl : PageUrls.IndexPageUrl;
     this.router.navigateFromButton(url);
+  }
+
+  private indexBtnHandler(): void {
+    const indexBtn = getElement('.logo__link');
+    indexBtn.addEventListener('click', this.btnMoveToIndexHandler.bind(this));
+  }
+
+  private homeBtnHandler(): void {
+    const homeBtn = getElement('.home--button');
+    homeBtn.addEventListener('click', this.btnMoveToIndexHandler.bind(this));
   }
 
   private btnMoveToIndexHandler(e: Event): void {
