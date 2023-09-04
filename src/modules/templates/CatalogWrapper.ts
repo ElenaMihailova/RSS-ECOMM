@@ -1,4 +1,4 @@
-import { Flavors, Origins, SortOptions } from '../../assets/data/constants';
+import { Flavors, Origins, SortMethods, SortOptions } from '../../assets/data/constants';
 import generateCatalogList from '../components/catalogList/generateCatalogList';
 import { createElement, createSvgElement } from '../helpers/functions';
 
@@ -55,7 +55,7 @@ const catalogWrapper = (): HTMLElement => {
 
   const linkBreakfast = createElement({
     tagName: 'a',
-    classNames: ['category-classic__link', 'category__link'],
+    classNames: ['category-breakfast__link', 'category__link'],
     text: 'BREAKFAST TEAS',
     parent: categoryBreakfast,
   });
@@ -68,7 +68,7 @@ const catalogWrapper = (): HTMLElement => {
 
   const linkFall = createElement({
     tagName: 'a',
-    classNames: ['category-classic__link', 'category__link'],
+    classNames: ['category-fall__link', 'category__link'],
     text: 'FALL TEAS',
     parent: categoryFall,
   });
@@ -191,8 +191,8 @@ const catalogWrapper = (): HTMLElement => {
 
     const originInput = createElement({
       tagName: 'input',
-      classNames: ['filter-origin__input', `input__${Origins[i].toLowerCase()}`],
-      attributes: [{ type: 'checkbox' }],
+      classNames: ['filter__input', 'filter-origin__input', `input__${Origins[i].toLowerCase()}`],
+      attributes: [{ type: 'checkbox' }, { value: `${Origins[i]}` }],
       parentPrepend: originItem,
     });
   }
@@ -226,8 +226,8 @@ const catalogWrapper = (): HTMLElement => {
 
     const flavorInput = createElement({
       tagName: 'input',
-      classNames: ['filter-flavor__input', `input__${Flavors[i].toLowerCase()}`],
-      attributes: [{ type: 'checkbox' }],
+      classNames: ['filter__input', 'filter-flavor__input', `input__${Flavors[i].toLowerCase()}`],
+      attributes: [{ type: 'checkbox' }, { value: `${Flavors[i]}` }],
       parentPrepend: flavorItem,
     });
   }
@@ -238,11 +238,24 @@ const catalogWrapper = (): HTMLElement => {
     parent: container,
   });
 
-  const seachInput = createElement({
+  const searchContainer = createElement({
+    tagName: 'div',
+    classNames: ['catalog__search', 'searching'],
+    parent: wrap,
+  });
+
+  const searchInput = createElement({
     tagName: 'input',
     classNames: ['search__input', 'input'],
-    attributes: [{ type: 'search' }, { placeholder: 'Search....' }],
-    parent: wrap,
+    attributes: [{ type: 'search' }],
+    parent: searchContainer,
+  });
+
+  const searchButton = createElement({
+    tagName: 'button',
+    classNames: ['search__button', 'button'],
+    text: 'Search',
+    parent: searchContainer,
   });
 
   const sorting = createElement({
@@ -262,6 +275,7 @@ const catalogWrapper = (): HTMLElement => {
       tagName: 'option',
       classNames: ['sort__option'],
       text: `${SortOptions[i]}`,
+      attributes: [{ value: `${SortMethods[i]}` }],
       parent: sortSelect,
     });
   }

@@ -185,6 +185,17 @@
   }
 }
 
+.catalog__search {
+  display: flex;
+  gap: 10px;
+}
+
+.search__button {
+  max-width: 90px;
+  width: 100%;
+  padding: 0;
+}
+
 .catalog__sort {
   position: relative;
 }

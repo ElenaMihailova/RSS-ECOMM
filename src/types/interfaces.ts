@@ -1,3 +1,5 @@
+import { QueryParam } from '@commercetools/sdk-client-v2';
+
 export interface AttrSet {
   [key: string]: string;
 }
@@ -73,4 +75,11 @@ export interface CustomerData {
   shippingAddresses?: number[];
   defaultBillingAddress?: number;
   billingAddresses?: number[];
+}
+
+export interface QueryArgs {
+  filter?: string[];
+  sort?: string[];
+  ['text.en-US']?: string;
+  [key: string]: QueryParam;
 }

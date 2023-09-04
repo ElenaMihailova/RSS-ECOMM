@@ -240,11 +240,11 @@ class App {
   }
 
   private catalogBtnHandler(): void {
-    const catalogBtn = getElement('.catalog__link');
-    catalogBtn.addEventListener('click', (e: Event): void => {
-      e.preventDefault();
-      this.router.navigateFromButton(PageUrls.CatalogPageUrl);
-    });
+    // const catalogBtn = getElement('.catalog__link');
+    // catalogBtn.addEventListener('click', (e: Event): void => {
+    //   e.preventDefault();
+    //   this.router.navigateFromButton(PageUrls.CatalogPageUrl);
+    // });
   }
 }
 
