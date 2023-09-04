@@ -211,6 +211,8 @@ export const setMenuBtnsView = (): void => {
   const token = getFromLS('token');
   const loginSvg = getElement('.login svg');
   const logoutSvg = getElement('.logout-svg');
+  const loginMobileBtn = getElement('.login--mobile div:nth-child(1)');
+  const logoutMobileBtn = getElement('.login--mobile div:nth-child(2)');
   const registrationContainer = getElement('.registration--desktop').closest('li');
   const registrationMobileContainer = getElement('.registration--mobile').closest('a');
   const profileContainer = getElement('.profile--desktop').closest('li');
@@ -220,6 +222,8 @@ export const setMenuBtnsView = (): void => {
   if (token) {
     loginSvg.classList.add('visually-hidden');
     logoutSvg.classList.remove('visually-hidden');
+    loginMobileBtn.classList.add('visually-hidden');
+    logoutMobileBtn.classList.remove('visually-hidden');
     registrationContainer?.classList.add('visually-hidden');
     registrationMobileContainer?.classList.add('visually-hidden');
     profileMobileContainer?.classList.remove('visually-hidden');
@@ -228,6 +232,8 @@ export const setMenuBtnsView = (): void => {
   } else {
     loginSvg.classList.remove('visually-hidden');
     logoutSvg.classList.add('visually-hidden');
+    loginMobileBtn.classList.remove('visually-hidden');
+    logoutMobileBtn.classList.add('visually-hidden');
     registrationContainer?.classList.remove('visually-hidden');
     registrationMobileContainer?.classList.remove('visually-hidden');
     profileMobileContainer?.classList.add('visually-hidden');
