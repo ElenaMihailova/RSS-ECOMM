@@ -71,7 +71,7 @@ const mobileMenuTemplate = ({ router }: { router: Router }): HTMLElement => {
   createSvg({
     tagName: 'use',
     attributes: {
-      xlinkHref: './image/sprite.svg#search',
+      xlinkHref: '../image/sprite.svg#search',
     },
     parent: svgElement,
   });

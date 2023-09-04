@@ -4,31 +4,31 @@ const createMenuUser = (): HTMLElement => {
   const menuItems = [
     {
       href: '#',
-      svgHref: './image/sprite.svg#search',
+      svgHref: '../image/sprite.svg#search',
       text: 'Search',
     },
     {
       href: '#',
-      svgHref: './image/sprite.svg#card',
+      svgHref: '../image/sprite.svg#card',
       text: 'Card',
     },
     {
       href: 'registration',
       classNames: ['registration', 'registration--desktop'],
-      svgHref: './image/sprite.svg#add_person',
+      svgHref: '../image/sprite.svg#add_person',
       text: 'Sign up',
     },
     {
       href: 'profile',
       classNames: ['profile', 'profile--desktop'],
-      svgHref: './image/sprite.svg#person',
+      svgHref: '../image/sprite.svg#person',
       text: 'Profile',
     },
     {
       href: 'login',
       classNames: ['login', 'login--desktop'],
-      svgHref: './image/sprite.svg#person',
-      extraSvgHref: './image/sprite.svg#logout',
+      svgHref: '../image/sprite.svg#person',
+      extraSvgHref: '../image/sprite.svg#logout',
       text: 'Log in',
     },
   ];
