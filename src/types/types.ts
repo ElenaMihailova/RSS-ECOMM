@@ -1,3 +1,12 @@
+import { ProfileData } from './interfaces';
+
+export type CoockieOptions = {
+  expires?: Date | number | string;
+  path?: string;
+  domain?: string;
+  secure?: boolean;
+};
+
 export type RouteAction = {
   path: string;
   callback: () => void;
@@ -95,3 +104,5 @@ export interface AttrSet {
 export interface Data {
   [key: string]: string;
 }
+
+export type ProfileAddressData = ProfileData[];

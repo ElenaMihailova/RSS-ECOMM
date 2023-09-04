@@ -1,6 +1,6 @@
 import { ProductProjection } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product';
 import { QueryArgs } from '../../../types/interfaces';
-import { filterProducts, getCategoryId } from '../../api/apiClient';
+import { filterProducts, getCategoryId, getProductByProductKey } from '../../api/apiClient';
 import { getElement, getElementCollection } from '../../helpers/functions';
 import Router from '../../router/router';
 
@@ -17,6 +17,7 @@ class CatalogController {
 
   constructor(router: Router) {
     this.router = router;
+    this.productItemsHandler();
     this.categoriesHandler();
     this.subcategoriesHandler();
     this.originInputsHandler();
@@ -355,6 +356,23 @@ class CatalogController {
     const products = await filterProducts(queryArgs);
     console.log(products);
     return products;
+  }
+
+  private productItemsHandler(): void {
+    const productItems = getElementCollection('.catalog__item a');
+
+    productItems.forEach((item) => {
+      const productItem = item as HTMLDivElement;
+      const productKey = productItem.getAttribute('product-key');
+      if (!productKey) {
+        return;
+      }
+
+      item.addEventListener('click', async () => {
+        await getProductByProductKey(productKey);
+        this.router.navigateFromButton('product');
+      });
+    });
   }
 }
 
