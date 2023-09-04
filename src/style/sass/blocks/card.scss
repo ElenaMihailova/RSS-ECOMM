@@ -1,13 +1,19 @@
 .card {
   box-shadow: 5px 5px 5px -5px rgba(16, 16, 17, 0.6);
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  border-radius: 20px;
+  transition: transform $trans-default;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 .card__link {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
 }
 
 .card__name {
@@ -16,6 +22,7 @@
   font-size: 20px;
   line-height: 1.5;
   letter-spacing: 0.5px;
+  padding: 10px;
 }
 
 .card__link div {
@@ -36,4 +43,5 @@
 .card__image {
   display: block;
   width: 100%;
+  border-radius: 20px 20px 0 0;
 }
