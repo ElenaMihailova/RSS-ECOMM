@@ -11,7 +11,12 @@ import {
 } from '../../../types/enums';
 import { changePassword, getUpdatedCustomer, getUpdatedVersion, updateCustomer } from '../../api/apiClient';
 import { getCountryCode, getElement, getElementCollection, renderPopup, setToLS } from '../../helpers/functions';
-import { createError, getDateFromString, getDateISOStringWithoutTime } from '../../validation/validationHelpers';
+import {
+  createError,
+  getDateFromString,
+  getDateISOStringWithoutTime,
+  removeError,
+} from '../../validation/validationHelpers';
 import Validator from '../../validation/validator';
 import {
   createPasswordData,
@@ -272,12 +277,15 @@ export const updatePassword = async (
 
   const passwordData = createPasswordData(passwordFormElements);
 
+  const NewPasswordInput: HTMLInputElement = getElement(`[password-type="${PasswordTypes.NewPasswordConfirm}"]`);
+
+  removeError(NewPasswordInput);
+
   if (!validator.isValidProfileData(button, passwordFormElements)) {
     return succes;
   }
 
   if (passwordData.newPassword !== passwordData.newPasswordRepeat) {
-    const NewPasswordInput: HTMLInputElement = getElement(`[password-type="${PasswordTypes.NewPasswordConfirm}"]`);
     createError(NewPasswordInput, InputUserError.ConfirmPasswordNoMatch);
     renderPopup(succes, PopupMessages.NewPasswordsNoMatch);
     return succes;

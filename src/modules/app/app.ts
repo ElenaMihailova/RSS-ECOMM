@@ -53,6 +53,7 @@ class App {
     this.loginBtnsHandlers();
     this.registrationBtnsHandlers();
     this.profileBtnsHandlers();
+    this.router.navigate();
   }
 
   private createView(): void {

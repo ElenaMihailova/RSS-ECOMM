@@ -1,10 +1,11 @@
 import {
   Customer,
   CustomerChangePassword,
-  CustomerSignInResult,
   CustomerUpdate,
+  CustomerSignInResult,
   MyCustomerDraft,
   createApiBuilderFromCtpClient,
+  ProductProjection,
 } from '@commercetools/platform-sdk';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
@@ -132,6 +133,22 @@ export const loginUser = async (
         position: 'center',
         stopOnFocus: true,
       }).showToast();
+    });
+
+  return resData;
+};
+
+export const getProductProjections = async (): Promise<ProductProjection[] | object> => {
+  let resData = {};
+  await apiProjectRoot
+    .productProjections()
+    .get()
+    .execute()
+    .then((r) => {
+      resData = r.body.results;
+    })
+    .catch((e) => {
+      console.error(e.message);
     });
 
   return resData;
