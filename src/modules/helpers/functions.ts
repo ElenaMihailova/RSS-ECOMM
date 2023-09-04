@@ -11,8 +11,9 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
   parentPrepend?: HTMLElement;
   href?: string;
   router?: Router;
+  src?: string;
 }): HTMLElementTagNameMap[T] => {
-  const { tagName, classNames, attributes, text, parent, parentPrepend, html, href, router } = elData;
+  const { tagName, classNames, attributes, text, parent, parentPrepend, html, href, router, src } = elData;
 
   const element: HTMLElementTagNameMap[T] = document.createElement(tagName);
 
@@ -34,6 +35,10 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
 
   if (html) {
     element.innerHTML = html;
+  }
+
+  if (src && tagName === 'img') {
+    element.setAttribute('src', src);
   }
 
   if (parent) {

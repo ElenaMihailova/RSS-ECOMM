@@ -2,27 +2,14 @@ import { PageUrls } from '../../assets/data/constants';
 import { RouteAction, UserRequest } from '../../types/types';
 
 class Router {
-  private static instance: Router | null = null;
-
   public routes: RouteAction[];
 
   constructor(routes: RouteAction[]) {
     this.routes = routes;
 
-    window.addEventListener('DOMContentLoaded', (): void => {
-      this.navigate();
-    });
-
     window.addEventListener('popstate', (): void => {
       this.navigate();
     });
-  }
-
-  public static getInstance(routes: RouteAction[]): Router {
-    if (!Router.instance) {
-      Router.instance = new Router(routes);
-    }
-    return Router.instance;
   }
 
   public navigateToLink(url: string): void {
@@ -37,7 +24,7 @@ class Router {
     this.navigate();
   }
 
-  private navigate(): void {
+  public navigate(): void {
     const urlString = window.location.pathname.slice(1);
 
     const res = { path: '', resource: '' };

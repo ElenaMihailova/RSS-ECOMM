@@ -16,6 +16,7 @@ import setupHeaderListeners from '../components/setupHeaderListeners';
 import RegistrationController from '../pages/registration/registrationPageController';
 import CatalogView from '../pages/catalog/catalogPageView';
 import catalogContent from '../templates/CatalogTemplate';
+import { getProductProjections } from '../api/apiClient';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -45,6 +46,7 @@ class App {
     this.loginBtnHandler();
     this.registrationBtnHandler();
     this.loginMobileBtnHandler();
+    this.router.navigate();
   }
 
   private createView(): void {
@@ -175,7 +177,6 @@ class App {
         removeFromLS('token');
       } else {
         this.router.navigateFromButton(PageUrls.LoginPageUrl);
-        console.log(PageUrls.LoginPageUrl);
       }
     });
   }
