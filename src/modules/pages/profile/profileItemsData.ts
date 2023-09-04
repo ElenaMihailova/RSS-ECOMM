@@ -144,9 +144,10 @@ export const createAddressDataItems = (mode: string): ProfileDataItem[] => {
 export const createAddressDetails = async (customerID: string, addressID?: string): Promise<AddressDetails> => {
   const data = await getUpdatedCustomer(customerID);
   const { defaultBillingAddressId, defaultShippingAddressId, shippingAddressIds, billingAddressIds } = data;
+
   const details: AddressDetails = {
-    shippingAddress: addressID ? Boolean(shippingAddressIds?.includes(addressID)) : false,
-    billingAddress: addressID ? Boolean(billingAddressIds?.includes(addressID)) : false,
+    shippingAddress: addressID ? (shippingAddressIds?.includes(addressID) as boolean) : false,
+    billingAddress: addressID ? (billingAddressIds?.includes(addressID) as boolean) : false,
     isDefaultShippingAddress: addressID ? addressID === defaultShippingAddressId : false,
     isDefaultBillingAddress: addressID ? addressID === defaultBillingAddressId : false,
   };
