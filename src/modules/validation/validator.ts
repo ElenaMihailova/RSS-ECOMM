@@ -54,91 +54,89 @@ class Validator {
       return;
     }
 
-    if (value) {
-      switch (element.dataset.type) {
-        case FieldNames.Name:
-        case FieldNames.Surname:
-        case FieldNames.City:
-          if (!hasLetters(value)) {
-            createError(element, InputUserError.LettersError);
-          }
-          break;
-        case FieldNames.Age:
-          createHelp(element, InputUserError.AgeError);
+    switch (element.dataset.type) {
+      case FieldNames.Name:
+      case FieldNames.Surname:
+      case FieldNames.City:
+        if (!hasLetters(value)) {
+          createError(element, InputUserError.LettersError);
+        }
+        break;
+      case FieldNames.Age:
+        createHelp(element, InputUserError.AgeError);
 
-          if (!hasNumbersAndDots(value)) {
-            createError(element, InputUserError.DateSyntaxError);
-          } else if (isMaxLength(value, dateFormatLength) && !isDateFormat(value)) {
-            createError(element, InputUserError.InvalidDataError);
-          } else if (isMaxLength(value, dateFormatLength) && isDateFormat(value) && isLessMinAge(value, this.minAge)) {
-            createError(element, `User must be at least ${this.minAge} years old`);
-          } else if (isOverMaxLength(value, dateFormatLength)) {
-            createError(element, InputUserError.TooManyCharactersError);
-          }
+        if (!hasNumbersAndDots(value)) {
+          createError(element, InputUserError.DateSyntaxError);
+        } else if (isMaxLength(value, dateFormatLength) && !isDateFormat(value)) {
+          createError(element, InputUserError.InvalidDataError);
+        } else if (isMaxLength(value, dateFormatLength) && isDateFormat(value) && isLessMinAge(value, this.minAge)) {
+          createError(element, `User must be at least ${this.minAge} years old`);
+        } else if (isOverMaxLength(value, dateFormatLength)) {
+          createError(element, InputUserError.TooManyCharactersError);
+        }
 
-          break;
-        case FieldNames.Password:
-          if (isOverOrEqualMaxLength(value, passwordFormatLength)) {
-            if (!isPasswordFormat(value)) {
-              removeError(element);
-              const passwordErors = [];
+        break;
+      case FieldNames.Password:
+        if (isOverOrEqualMaxLength(value, passwordFormatLength)) {
+          if (!isPasswordFormat(value)) {
+            removeError(element);
+            const passwordErors = [];
 
-              if (!hasNumbers(value)) {
-                passwordErors.push('1 number');
-              }
-
-              if (!hasLowerLetters(value)) {
-                passwordErors.push('1 lowercase letter');
-              }
-
-              if (!hasUpperLetters(value)) {
-                passwordErors.push('1 uppercase letter');
-              }
-
-              const errorString = `Must contain at least: ${passwordErors.join(', ')}`;
-              createError(element, errorString);
+            if (!hasNumbers(value)) {
+              passwordErors.push('1 number');
             }
-          }
-          break;
-        case FieldNames.LoginEmail:
-          if (!isEmailFormat(value)) {
-            createError(element, InputUserError.EmailError);
-          }
-          break;
-        case FieldNames.LoginPassword:
-          if (
-            isLessLengthLimit(value, passwordFormatLength) ||
-            hasLSpaces(value) ||
-            hasTSpaces(value) ||
-            !hasLowerLetters(value) ||
-            !hasNumbers(value) ||
-            !hasUpperLetters(value)
-          ) {
-            createError(element, InputUserError.PasswordError);
-          }
-          break;
-        case FieldNames.PostalCode:
-          if (element.classList.contains('billing-address__input')) {
-            this.currentValidateCountry = this.billingCountry;
-          } else if (element.classList.contains('shipping-address__input')) {
-            this.currentValidateCountry = this.shippingCountry;
-          }
 
-          if (!isOnlyNumbers(value)) {
-            removeError(element);
-            createError(element, InputUserError.PostalCodeError);
-          }
+            if (!hasLowerLetters(value)) {
+              passwordErors.push('1 lowercase letter');
+            }
 
-          if (this.postalCodeLength && isOverMaxLength(value, this.postalCodeLength)) {
-            removeError(element);
-            createError(
-              element,
-              `Postal code for ${this.currentValidateCountry} must have ${this.postalCodeLength} numeric characters`,
-            );
+            if (!hasUpperLetters(value)) {
+              passwordErors.push('1 uppercase letter');
+            }
+
+            const errorString = `Must contain at least: ${passwordErors.join(', ')}`;
+            createError(element, errorString);
           }
-          break;
-        default:
-      }
+        }
+        break;
+      case FieldNames.LoginEmail:
+        if (!isEmailFormat(value)) {
+          createError(element, InputUserError.EmailError);
+        }
+        break;
+      case FieldNames.LoginPassword:
+        if (
+          isLessLengthLimit(value, passwordFormatLength) ||
+          hasLSpaces(value) ||
+          hasTSpaces(value) ||
+          !hasLowerLetters(value) ||
+          !hasNumbers(value) ||
+          !hasUpperLetters(value)
+        ) {
+          createError(element, InputUserError.PasswordError);
+        }
+        break;
+      case FieldNames.PostalCode:
+        if (element.classList.contains('billing-address__input')) {
+          this.currentValidateCountry = this.billingCountry;
+        } else if (element.classList.contains('shipping-address__input')) {
+          this.currentValidateCountry = this.shippingCountry;
+        }
+
+        if (!isOnlyNumbers(value)) {
+          removeError(element);
+          createError(element, InputUserError.PostalCodeError);
+        }
+
+        if (this.postalCodeLength && isOverMaxLength(value, this.postalCodeLength)) {
+          removeError(element);
+          createError(
+            element,
+            `Postal code for ${this.currentValidateCountry} must have ${this.postalCodeLength} numeric characters`,
+          );
+        }
+        break;
+      default:
     }
   }
 
