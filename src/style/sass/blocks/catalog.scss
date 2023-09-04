@@ -59,3 +59,149 @@
 .catalog__link:hover {
   transform: scale(1.05);
 }
+
+.catalog__wrap {
+  display: flex;
+  flex-direction: column;
+
+  @include vp-768 {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: auto 1fr;
+    grid-auto-flow: row;
+    grid-template-areas:
+      'filter sort'
+      'filter items';
+  }
+}
+
+.catalog__navigation {
+  display: flex;
+  flex-direction: column;
+
+  @include vp-768 {
+    grid-area: filter;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.catalog__categories {
+  padding-bottom: 50px;
+}
+
+.catalog__categories-list {
+  padding-left: 0;
+}
+
+.category__item {
+  list-style-type: none;
+}
+
+.subcategory__item {
+  font-size: 0.8rem;
+  padding-left: 10px;
+}
+
+.category__link {
+  cursor: pointer;
+}
+
+.catalog__category-classic,
+.catalog__category-breakfast {
+  padding-bottom: 10px;
+}
+
+.catalog__filter {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-origin__title,
+.filter-flavor__title {
+  font-weight: 600;
+  padding-bottom: 5px;
+}
+
+.filter-origin__list,
+.filter-flavor__list {
+  padding-left: 0;
+}
+
+.filter-origin__list {
+  padding-bottom: 35px;
+}
+
+.filter-origin__item,
+.filter-flavor__item {
+  list-style-type: none;
+  padding: 5px 0;
+}
+
+.filter-origin__input,
+.filter-flavor__input {
+  position: relative;
+  cursor: pointer;
+  margin-right: 15px;
+  background-color: white;
+  bottom: 2px;
+
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 0;
+    left: 0;
+    border: 1.5px solid black;
+    background-color: white;
+  }
+
+  &:checked:after {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 10px;
+    border: solid black;
+    border-width: 0 1.5px 1.5px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    position: absolute;
+    top: 2px;
+    left: 6px;
+  }
+}
+
+.catalog__sortSearch {
+  display: flex;
+  justify-content: space-between;
+
+  @include vp-768 {
+    grid-area: sort;
+  }
+}
+
+.catalog__sort {
+  position: relative;
+}
+
+.catalog__sort select {
+  height: 100%;
+  border: 1.5px solid black;
+  border: 0;
+  float: right;
+
+  &:active {
+    border: none;
+  }
+}
+
+.catalog__items {
+  @include vp-768 {
+    grid-area: items;
+  }
+}

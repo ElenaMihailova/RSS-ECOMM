@@ -8,17 +8,21 @@ import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
 import LoginController from '../pages/login/loginPageController';
 import { getElement, getFromLS, removeFromLS } from '../helpers/functions';
-import { FooterLinksType, NavLink } from '../../types/nav.types';
-import createLayout from '../components/createLayout';
+import { FooterLinks, NavLink } from '../components/layout/nav.types';
+import createLayout from '../components/layout/createLayout';
 import { headerLinks, footerLinks } from '../../assets/data/navigationData';
 import mainContent from '../templates/mainContent';
 import setupHeaderListeners from '../components/setupHeaderListeners';
 import RegistrationController from '../pages/registration/registrationPageController';
 import ProfileController from '../pages/profile/profilePageController';
 import ProfileView from '../pages/profile/profilePageView';
+import CatalogView from '../pages/catalog/catalogPageView';
+import catalogContent from '../templates/CatalogTemplate';
 
 class App {
   private static container: HTMLElement = document.body;
+
+  public static routerInstance: Router | null = null;
 
   public router: Router;
 
@@ -28,7 +32,7 @@ class App {
 
   private headerData: NavLink[] = headerLinks;
 
-  private footerData: FooterLinksType = footerLinks;
+  private footerData: FooterLinks = footerLinks;
 
   private registrationController: RegistrationController | null;
 
@@ -53,9 +57,9 @@ class App {
   }
 
   private createView(): void {
-    const layout = createLayout(this.headerData, this.footerData);
+    const layout = createLayout(this.headerData, this.footerData, this.router);
     App.container.append(layout.header, layout.footer);
-    const loginSvg = getElement('.login-svg');
+    const loginSvg = getElement('.login svg');
     const logoutSvg = getElement('.logout-svg');
     const tooltip = getElement('.tooltip--login');
     const profileBtn = getElement('.profile--desktop');
@@ -106,6 +110,15 @@ class App {
           if (this.main) {
             this.main.clearContent();
             this.main.setContent(new IndexView(mainContent).render());
+          }
+        },
+      },
+      {
+        path: `${PageUrls.CatalogPageUrl}`,
+        callback: (): void => {
+          if (this.main) {
+            this.main.clearContent();
+            this.main.setContent(new CatalogView(catalogContent).render());
           }
         },
       },
@@ -206,7 +219,7 @@ class App {
 
   private loginBtnHandler(): void {
     const loginBtn = getElement('.login--desktop');
-    const loginSvg = getElement('.login-svg');
+    const loginSvg = getElement('.login svg');
     const logoutSvg = getElement('.logout-svg');
     const tooltip = getElement('.tooltip--login');
     const profileBtn = getElement('.profile--desktop');
@@ -237,6 +250,7 @@ class App {
         }
       } else {
         this.router.navigateFromButton(PageUrls.LoginPageUrl);
+        console.log(PageUrls.LoginPageUrl);
       }
     });
   }
@@ -244,7 +258,7 @@ class App {
   private loginMobileBtnHandler(): void {
     const loginMobileBtn = getElement('.login--mobile');
     const registrationBtn = getElement('.registration--desktop');
-    const loginSvg = getElement('.login-svg');
+    const loginSvg = getElement('.login svg');
     const logoutSvg = getElement('.logout-svg');
     const tooltip = getElement('.tooltip--login');
     const registrationContainer = registrationBtn.closest('li');

@@ -1,8 +1,8 @@
 export const headerLinks = [
-  { text: 'tea collections', href: '#' },
-  { text: 'accessories', href: '#' },
-  { text: 'blog', href: '#' },
-  { text: 'contact us', href: '#' },
+  { text: 'tea collections', href: '/catalog' },
+  { text: 'accessories', href: '', inactive: true },
+  { text: 'blog', href: '', inactive: true },
+  { text: 'contact us', href: '', inactive: true },
 ];
 
 export const footerLinks = {
