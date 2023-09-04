@@ -7,16 +7,18 @@ import RegistrationView from '../pages/registration/registrationPageView';
 import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
 import LoginController from '../pages/login/loginPageController';
-import { getElement, getFromLS, removeFromLS } from '../helpers/functions';
+import { getElement, getFromLS, removeFromLS, setMenuBtnsView } from '../helpers/functions';
 import { FooterLinks, NavLink } from '../components/layout/nav.types';
 import createLayout from '../components/layout/createLayout';
 import { headerLinks, footerLinks } from '../../assets/data/navigationData';
 import mainContent from '../templates/mainContent';
 import setupHeaderListeners from '../components/setupHeaderListeners';
 import RegistrationController from '../pages/registration/registrationPageController';
+import ProfileController from '../pages/profile/profilePageController';
+import ProfileView from '../pages/profile/profilePageView';
 import CatalogView from '../pages/catalog/catalogPageView';
 import catalogContent from '../templates/CatalogTemplate';
-import { getProductProjections } from '../api/apiClient';
+import CatalogController from '../pages/catalog/catalogPageController';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -35,45 +37,35 @@ class App {
 
   private registrationController: RegistrationController | null;
 
+  private profileController: ProfileController | null;
+
+  private catalogController: CatalogController | null;
+
+  private profilePage: ProfileView | null;
+
   constructor() {
     this.main = null;
     this.loginController = null;
     this.registrationController = null;
+    this.catalogController = null;
+    this.profileController = null;
+    this.profilePage = null;
     const routes = this.createRoutes();
     this.router = new Router(routes);
     this.createView();
     this.indexBtnHandler();
-    this.loginBtnHandler();
-    this.registrationBtnHandler();
-    this.loginMobileBtnHandler();
+    this.loginBtnsHandlers();
+    this.registrationBtnsHandlers();
+    this.profileBtnsHandlers();
     this.router.navigate();
   }
 
   private createView(): void {
     const layout = createLayout(this.headerData, this.footerData, this.router);
+
     App.container.append(layout.header, layout.footer);
 
-    const loginSvg = getElement('.login svg');
-    const logoutSvg = getElement('.logout-svg');
-    const tooltip = getElement('.tooltip--login');
-    const registrationBtn = getElement('.registration--desktop');
-    const registrationContainer = registrationBtn.closest('li');
-    const registrationMobileBtn = getElement('.registration--mobile');
-    const registrationMobileContainer = registrationMobileBtn.closest('a');
-
-    if (getFromLS('token')) {
-      loginSvg.classList.add('visually-hidden');
-      logoutSvg.classList.remove('visually-hidden');
-      registrationContainer?.classList.add('visually-hidden');
-      registrationMobileContainer?.classList.add('visually-hidden');
-      tooltip.textContent = 'LOG OUT';
-    } else {
-      logoutSvg.classList.add('visually-hidden');
-      loginSvg.classList.remove('visually-hidden');
-      registrationContainer?.classList.remove('visually-hidden');
-      registrationMobileContainer?.classList.remove('visually-hidden');
-      tooltip.textContent = 'LOG IN';
-    }
+    setMenuBtnsView();
 
     setupHeaderListeners('hamburger', 'menu');
 
@@ -109,6 +101,7 @@ class App {
           if (this.main) {
             this.main.clearContent();
             this.main.setContent(new CatalogView(catalogContent).render());
+            this.catalogController = new CatalogController(this.router);
           }
         },
       },
@@ -117,10 +110,12 @@ class App {
         callback: (): void => {
           if (this.main) {
             this.main.clearContent();
+
             if (getFromLS('token')) {
               this.router.navigateFromButton(PageUrls.IndexPageUrl);
               return;
             }
+
             const registrationView = new RegistrationView();
             this.main.setViewContent(registrationView);
             this.registrationController = new RegistrationController(this.router, registrationView);
@@ -144,79 +139,78 @@ class App {
         },
       },
       {
+        path: `${PageUrls.ProfilePageUrl}`,
+        callback: this.redirectToProfile.bind(this),
+      },
+      {
+        path: `${PageUrls.ProfilePageUrl}/${PageUrls.AddressesPageUrl}`,
+        callback: this.redirectToProfile.bind(this),
+      },
+      {
+        path: `${PageUrls.ProfilePageUrl}/${PageUrls.ChangePasswordPageUrl}`,
+        callback: this.redirectToProfile.bind(this),
+      },
+      {
         path: `${PageUrls.ErrorPageUrl}`,
         callback: (): void => {
           if (this.main) {
             this.main.clearContent();
             this.main.setContent(new ErrorView(this.router).render());
           }
+
           this.homeBtnHandler();
         },
       },
     ];
   }
 
-  private loginBtnHandler(): void {
+  private loginBtnsHandlers(): void {
     const loginBtn = getElement('.login--desktop');
-    const loginSvg = getElement('.login svg');
-    const logoutSvg = getElement('.logout-svg');
-    const tooltip = getElement('.tooltip--login');
-    const registrationBtn = getElement('.registration--desktop');
-    const registrationContainer = registrationBtn.closest('li');
-    const registrationMobileBtn = getElement('.registration--mobile');
-    const registrationMobileContainer = registrationMobileBtn.closest('a');
-
-    loginBtn.addEventListener('click', (e: Event): void => {
-      e.preventDefault();
-      if (getFromLS('token')) {
-        registrationContainer?.classList.remove('visually-hidden');
-        registrationMobileContainer?.classList.remove('visually-hidden');
-        logoutSvg.classList.add('visually-hidden');
-        loginSvg.classList.remove('visually-hidden');
-        tooltip.textContent = 'LOG IN';
-        removeFromLS('token');
-      } else {
-        this.router.navigateFromButton(PageUrls.LoginPageUrl);
-      }
-    });
-  }
-
-  private loginMobileBtnHandler(): void {
     const loginMobileBtn = getElement('.login--mobile');
-    const registrationBtn = getElement('.registration--desktop');
-    const loginSvg = getElement('.login svg');
-    const logoutSvg = getElement('.logout-svg');
-    const tooltip = getElement('.tooltip--login');
-    const registrationContainer = registrationBtn.closest('li');
-    const registrationMobileBtn = getElement('.registration--mobile');
-    const registrationMobileContainer = registrationMobileBtn.closest('a');
 
-    loginMobileBtn.addEventListener('click', (e: Event): void => {
-      e.preventDefault();
-      if (getFromLS('token')) {
-        removeFromLS('token');
-        registrationContainer?.classList.remove('visually-hidden');
-        registrationMobileContainer?.classList.remove('visually-hidden');
-        logoutSvg.classList.add('visually-hidden');
-        loginSvg.classList.remove('visually-hidden');
-        tooltip.textContent = 'LOG IN';
-      } else {
-        this.router.navigateFromButton(PageUrls.LoginPageUrl);
-      }
-    });
+    loginBtn.addEventListener('click', this.btnMoveToLoginHandler.bind(this));
+    loginMobileBtn.addEventListener('click', this.btnMoveToLoginHandler.bind(this));
   }
 
-  private registrationBtnHandler(): void {
-    const registrationBtn = getElement('.registration--desktop');
+  private btnMoveToLoginHandler(e: Event): void {
+    e.preventDefault();
+    if (getFromLS('token')) {
+      removeFromLS('token');
+      removeFromLS('userID');
+      removeFromLS('version');
+      setMenuBtnsView();
+      this.logoutRedirect();
+    } else {
+      this.router.navigateFromButton(PageUrls.LoginPageUrl);
+    }
+  }
 
-    registrationBtn.addEventListener('click', (e: Event): void => {
-      e.preventDefault();
-      if (getFromLS('token')) {
-        this.router.navigateFromButton(PageUrls.IndexPageUrl);
-      } else {
-        this.router.navigateFromButton(PageUrls.RegistrationPageUrl);
-      }
-    });
+  private registrationBtnsHandlers(): void {
+    const registrationBtn = getElement('.registration--desktop');
+    const registrationMobileBtn = getElement('.registration--mobile');
+
+    registrationBtn.addEventListener('click', this.btnMoveToRegistrationHandler.bind(this));
+    registrationMobileBtn.addEventListener('click', this.btnMoveToRegistrationHandler.bind(this));
+  }
+
+  private btnMoveToRegistrationHandler(e: Event): void {
+    e.preventDefault();
+    const url = getFromLS('token') ? PageUrls.IndexPageUrl : PageUrls.RegistrationPageUrl;
+    this.router.navigateFromButton(url);
+  }
+
+  private profileBtnsHandlers(): void {
+    const profileBtn = getElement('.profile--desktop');
+    const profileMobileBtn = getElement('.profile--mobile');
+
+    profileBtn.addEventListener('click', this.btnMoveToProfileHandler.bind(this));
+    profileMobileBtn.addEventListener('click', this.btnMoveToProfileHandler.bind(this));
+  }
+
+  private btnMoveToProfileHandler(e: Event): void {
+    e.preventDefault();
+    const url = getFromLS('token') ? PageUrls.ProfilePageUrl : PageUrls.IndexPageUrl;
+    this.router.navigateFromButton(url);
   }
 
   private indexBtnHandler(): void {
@@ -232,6 +226,31 @@ class App {
   private btnMoveToIndexHandler(e: Event): void {
     e.preventDefault();
     this.router.navigateFromButton(PageUrls.IndexPageUrl);
+  }
+
+  private redirectToProfile(): void {
+    if (this.main) {
+      this.main.clearContent();
+
+      if (!getFromLS('token')) {
+        this.router.navigateFromButton(PageUrls.LoginPageUrl);
+        return;
+      }
+      this.profilePage = new ProfileView();
+      this.main.setViewContent(this.profilePage);
+      this.profileController = new ProfileController(this.router);
+    }
+  }
+
+  private logoutRedirect(): void {
+    switch (window.location.pathname.slice(1)) {
+      case PageUrls.ProfilePageUrl:
+      case `${PageUrls.ProfilePageUrl}/${PageUrls.AddressesPageUrl}`:
+      case `${PageUrls.ProfilePageUrl}/${PageUrls.ChangePasswordPageUrl}`:
+        this.router.navigateFromButton(PageUrls.IndexPageUrl);
+        break;
+      default:
+    }
   }
 }
 

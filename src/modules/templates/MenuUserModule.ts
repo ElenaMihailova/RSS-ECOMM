@@ -47,7 +47,7 @@ const menuUser = (): HTMLElement => {
           parent: svg,
         });
 
-        const pElement = createElement({
+        createElement({
           tagName: 'p',
           html: content.text,
           parent: div,
@@ -78,7 +78,7 @@ const menuUser = (): HTMLElement => {
         parent: svg,
       });
 
-      const pElement = createElement({
+      createElement({
         tagName: 'p',
         html: item.text,
         parent: div,

@@ -15,7 +15,7 @@ const mobileMenuTemplate = ({ router }: { router: Router }): HTMLElement => {
     parent: container,
   });
 
-  const inputCheckbox = createElement({
+  createElement({
     tagName: 'input',
     attributes: [{ type: 'checkbox' }, { id: 'hamburger' }],
     classNames: ['hamburger'],
@@ -45,7 +45,7 @@ const mobileMenuTemplate = ({ router }: { router: Router }): HTMLElement => {
     parent: wrapper,
   });
 
-  const input = createElement({
+  createElement({
     tagName: 'input',
     attributes: [{ type: 'text' }, { id: 'search' }, { placeholder: 'SEARCH PRODUCTS' }],
     parent: inputWrap,
@@ -71,7 +71,7 @@ const mobileMenuTemplate = ({ router }: { router: Router }): HTMLElement => {
   createSvg({
     tagName: 'use',
     attributes: {
-      xlinkHref: './image/sprite.svg#search',
+      xlinkHref: '../image/sprite.svg#search',
     },
     parent: svgElement,
   });

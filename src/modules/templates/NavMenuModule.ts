@@ -21,7 +21,7 @@ const navMenu = ({ router }: { router: Router }): HTMLElement => {
       classNames.push('no-active');
     }
 
-    const a = createElement({
+    createElement({
       tagName: 'a',
       classNames,
       text: item.text,

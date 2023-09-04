@@ -1,17 +1,17 @@
 import {
+  Customer,
+  CustomerChangePassword,
+  CustomerUpdate,
   CustomerSignInResult,
   MyCustomerDraft,
   createApiBuilderFromCtpClient,
-  ProductPagedQueryResponse,
-  Product,
-  ApiRoot,
-  Category,
   ProductProjection,
 } from '@commercetools/platform-sdk';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import Toastify from 'toastify-js';
 import { buildClientWithPasswordFlow, ctpClient } from './buildClient';
+import { CustomerData } from '../../types/interfaces';
 
 const apiProjectRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
   projectKey: process.env.CTP_PROJECT_KEY as string,
@@ -32,6 +32,81 @@ export const createCustomer = async (data: MyCustomerDraft): Promise<MyCustomerD
     console.error();
     return err as Error;
   }
+};
+
+export const changePassword = async (body: CustomerChangePassword): Promise<Customer | Error> => {
+  try {
+    const res = await apiProjectRoot
+      .customers()
+      .password()
+      .post({
+        body,
+      })
+      .execute();
+    const resData = await res.body;
+    return resData;
+  } catch (err) {
+    console.error();
+    return err as Error;
+  }
+};
+
+export const getCustomerByID = async (ID: string): Promise<MyCustomerDraft | object> => {
+  try {
+    const res = await apiProjectRoot.customers().withId({ ID }).get().execute();
+    const resData = await res.body;
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
+export const getProductByProductKey = async (key: string): Promise<MyCustomerDraft | object> => {
+  try {
+    const res = await apiProjectRoot.productProjections().withKey({ key }).get().execute();
+    const resData = await res.body;
+    console.log('product', resData);
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
+export const updateCustomer = async (customerId: string, body: CustomerUpdate): Promise<Customer | Error> => {
+  try {
+    const res = await apiProjectRoot
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body,
+      })
+      .execute();
+    const resData = await res.body;
+    return resData;
+  } catch (err) {
+    console.error();
+    return err as Error;
+  }
+};
+
+export const getUpdatedCustomer = async (customerID: string): Promise<Customer> => {
+  const updatedCustomersData: MyCustomerDraft | object = await getCustomerByID(customerID);
+  const data = updatedCustomersData as Customer;
+  return data;
+};
+
+export const getUpdatedVersion = async (customerID: string): Promise<number | undefined> => {
+  const updatedCustomersData: CustomerData | object = await getCustomerByID(customerID);
+  const data = updatedCustomersData as CustomerData;
+  const { version } = data;
+
+  if (version) {
+    return version;
+  }
+
+  return version;
 };
 
 export const createApiRootWithPasswordFlow = (options: PasswordAuthMiddlewareOptions): ByProjectKeyRequestBuilder => {

@@ -12,3 +12,4 @@ export const emailWord = /\bemail\b/;
 export const emailFormat =
   /^((([0-9A-Za-z]{1}[-0-9A-z.]{1,}[0-9A-Za-z]{1})|([0-9А-Яа-я]{1}[-0-9А-я.]{1,}[0-9А-Яа-я]{1}))@([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$/;
 export const dateFormat = /(?:0?[1-9]|[12][0-9]|3[0-1])\.(?:0?[1-9]|1[0-2])\.(?:19[0-9][0-9]|20[01][0-9]|20[02][0-3])/;
+export const currentWord = /\bcurrent\b/;
