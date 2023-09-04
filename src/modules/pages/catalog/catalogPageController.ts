@@ -12,14 +12,14 @@ class CatalogController {
 
   private productItemsHandler(): void {
     const productItems = getElementCollection('.catalog__item a');
-    console.log(productItems);
+
     productItems.forEach((item) => {
       const productItem = item as HTMLDivElement;
       const productKey = productItem.getAttribute('product-key');
       if (!productKey) {
         return;
       }
-      console.log(productItem.getAttribute('product-key'));
+
       item.addEventListener('click', async () => {
         await getProductByProductKey(productKey);
         this.router.navigateFromButton('product');
