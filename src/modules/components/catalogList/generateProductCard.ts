@@ -2,11 +2,12 @@ import { ProductCardData } from './productTypes';
 import { createElement } from '../../helpers/functions';
 
 export default function generateProductCard(productData: ProductCardData): HTMLElement {
-  const { link, imageUrl, title, price, description } = productData;
+  const { link, imageUrl, title, price, description, key } = productData;
 
   const productCard = createElement({
     tagName: 'a',
     classNames: ['card__link'],
+    attributes: [{ 'product-key': key }],
     href: link,
   });
 

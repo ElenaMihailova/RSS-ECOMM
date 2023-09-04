@@ -1,7 +1,6 @@
 import IntroCatalog from './IntroCatalog';
 import catalogWrapper from './CatalogWrapper';
 import { createElement } from '../helpers/functions';
-import Router from '../router/router';
 
 const contentContainer = createElement({
   tagName: 'div',
