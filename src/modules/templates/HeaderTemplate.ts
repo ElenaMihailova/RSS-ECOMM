@@ -31,15 +31,15 @@ const headerTemplate = (mobilMenu: HTMLElement, desktopMenu: HTMLElement): HTMLE
     parent: logoLink,
   });
 
-  const useElement = createSvg({
+  createSvg({
     tagName: 'use',
     attributes: {
-      xlinkHref: './image/sprite.svg#logo',
+      xlinkHref: '../image/sprite.svg#logo',
     },
     parent: svgElement,
   });
 
-  const logoText = createElement({
+  createElement({
     tagName: 'span',
     text: 'Brand Name',
     parent: logoLink,

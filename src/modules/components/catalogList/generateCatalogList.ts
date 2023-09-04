@@ -1,24 +1,56 @@
 import generateProductCard from './generateProductCard';
-import { ProductCardData } from './productTypes';
 import { createElement } from '../../helpers/functions';
+import { getProductProjections } from '../../api/apiClient';
 
-export default function generateCatalogList(productData: ProductCardData[]): HTMLElement {
-  const catalogList = createElement({
-    tagName: 'ol',
-    classNames: ['catalog__list'],
-  });
+export default async function generateCatalogList(): Promise<HTMLElement> {
+  try {
+    const productData = await getProductProjections();
 
-  productData.forEach((product) => {
-    const li = createElement({
-      tagName: 'li',
-      classNames: ['catalog__item', 'card'],
+    const catalogList = createElement({
+      tagName: 'ol',
+      classNames: ['catalog__list', 'catalog__list--catalog'],
     });
 
-    const productCard = generateProductCard(product);
-    li.appendChild(productCard);
+    if (Array.isArray(productData)) {
+      productData.forEach((product) => {
+        const li = createElement({
+          tagName: 'li',
+          classNames: ['catalog__item', 'card'],
+        });
 
-    catalogList.appendChild(li);
-  });
+        const price =
+          product.masterVariant.prices && product.masterVariant.prices[0]
+            ? product.masterVariant.prices[0].value.centAmount / 100
+            : 0;
 
-  return catalogList;
+        const description = product.description && product.description['en-US'] ? product.description['en-US'] : '';
+
+        const imageUrl =
+          product.masterVariant.images && product.masterVariant.images.length > 0
+            ? product.masterVariant.images[0].url
+            : '';
+
+        const { key } = product;
+
+        const productCard = generateProductCard({
+          link: product.slug['en-US'],
+          title: product.name['en-US'],
+          price,
+          imageUrl,
+          description,
+          key,
+        });
+
+        li.appendChild(productCard);
+        catalogList.appendChild(li);
+      });
+    } else {
+      console.error('Product data is not an array');
+    }
+
+    return catalogList;
+  } catch (error) {
+    console.error();
+    throw error;
+  }
 }

@@ -1,8 +1,9 @@
+import { CustomerSignInResult } from '@commercetools/platform-sdk';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { PageUrls } from '../../assets/data/constants';
-import { createApiRootWithPasswordFlow, loginUser } from '../api/apiClient';
+import { createApiRootWithPasswordFlow, getUpdatedVersion, loginUser } from '../api/apiClient';
 import MyTokenCache from '../api/myTokenCache';
-import { getElement, setToLS } from '../helpers/functions';
+import { setMenuBtnsView, setToLS } from '../helpers/functions';
 import Router from '../router/router';
 
 class Controller {
@@ -26,23 +27,17 @@ class Controller {
 
     const apiRoot = createApiRootWithPasswordFlow(options);
     const login = await loginUser(apiRoot, email, password);
-    const loginSvg = getElement('.login svg');
-    const logoutSvg = getElement('.logout-svg');
-    const tooltip = getElement('.tooltip--login');
-    const registrationBtn = getElement('.registration--desktop');
-    const registrationContainer = registrationBtn.closest('li');
-    const registrationMobileBtn = getElement('.registration--mobile');
-    const registrationMobileContainer = registrationMobileBtn.closest('a');
 
     if (Object.keys(login).length) {
+      const loginData = login as CustomerSignInResult;
+      setToLS('userID', loginData.customer.id);
       const tokenInfo = tokenCache.get();
       setToLS('token', tokenInfo.token);
+      const version = await getUpdatedVersion(loginData.customer.id);
+      setToLS('version', JSON.stringify(version));
       router.navigateFromButton(PageUrls.IndexPageUrl);
-      loginSvg.classList.add('visually-hidden');
-      registrationContainer?.classList.add('visually-hidden');
-      registrationMobileContainer?.classList.add('visually-hidden');
-      logoutSvg.classList.remove('visually-hidden');
-      tooltip.textContent = 'LOG OUT';
+
+      setMenuBtnsView();
     }
   }
 }

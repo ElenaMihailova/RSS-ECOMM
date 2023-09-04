@@ -1,16 +1,8 @@
 import { Flavors, Origins, SortOptions } from '../../assets/data/constants';
 import generateCatalogList from '../components/catalogList/generateCatalogList';
-import { createElement, createSvgElement } from '../helpers/functions';
+import { createElement } from '../helpers/functions';
 
-const myProductData = [
-  { image: 'path/to/image1.jpg', title: 'Продукт 1', price: 1000, link: '#' },
-  { image: 'path/to/image2.jpg', title: 'Продукт 2', price: 2000, link: '#' },
-  { image: 'path/to/image3.jpg', title: 'Продукт 3', price: 3000, link: '#' },
-];
-
-const catalogList = generateCatalogList(myProductData);
-
-const catalogWrapper = (): HTMLElement => {
+const catalogWrapper = async (): Promise<HTMLElement> => {
   const container = createElement({
     tagName: 'section',
     classNames: ['catalog__wrap', 'container'],
@@ -270,13 +262,9 @@ const catalogWrapper = (): HTMLElement => {
   selectTitle.setAttribute('selected', 'selected');
   selectTitle.setAttribute('disabled', 'disabled');
 
-  const items = createElement({
-    tagName: 'div',
-    classNames: ['catalog__items'],
-    parent: container,
-  });
+  const catalogList = await generateCatalogList();
 
-  items.appendChild(catalogList);
+  container.appendChild(catalogList);
 
   return container;
 };

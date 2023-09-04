@@ -1,4 +1,6 @@
 import { createElement } from '../helpers/functions';
+import generateBreadcrumbs from '../components/breadcrumbs/generateBreadcrumbs';
+import breadcrumbLinksCatalog from '../../assets/data/breadcrumbs';
 
 const IntroCatalog = createElement({
   tagName: 'section',
@@ -9,5 +11,9 @@ const IntroCatalog = createElement({
     </div>
   `,
 });
+
+const breadcrumbsCatalog = generateBreadcrumbs(breadcrumbLinksCatalog);
+
+IntroCatalog.appendChild(breadcrumbsCatalog);
 
 export default IntroCatalog;

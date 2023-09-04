@@ -1,16 +1,7 @@
-import Toastify from 'toastify-js';
-import {
-  AdressCategories,
-  CheckboxNames,
-  Countries,
-  CountryCodes,
-  FieldNames,
-  InputUserError,
-  SubmitMessages,
-} from '../../../types/enums';
-import { BaseAdress, CustomerData, FormAdressData } from '../../../types/interfaces';
+import { AddressCategories, CheckboxNames, FieldNames, InputUserError, PopupMessages } from '../../../types/enums';
+import { BaseAddress, CustomerData, FormAddressData } from '../../../types/interfaces';
 import { createCustomer } from '../../api/apiClient';
-import { getElement, getElementCollection } from '../../helpers/functions';
+import { getCountryCode, getElement, getElementCollection, renderPopup } from '../../helpers/functions';
 import Router from '../../router/router';
 import {
   createError,
@@ -32,21 +23,20 @@ class RegistrationController {
 
   private router: Router;
 
-  public isCommonAdress: boolean;
+  public isCommonAddress: boolean;
 
   constructor(router: Router, registrationView: RegistrationView) {
     this.validator = new Validator();
     this.registrationView = registrationView;
     this.router = router;
-    this.isCommonAdress = false;
+    this.isCommonAddress = false;
     this.runHandlers();
   }
 
   public runHandlers(): void {
     this.addFormInputHandlers();
     this.addFormSelectHandlers();
-    this.addPasswordBtnHandler();
-    this.addCommonAdressCheckboxHandler();
+    this.addCommonAddressCheckboxHandler();
     this.addSubmitFormButtonHandler();
     this.addLoginBtnHandler();
   }
@@ -73,12 +63,12 @@ class RegistrationController {
     const formItemSelectElements = getElementCollection('.form-item .select');
 
     formItemSelectElements.forEach((element) => {
-      const adressCategory = element.getAttribute('category');
+      const addressCategory = element.getAttribute('category');
       const selectElement = element as HTMLSelectElement;
 
       selectElement.addEventListener('change', () => {
-        const adressInputs = getElementCollection(`.${adressCategory}-adress__input`);
-        adressInputs.forEach((input) => {
+        const addressInputs = getElementCollection(`.${addressCategory}-address__input`);
+        addressInputs.forEach((input) => {
           const inputElement = input as HTMLInputElement;
           removeError(inputElement);
           inputElement.value = '';
@@ -87,17 +77,8 @@ class RegistrationController {
       });
 
       selectElement.addEventListener('focusout', () => {
-        this.validator.setCountryFromSelectValue(adressCategory, selectElement);
+        this.validator.setCountryFromSelectValue(selectElement, addressCategory);
       });
-    });
-  }
-
-  public addPasswordBtnHandler(): void {
-    const passwordBtn: HTMLButtonElement = getElement('.password-input-btn');
-    const passwordInput: HTMLInputElement = getElement('.password-input');
-
-    passwordBtn.addEventListener('click', () => {
-      this.registrationView.togglePasswordView(passwordInput, passwordBtn);
     });
   }
 
@@ -110,13 +91,14 @@ class RegistrationController {
     });
   }
 
-  public addCommonAdressCheckboxHandler(): void {
-    const commonAdressCheckbox: HTMLInputElement = getElement('.use-as-billing-adress__input');
+  public addCommonAddressCheckboxHandler(): void {
+    const commonAddressCheckbox: HTMLInputElement = getElement('.use-as-billing-address__input');
 
-    commonAdressCheckbox.addEventListener('change', () => {
-      this.isCommonAdress = commonAdressCheckbox.checked;
-      this.registrationView.toggleBillingAdressView();
+    commonAddressCheckbox.addEventListener('change', () => {
+      this.isCommonAddress = commonAddressCheckbox.checked;
+      this.registrationView.toggleBillingAddressView();
       this.addFormSelectHandlers();
+      this.addFormInputHandlers();
     });
   }
 
@@ -153,108 +135,94 @@ class RegistrationController {
     commonData.shippingAddresses = [];
     commonData.billingAddresses = [];
 
-    const shippingAdressIndex = 0;
-    const billingAdressIndex = 1;
+    const shippingAddressIndex = 0;
+    const billingAddressIndex = 1;
 
-    const shippingAdress: FormAdressData = this.createAdress(AdressCategories.Shipping);
+    const shippingAddress: FormAddressData = this.createAddress(AddressCategories.Shipping);
 
-    commonData.addresses?.push(shippingAdress.data as BaseAdress);
-    commonData.shippingAddresses?.push(shippingAdressIndex);
+    commonData.addresses?.push(shippingAddress.data as BaseAddress);
+    commonData.shippingAddresses?.push(shippingAddressIndex);
 
-    if (shippingAdress.isDefault) {
-      commonData.defaultShippingAddress = shippingAdressIndex;
+    if (shippingAddress.isDefault) {
+      commonData.defaultShippingAddress = shippingAddressIndex;
     }
 
-    if (this.isCommonAdress) {
-      commonData.billingAddresses?.push(shippingAdressIndex);
-      if (shippingAdress.isDefault) {
-        commonData.defaultBillingAddress = shippingAdressIndex;
+    if (this.isCommonAddress) {
+      commonData.billingAddresses?.push(shippingAddressIndex);
+      if (shippingAddress.isDefault) {
+        commonData.defaultBillingAddress = shippingAddressIndex;
       }
     } else {
-      const billingAdress = this.createAdress(AdressCategories.Billing);
+      const billingAddress = this.createAddress(AddressCategories.Billing);
 
-      commonData.addresses?.push(billingAdress.data as BaseAdress);
-      commonData.billingAddresses?.push(billingAdressIndex);
+      commonData.addresses?.push(billingAddress.data as BaseAddress);
+      commonData.billingAddresses?.push(billingAddressIndex);
 
-      if (billingAdress.isDefault) {
-        commonData.defaultBillingAddress = billingAdressIndex;
+      if (billingAddress.isDefault) {
+        commonData.defaultBillingAddress = billingAddressIndex;
       }
     }
 
     return commonData;
   }
 
-  public createAdress(category: string): FormAdressData {
-    const adressData: FormAdressData = {
+  public createAddress(category: string): FormAddressData {
+    const addressData: FormAddressData = {
       category,
       isDefault: false,
     };
 
-    const baseAdressData: Partial<BaseAdress> = {};
-    const adressDataElements = getElementCollection(`.${category}-adress .form-item-element`);
+    const baseAddressData: Partial<BaseAddress> = {};
+    const addressDataElements = getElementCollection(`.${category}-address .form-item-element`);
 
-    adressDataElements.forEach((element) => {
-      const data = baseAdressData as BaseAdress;
-      const adressDataElement = element as HTMLInputElement | HTMLSelectElement;
-      const countryCode = this.getCountryCode(adressDataElement.value);
+    addressDataElements.forEach((element) => {
+      const data = baseAddressData as BaseAddress;
+      const addressDataElement = element as HTMLInputElement | HTMLSelectElement;
+      const countryCode = getCountryCode(addressDataElement.value);
 
-      switch (adressDataElement.getAttribute('data-type')) {
+      switch (addressDataElement.getAttribute('data-type')) {
         case FieldNames.Country:
           if (countryCode) {
             data.country = countryCode;
           }
           break;
         case FieldNames.City:
-          data.city = adressDataElement.value;
+          data.city = addressDataElement.value;
           break;
         case FieldNames.Street:
-          data.streetName = adressDataElement.value;
+          data.streetName = addressDataElement.value;
           break;
         case FieldNames.PostalCode:
-          data.postalCode = adressDataElement.value;
+          data.postalCode = addressDataElement.value;
           break;
 
         default:
       }
     });
 
-    const adressCheckboxes = getElementCollection('.adress-checkboxes .input');
+    const addressCheckboxes = getElementCollection('.address-checkboxes .input');
 
-    adressCheckboxes.forEach((element) => {
-      const adressDataElement = element as HTMLInputElement;
+    addressCheckboxes.forEach((element) => {
+      const addressDataElement = element as HTMLInputElement;
 
-      switch (adressDataElement.getAttribute('data-type')) {
-        case CheckboxNames.DefaultAdress:
-          if (adressDataElement.checked && adressDataElement.classList.contains(`${category}-adress__input`)) {
-            adressData.isDefault = true;
+      switch (addressDataElement.getAttribute('data-type')) {
+        case CheckboxNames.DefaultAddress:
+          if (addressDataElement.checked && addressDataElement.classList.contains(`${category}-address__input`)) {
+            addressData.isDefault = true;
           }
           break;
-        case CheckboxNames.UseAsBillingAdress:
-          if (adressDataElement.checked) {
-            adressData.additionalCategory = AdressCategories.Billing;
+        case CheckboxNames.UseAsBillingAddress:
+          if (addressDataElement.checked) {
+            addressData.additionalCategory = AddressCategories.Billing;
           }
           break;
         default:
       }
     });
 
-    adressData.data = baseAdressData as BaseAdress;
+    addressData.data = baseAddressData as BaseAddress;
 
-    return adressData;
-  }
-
-  public getCountryCode(value: string): string | undefined {
-    let countryCode;
-
-    if (value === Countries.Belarus) {
-      countryCode = CountryCodes.Belarus;
-    } else if (value === Countries.Spain) {
-      countryCode = CountryCodes.Spain;
-    } else if (value === Countries.Netherlands) {
-      countryCode = CountryCodes.Netherlands;
-    }
-
-    return countryCode;
+    return addressData;
   }
 
   public isValidForm(): boolean {
@@ -297,14 +265,14 @@ class RegistrationController {
           createError(emailInput, inputErrorMessage);
         }
 
-        this.renderPopup(false, errorMessage);
+        renderPopup(false, errorMessage);
 
         return;
       }
 
-      const succesResponceMessage = SubmitMessages.SuccesfullyRegistered;
+      const succesResponceMessage = PopupMessages.SuccesfullyRegistered;
 
-      this.renderPopup(true, succesResponceMessage);
+      renderPopup(true, succesResponceMessage);
 
       const email = emailInput.value;
       const password = passwordInput.value;
@@ -313,21 +281,6 @@ class RegistrationController {
 
       this.router.navigateFromButton(PageUrls.IndexPageUrl);
     }
-  }
-
-  public renderPopup(succes: boolean, message: string): void {
-    const className = succes ? 'toastify-succes' : 'toastify-error';
-
-    Toastify({
-      text: `${message}`,
-      className: `toastify ${className}`,
-      duration: 4000,
-      newWindow: true,
-      close: true,
-      gravity: 'bottom',
-      position: 'center',
-      stopOnFocus: true,
-    }).showToast();
   }
 
   private addLoginBtnHandler(): void {

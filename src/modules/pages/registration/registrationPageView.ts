@@ -1,9 +1,9 @@
 import PageView from '../../core/pageView';
-import { createElement, createSvgElement, getElement } from '../../helpers/functions';
-import { FormItems, Icon, InputBtn, SelectOption } from '../../../types/interfaces';
-import { AdressCategories } from '../../../types/enums';
+import { createElement, getElement } from '../../helpers/functions';
+import { FormItems } from '../../../types/interfaces';
+import { AddressCategories } from '../../../types/enums';
 import './registrationPageView.scss';
-import { commonDataInputItems } from './registrationItemsData';
+import { commonDataInputItems, createAddressFormItems } from './registrationItemsData';
 
 class RegistrationView extends PageView {
   constructor() {
@@ -72,15 +72,15 @@ class RegistrationView extends PageView {
 
     this.renderFormItems(commonDataContainer, commonDataInputItems);
 
-    const adressesContainer = createElement({
+    const addressesContainer = createElement({
       tagName: 'div',
-      classNames: ['adresses-container'],
+      classNames: ['addresses-container'],
       parent: registrationForm,
     });
 
-    this.renderAdressContainer(adressesContainer, AdressCategories.Shipping);
+    this.renderAddressContainer(addressesContainer, AddressCategories.Shipping);
 
-    this.addBillingAdressFields(adressesContainer);
+    this.addBillingAddressFields(addressesContainer);
 
     createElement({
       tagName: 'button',
@@ -124,104 +124,63 @@ class RegistrationView extends PageView {
     return container;
   }
 
-  private addSelectOptions(selectElement: HTMLElement, options: SelectOption[]): void {
-    options.forEach((option) => {
-      createElement({
-        tagName: 'option',
-        attributes: option.attributes,
-        text: option.text,
-        parent: selectElement,
-      });
-    });
-  }
-
-  private addInputIcon(parentElement: HTMLElement, iconData: Icon): void {
-    createElement({
-      tagName: 'div',
-      classNames: ['input-icon', `${iconData.containerClassName}`],
-      html: createSvgElement(iconData.className, iconData.id),
-      attributes: iconData.attributes,
-      parent: parentElement,
-    });
-  }
-
-  private addInputBtn(parentElement: HTMLElement, inputBtnData: InputBtn): void {
-    createElement({
-      tagName: 'button',
-      classNames: ['input-btn', `${inputBtnData.className}`],
-      text: inputBtnData.text,
-      attributes: inputBtnData.attributes,
-      parent: parentElement,
-    });
-  }
-
-  public togglePasswordView(passwordInput: HTMLInputElement, passwordBtn: HTMLButtonElement): void {
-    const input = passwordInput;
-    const btn = passwordBtn;
-
-    const isVisible = input.getAttribute('type') === 'text';
-
-    btn.innerText = isVisible ? 'SHOW' : 'HIDE';
-    input.type = isVisible ? 'password' : 'text';
-  }
-
-  private renderAdressContainer(container: HTMLElement, category: AdressCategories): HTMLElement {
-    const adressContent = createElement({
+  private renderAddressContainer(container: HTMLElement, category: AddressCategories): HTMLElement {
+    const addressContent = createElement({
       tagName: 'div',
       attributes: [{ category: `${category}` }],
-      classNames: ['adresses-container__adress-container', 'adress-container', `${category}-adress`],
+      classNames: ['addresses-container__address-container', 'address-container', `${category}-address`],
       parent: container,
     });
 
     createElement({
       tagName: 'span',
-      classNames: ['adress-container__description', 'form-description'],
-      text: `Enter your ${category} adress : `,
-      parent: adressContent,
+      classNames: ['address-container__description', 'form-description'],
+      text: `Enter your ${category} address : `,
+      parent: addressContent,
     });
 
-    this.renderFormItems(adressContent, this.createAdressFormItems(category));
+    this.renderFormItems(addressContent, createAddressFormItems(category));
 
-    const adressCheckboxes = createElement({
+    const addressCheckboxes = createElement({
       tagName: 'div',
       attributes: [{ category: `${category}` }],
-      classNames: ['adress-container__adress-checkboxes', 'adress-checkboxes', `${category}-adress-checkboxes`],
-      parent: adressContent,
+      classNames: ['address-container__address-checkboxes', 'address-checkboxes', `${category}-address-checkboxes`],
+      parent: addressContent,
     });
 
-    const defaultAdressChekboxLabel = createElement({
+    const defaultAddressChekboxLabel = createElement({
       tagName: 'label',
-      classNames: [`${category}-adress__checkbox`, 'adress-checkbox', 'checkbox'],
-      attributes: [{ 'data-type': 'default-adress' }, { category: `${category}` }],
-      text: `Use as default adress`,
-      parent: adressCheckboxes,
+      classNames: [`${category}-address__checkbox`, 'address-checkbox', 'checkbox'],
+      attributes: [{ 'data-type': 'default-address' }, { category: `${category}` }],
+      text: `Use as default address`,
+      parent: addressCheckboxes,
     });
 
     createElement({
       tagName: 'input',
-      classNames: ['input', `${category}-default-adress__input`, `${category}-adress__input`, 'visually-hidden'],
-      attributes: [{ 'data-type': 'default-adress' }, { type: 'checkbox' }, { disabled: 'true' }],
-      parent: defaultAdressChekboxLabel,
+      classNames: ['input', `${category}-default-address__input`, `${category}-address__input`, 'visually-hidden'],
+      attributes: [{ 'data-type': 'default-address' }, { type: 'checkbox' }, { disabled: 'true' }],
+      parent: defaultAddressChekboxLabel,
     });
 
     createElement({
       tagName: 'span',
-      parent: defaultAdressChekboxLabel,
+      parent: defaultAddressChekboxLabel,
     });
 
-    if (category === AdressCategories.Shipping) {
+    if (category === AddressCategories.Shipping) {
       const useAsBillingChekboxLabel = createElement({
         tagName: 'label',
-        classNames: [`use-as-billing-adress__checkbox`, 'adress-checkbox', 'checkbox'],
-        attributes: [{ 'data-type': 'use-as-billing-adress' }],
-        text: `Also use as billing adress`,
-        parent: adressCheckboxes,
+        classNames: [`use-as-billing-address__checkbox`, 'address-checkbox', 'checkbox'],
+        attributes: [{ 'data-type': 'use-as-billing-address' }],
+        text: `Also use as billing address`,
+        parent: addressCheckboxes,
       });
 
       createElement({
         tagName: 'input',
-        classNames: ['input', `use-as-billing-adress__input`, `${category}-adress__input`, 'visually-hidden'],
-        attributes: [{ 'data-type': 'use-as-billing-adress' }, { type: 'checkbox' }, { disabled: 'true' }],
+        classNames: ['input', `use-as-billing-address__input`, `${category}-address__input`, 'visually-hidden'],
+        attributes: [{ 'data-type': 'use-as-billing-address' }, { type: 'checkbox' }, { disabled: 'true' }],
         parent: useAsBillingChekboxLabel,
       });
 
@@ -234,80 +193,19 @@ class RegistrationView extends PageView {
     return container;
   }
 
-  public toggleBillingAdressView(): void {
-    const adressesContainer: HTMLElement = getElement(`.adresses-container`);
+  public toggleBillingAddressView(): void {
+    const addressesContainer: HTMLElement = getElement(`.addresses-container`);
 
-    if (adressesContainer.querySelector('.billing-adress')) {
-      const billingAdressContainer = getElement(`.billing-adress`);
-      adressesContainer.removeChild(billingAdressContainer);
+    if (addressesContainer.querySelector('.billing-address')) {
+      const billingAddressContainer = getElement(`.billing-address`);
+      addressesContainer.removeChild(billingAddressContainer);
     } else {
-      this.addBillingAdressFields(adressesContainer);
+      this.addBillingAddressFields(addressesContainer);
     }
   }
 
-  private addBillingAdressFields(container: HTMLElement): void {
-    this.renderAdressContainer(container, AdressCategories.Billing);
-  }
-
-  private createAdressFormItems(category: AdressCategories): FormItems[] {
-    return [
-      {
-        tagName: 'select',
-        attributes: [{ 'data-type': 'country' }, { name: 'country' }, { category: `${category}` }],
-        classNames: [`${category}-adress__select`, 'select'],
-        options: [
-          {
-            text: 'Select your country',
-            attributes: [{ value: '' }, { selected: 'true' }, { disabled: 'true' }],
-          },
-          {
-            text: 'Belarus',
-            attributes: [{ value: 'Belarus' }],
-          },
-          {
-            text: 'Spain',
-            attributes: [{ value: 'Spain' }],
-          },
-          {
-            text: 'Netherlands',
-            attributes: [{ value: 'Netherlands' }],
-          },
-        ],
-      },
-      {
-        tagName: 'input',
-        attributes: [
-          { 'data-type': 'city' },
-          { category: `${category}` },
-          { type: 'text' },
-          { placeholder: 'City' },
-          { disabled: 'true' },
-        ],
-        classNames: ['registration-form__input', `${category}-adress__input`, 'input'],
-      },
-      {
-        tagName: 'input',
-        attributes: [
-          { 'data-type': 'street' },
-          { category: `${category}` },
-          { type: 'text' },
-          { placeholder: 'Street' },
-          { disabled: 'true' },
-        ],
-        classNames: ['registration-form__input', `${category}-adress__input`, 'input'],
-      },
-      {
-        tagName: 'input',
-        attributes: [
-          { 'data-type': 'postal-code' },
-          { category: `${category}` },
-          { type: 'text' },
-          { placeholder: 'Postal Code' },
-          { disabled: 'true' },
-        ],
-        classNames: ['registration-form__input', `${category}-adress__input`, 'input'],
-      },
-    ];
+  private addBillingAddressFields(container: HTMLElement): void {
+    this.renderAddressContainer(container, AddressCategories.Billing);
   }
 
   private renderLoginContainer(container: HTMLElement): void {

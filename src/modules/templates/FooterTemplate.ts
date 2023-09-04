@@ -31,7 +31,7 @@ const footerTemplate = (collectionHtml: string, learnHtml: string, customerServi
         <li>
           <a href="https://goo.gl/maps/1WG8jzf7J3yR8UmY7" class="navigation__link titleMonserrat titleMonserrat--small">
             <svg width="24" height="24" viewBox="0 0 24 25" aria-label="location">
-              <use xlink:href="./image/sprite.svg#location"></use>
+              <use xlink:href="../image/sprite.svg#location"></use>
             </svg>
             пр. Независимости 28, Минск 220040, Беларусь</a
           >
@@ -39,7 +39,7 @@ const footerTemplate = (collectionHtml: string, learnHtml: string, customerServi
         <li>
           <a class="navigation__link titleMonserrat titleMonserrat--small" href="mailto:teashop@teashop.by">
             <svg width="24" height="24" viewBox="0 0 24 25" aria-label="email">
-              <use xlink:href="./image/sprite.svg#mail"></use>
+              <use xlink:href="../image/sprite.svg#mail"></use>
             </svg>
             teashop@teashop.by</a
           >
@@ -47,7 +47,7 @@ const footerTemplate = (collectionHtml: string, learnHtml: string, customerServi
         <li>
           <a class="prevent-link navigation__link titleMonserrat titleMonserrat--small" href="tel:+375336041177">
             <svg width="24" height="24" viewBox="0 0 24 25" aria-label="email">
-              <use xlink:href="./image/sprite.svg#call"></use>
+              <use xlink:href="../image/sprite.svg#call"></use>
             </svg>
             +375 33 604 11 77</a
           >
