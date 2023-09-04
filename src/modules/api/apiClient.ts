@@ -62,6 +62,18 @@ export const getCustomerByID = async (ID: string): Promise<MyCustomerDraft | obj
   return {};
 };
 
+export const getProductByProductKey = async (key: string): Promise<MyCustomerDraft | object> => {
+  try {
+    const res = await apiProjectRoot.productProjections().withKey({ key }).get().execute();
+    const resData = await res.body;
+    console.log('product', resData);
+    return resData;
+  } catch (err) {
+    console.error(err);
+  }
+  return {};
+};
+
 export const updateCustomer = async (customerId: string, body: CustomerUpdate): Promise<Customer | Error> => {
   try {
     const res = await apiProjectRoot

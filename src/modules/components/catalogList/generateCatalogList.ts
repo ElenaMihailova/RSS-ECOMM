@@ -1,6 +1,6 @@
 import generateProductCard from './generateProductCard';
-import { createElement } from '../../helpers/functions';
-import { getProductProjections } from '../../api/apiClient';
+import { createElement, getElementCollection } from '../../helpers/functions';
+import { getProductByProductKey, getProductProjections } from '../../api/apiClient';
 
 export default async function generateCatalogList(): Promise<HTMLElement> {
   try {
@@ -30,12 +30,17 @@ export default async function generateCatalogList(): Promise<HTMLElement> {
             ? product.masterVariant.images[0].url
             : '';
 
+        console.log(productData);
+
+        const { key } = product;
+        console.log(key);
         const productCard = generateProductCard({
           link: product.slug['en-US'],
           title: product.name['en-US'],
           price,
           imageUrl,
           description,
+          key,
         });
 
         li.appendChild(productCard);

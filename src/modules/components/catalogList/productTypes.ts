@@ -5,4 +5,5 @@ export interface ProductCardData {
   price: number;
   description: string;
   weight?: string;
+  key: string;
 }

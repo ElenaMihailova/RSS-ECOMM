@@ -18,6 +18,7 @@ import ProfileController from '../pages/profile/profilePageController';
 import ProfileView from '../pages/profile/profilePageView';
 import CatalogView from '../pages/catalog/catalogPageView';
 import catalogContent from '../templates/CatalogTemplate';
+import CatalogController from '../pages/catalog/catalogPageController';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -38,12 +39,15 @@ class App {
 
   private profileController: ProfileController | null;
 
+  private catalogController: CatalogController | null;
+
   private profilePage: ProfileView | null;
 
   constructor() {
     this.main = null;
     this.loginController = null;
     this.registrationController = null;
+    this.catalogController = null;
     this.profileController = null;
     this.profilePage = null;
     const routes = this.createRoutes();
@@ -97,6 +101,7 @@ class App {
           if (this.main) {
             this.main.clearContent();
             this.main.setContent(new CatalogView(catalogContent).render());
+            this.catalogController = new CatalogController(this.router);
           }
         },
       },

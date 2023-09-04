@@ -1,6 +1,7 @@
 import { Flavors, Origins, SortOptions } from '../../assets/data/constants';
+import { getProductByProductKey } from '../api/apiClient';
 import generateCatalogList from '../components/catalogList/generateCatalogList';
-import { createElement } from '../helpers/functions';
+import { createElement, getElementCollection } from '../helpers/functions';
 
 const catalogWrapper = async (): Promise<HTMLElement> => {
   const container = createElement({
