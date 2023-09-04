@@ -7,7 +7,7 @@ import RegistrationView from '../pages/registration/registrationPageView';
 import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
 import LoginController from '../pages/login/loginPageController';
-import { getElement, getFromLS, removeFromLS } from '../helpers/functions';
+import { getElement, getFromLS, removeFromLS, setMenuBtnsView } from '../helpers/functions';
 import { FooterLinks, NavLink } from '../components/layout/nav.types';
 import createLayout from '../components/layout/createLayout';
 import { headerLinks, footerLinks } from '../../assets/data/navigationData';
@@ -50,40 +50,16 @@ class App {
     this.router = new Router(routes);
     this.createView();
     this.indexBtnHandler();
-    this.loginBtnHandler();
-    this.registrationBtnHandler();
-    this.loginMobileBtnHandler();
-    this.profileBtnHandler();
+    this.loginBtnsHandlers();
+    this.registrationBtnsHandlers();
+    this.profileBtnsHandlers();
   }
 
   private createView(): void {
     const layout = createLayout(this.headerData, this.footerData, this.router);
     App.container.append(layout.header, layout.footer);
-    const loginSvg = getElement('.login svg');
-    const logoutSvg = getElement('.logout-svg');
-    const tooltip = getElement('.tooltip--login');
-    const profileBtn = getElement('.profile--desktop');
-    const profileContainer = profileBtn.closest('li');
-    const registrationBtn = getElement('.registration--desktop');
-    const registrationContainer = registrationBtn.closest('li');
-    const registrationMobileBtn = getElement('.registration--mobile');
-    const registrationMobileContainer = registrationMobileBtn.closest('a');
 
-    if (getFromLS('token')) {
-      loginSvg.classList.add('visually-hidden');
-      logoutSvg.classList.remove('visually-hidden');
-      registrationContainer?.classList.add('visually-hidden');
-      registrationMobileContainer?.classList.add('visually-hidden');
-      profileContainer?.classList.remove('visually-hidden');
-      tooltip.textContent = 'LOG OUT';
-    } else {
-      logoutSvg.classList.add('visually-hidden');
-      loginSvg.classList.remove('visually-hidden');
-      registrationContainer?.classList.remove('visually-hidden');
-      profileContainer?.classList.add('visually-hidden');
-      registrationMobileContainer?.classList.remove('visually-hidden');
-      tooltip.textContent = 'LOG IN';
-    }
+    setMenuBtnsView();
 
     setupHeaderListeners('hamburger', 'menu');
 
@@ -157,51 +133,15 @@ class App {
       },
       {
         path: `${PageUrls.ProfilePageUrl}`,
-        callback: (): void => {
-          if (this.main) {
-            this.main.clearContent();
-
-            if (!getFromLS('token')) {
-              this.router.navigateFromButton(PageUrls.LoginPageUrl);
-              return;
-            }
-            this.profilePage = new ProfileView();
-            this.main.setViewContent(this.profilePage);
-            this.profileController = new ProfileController(this.router);
-          }
-        },
+        callback: this.redirectToProfile.bind(this),
       },
       {
         path: `${PageUrls.ProfilePageUrl}/${PageUrls.AddressesPageUrl}`,
-        callback: (): void => {
-          if (this.main) {
-            this.main.clearContent();
-
-            if (!getFromLS('token')) {
-              this.router.navigateFromButton(PageUrls.LoginPageUrl);
-              return;
-            }
-            this.profilePage = new ProfileView();
-            this.main.setViewContent(this.profilePage);
-            this.profileController = new ProfileController(this.router);
-          }
-        },
+        callback: this.redirectToProfile.bind(this),
       },
       {
         path: `${PageUrls.ProfilePageUrl}/${PageUrls.ChangePasswordPageUrl}`,
-        callback: (): void => {
-          if (this.main) {
-            this.main.clearContent();
-
-            if (!getFromLS('token')) {
-              this.router.navigateFromButton(PageUrls.LoginPageUrl);
-              return;
-            }
-            this.profilePage = new ProfileView();
-            this.main.setViewContent(this.profilePage);
-            this.profileController = new ProfileController(this.router);
-          }
-        },
+        callback: this.redirectToProfile.bind(this),
       },
       {
         path: `${PageUrls.ErrorPageUrl}`,
@@ -217,101 +157,39 @@ class App {
     ];
   }
 
-  private loginBtnHandler(): void {
+  private loginBtnsHandlers(): void {
     const loginBtn = getElement('.login--desktop');
-    const loginSvg = getElement('.login svg');
-    const logoutSvg = getElement('.logout-svg');
-    const tooltip = getElement('.tooltip--login');
-    const profileBtn = getElement('.profile--desktop');
-    const profileContainer = profileBtn.closest('li');
-    const registrationBtn = getElement('.registration--desktop');
-    const registrationContainer = registrationBtn.closest('li');
-    const registrationMobileBtn = getElement('.registration--mobile');
-    const registrationMobileContainer = registrationMobileBtn.closest('a');
-
-    loginBtn.addEventListener('click', (e: Event): void => {
-      e.preventDefault();
-      if (getFromLS('token')) {
-        registrationContainer?.classList.remove('visually-hidden');
-        registrationMobileContainer?.classList.remove('visually-hidden');
-        logoutSvg.classList.add('visually-hidden');
-        loginSvg.classList.remove('visually-hidden');
-        profileContainer?.classList.add('visually-hidden');
-        tooltip.textContent = 'LOG IN';
-        removeFromLS('token');
-
-        switch (window.location.pathname.slice(1)) {
-          case PageUrls.ProfilePageUrl:
-          case `${PageUrls.ProfilePageUrl}/${PageUrls.AddressesPageUrl}`:
-          case `${PageUrls.ProfilePageUrl}/${PageUrls.ChangePasswordPageUrl}`:
-            this.router.navigateFromButton(PageUrls.IndexPageUrl);
-            break;
-          default:
-        }
-      } else {
-        this.router.navigateFromButton(PageUrls.LoginPageUrl);
-        console.log(PageUrls.LoginPageUrl);
-      }
-    });
-  }
-
-  private loginMobileBtnHandler(): void {
     const loginMobileBtn = getElement('.login--mobile');
+
+    loginBtn.addEventListener('click', this.btnMoveToLoginHandler.bind(this));
+    loginMobileBtn.addEventListener('click', this.btnMoveToLoginHandler.bind(this));
+  }
+
+  private registrationBtnsHandlers(): void {
     const registrationBtn = getElement('.registration--desktop');
-    const loginSvg = getElement('.login svg');
-    const logoutSvg = getElement('.logout-svg');
-    const tooltip = getElement('.tooltip--login');
-    const registrationContainer = registrationBtn.closest('li');
     const registrationMobileBtn = getElement('.registration--mobile');
-    const registrationMobileContainer = registrationMobileBtn.closest('a');
 
-    loginMobileBtn.addEventListener('click', (e: Event): void => {
-      e.preventDefault();
-      if (getFromLS('token')) {
-        removeFromLS('token');
-        registrationContainer?.classList.remove('visually-hidden');
-        registrationMobileContainer?.classList.remove('visually-hidden');
-        logoutSvg.classList.add('visually-hidden');
-        loginSvg.classList.remove('visually-hidden');
-        tooltip.textContent = 'LOG IN';
-
-        switch (window.location.pathname.slice(1)) {
-          case PageUrls.ProfilePageUrl:
-          case `${PageUrls.ProfilePageUrl}/${PageUrls.AddressesPageUrl}`:
-          case `${PageUrls.ProfilePageUrl}/${PageUrls.ChangePasswordPageUrl}`:
-            this.router.navigateFromButton(PageUrls.IndexPageUrl);
-            break;
-          default:
-        }
-      } else {
-        this.router.navigateFromButton(PageUrls.LoginPageUrl);
-      }
-    });
+    registrationBtn.addEventListener('click', this.btnMoveToRegistrationHandler.bind(this));
+    registrationMobileBtn.addEventListener('click', this.btnMoveToRegistrationHandler.bind(this));
   }
 
-  private registrationBtnHandler(): void {
-    const registrationBtn = getElement('.registration--desktop');
-
-    registrationBtn.addEventListener('click', (e: Event): void => {
-      e.preventDefault();
-      if (getFromLS('token')) {
-        this.router.navigateFromButton(PageUrls.IndexPageUrl);
-      } else {
-        this.router.navigateFromButton(PageUrls.RegistrationPageUrl);
-      }
-    });
-  }
-
-  private profileBtnHandler(): void {
+  private profileBtnsHandlers(): void {
     const profileBtn = getElement('.profile--desktop');
-    profileBtn.addEventListener('click', (e: Event): void => {
-      e.preventDefault();
-      if (getFromLS('token')) {
-        this.router.navigateFromButton(PageUrls.ProfilePageUrl);
-      } else {
-        this.router.navigateFromButton(PageUrls.IndexPageUrl);
-      }
-    });
+    const profileMobileBtn = getElement('.profile--mobile');
+
+    profileBtn.addEventListener('click', this.btnMoveToProfileHandler.bind(this));
+    profileMobileBtn.addEventListener('click', this.btnMoveToProfileHandler.bind(this));
+  }
+
+  private btnMoveToLoginHandler(e: Event): void {
+    e.preventDefault();
+    if (getFromLS('token')) {
+      removeFromLS('token');
+      setMenuBtnsView();
+      this.logoutRedirect();
+    } else {
+      this.router.navigateFromButton(PageUrls.LoginPageUrl);
+    }
   }
 
   private indexBtnHandler(): void {
@@ -324,9 +202,46 @@ class App {
     homeBtn.addEventListener('click', this.btnMoveToIndexHandler.bind(this));
   }
 
+  private btnMoveToRegistrationHandler(e: Event): void {
+    e.preventDefault();
+    const url = getFromLS('token') ? PageUrls.IndexPageUrl : PageUrls.RegistrationPageUrl;
+    this.router.navigateFromButton(url);
+  }
+
+  private btnMoveToProfileHandler(e: Event): void {
+    e.preventDefault();
+    const url = getFromLS('token') ? PageUrls.ProfilePageUrl : PageUrls.IndexPageUrl;
+    this.router.navigateFromButton(url);
+  }
+
   private btnMoveToIndexHandler(e: Event): void {
     e.preventDefault();
     this.router.navigateFromButton(PageUrls.IndexPageUrl);
+  }
+
+  private redirectToProfile(): void {
+    if (this.main) {
+      this.main.clearContent();
+
+      if (!getFromLS('token')) {
+        this.router.navigateFromButton(PageUrls.LoginPageUrl);
+        return;
+      }
+      this.profilePage = new ProfileView();
+      this.main.setViewContent(this.profilePage);
+      this.profileController = new ProfileController(this.router);
+    }
+  }
+
+  private logoutRedirect(): void {
+    switch (window.location.pathname.slice(1)) {
+      case PageUrls.ProfilePageUrl:
+      case `${PageUrls.ProfilePageUrl}/${PageUrls.AddressesPageUrl}`:
+      case `${PageUrls.ProfilePageUrl}/${PageUrls.ChangePasswordPageUrl}`:
+        this.router.navigateFromButton(PageUrls.IndexPageUrl);
+        break;
+      default:
+    }
   }
 }
 

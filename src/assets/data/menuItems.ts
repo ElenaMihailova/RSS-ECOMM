@@ -1,11 +1,17 @@
 const menuItems = [
   {
+    href: 'profile',
+    classNames: ['profile', 'profile--mobile'],
+    svgHref: './image/sprite.svg#person',
+    text: 'USER PROFILE',
+  },
+  {
     href: 'login',
     classNames: ['login', 'login--mobile'],
     contents: [
       {
         svgHref: './image/sprite.svg#person',
-        text: 'USER PROFILE <span>We know you as a guest user</span>',
+        text: 'LOGIN <span>We know you as a guest user</span>',
       },
       {
         svgHref: './image/sprite.svg#logout',

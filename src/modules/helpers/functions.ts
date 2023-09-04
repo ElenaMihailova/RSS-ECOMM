@@ -206,3 +206,32 @@ export const createSvg = <T extends keyof SVGElementTagNameMap>(elData: {
 
   return element;
 };
+
+export const setMenuBtnsView = (): void => {
+  const token = getFromLS('token');
+  const loginSvg = getElement('.login svg');
+  const logoutSvg = getElement('.logout-svg');
+  const registrationContainer = getElement('.registration--desktop').closest('li');
+  const registrationMobileContainer = getElement('.registration--mobile').closest('a');
+  const profileContainer = getElement('.profile--desktop').closest('li');
+  const profileMobileContainer = getElement('.profile--mobile').closest('a');
+  const tooltip = getElement('.tooltip--login');
+
+  if (token) {
+    loginSvg.classList.add('visually-hidden');
+    logoutSvg.classList.remove('visually-hidden');
+    registrationContainer?.classList.add('visually-hidden');
+    registrationMobileContainer?.classList.add('visually-hidden');
+    profileMobileContainer?.classList.remove('visually-hidden');
+    profileContainer?.classList.remove('visually-hidden');
+    tooltip.textContent = 'LOG OUT';
+  } else {
+    loginSvg.classList.remove('visually-hidden');
+    logoutSvg.classList.add('visually-hidden');
+    registrationContainer?.classList.remove('visually-hidden');
+    registrationMobileContainer?.classList.remove('visually-hidden');
+    profileMobileContainer?.classList.add('visually-hidden');
+    profileContainer?.classList.add('visually-hidden');
+    tooltip.textContent = 'LOG IN';
+  }
+};
