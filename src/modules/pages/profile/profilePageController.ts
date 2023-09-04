@@ -97,7 +97,7 @@ class ProfileController {
           await this.addRemoveBtnsHandler();
         }
         this.view.renderAddNewAddressButton();
-        await this.addAddAddressBtnHandler();
+        await this.addCreateAddressBtnHandler();
         break;
       case `${PageUrls.ProfilePageUrl}/${PageUrls.ChangePasswordPageUrl}`:
         this.addPasswordViewBtnsHandler();
@@ -399,7 +399,7 @@ class ProfileController {
     await this.setCurrentCustomerVersion();
   }
 
-  private async addAddAddressBtnHandler(): Promise<void> {
+  private async addCreateAddressBtnHandler(): Promise<void> {
     const addAddressBtn: HTMLButtonElement = getElement(`.profile-content [type="${ProfileDataBtns.Add}"]`);
 
     addAddressBtn.addEventListener('click', async () => {
