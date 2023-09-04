@@ -2,6 +2,8 @@ import { PageUrls } from '../../assets/data/constants';
 import { RouteAction, UserRequest } from '../../types/types';
 
 class Router {
+  private static instance: Router | null = null;
+
   public routes: RouteAction[];
 
   constructor(routes: RouteAction[]) {
@@ -14,6 +16,19 @@ class Router {
     window.addEventListener('popstate', (): void => {
       this.navigate();
     });
+  }
+
+  public static getInstance(routes: RouteAction[]): Router {
+    if (!Router.instance) {
+      Router.instance = new Router(routes);
+    }
+    return Router.instance;
+  }
+
+  public navigateToLink(url: string): void {
+    window.history.pushState({}, '', url);
+
+    this.navigate();
   }
 
   public navigateFromButton(url: string): void {

@@ -1,6 +1,7 @@
 import Toastify from 'toastify-js';
 import { AttrSet } from '../../types/types';
 import { Countries, CountryCodes } from '../../types/enums';
+import Router from '../router/router';
 
 export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
   tagName: T;
@@ -9,8 +10,11 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
   text?: string;
   html?: string;
   parent?: HTMLElement;
+  parentPrepend?: HTMLElement;
+  href?: string;
+  router?: Router;
 }): HTMLElementTagNameMap[T] => {
-  const { tagName, classNames, attributes, text, parent, html } = elData;
+  const { tagName, classNames, attributes, text, parent, parentPrepend, html, href, router } = elData;
 
   const element: HTMLElementTagNameMap[T] = document.createElement(tagName);
 
@@ -36,6 +40,18 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
 
   if (parent) {
     parent.append(element);
+  }
+
+  if (parentPrepend) {
+    parentPrepend.prepend(element);
+  }
+
+  if (tagName === 'a' && href && router) {
+    element.setAttribute('href', href);
+    element.addEventListener('click', (e) => {
+      e.preventDefault();
+      router.navigateToLink(href);
+    });
   }
 
   return element;
@@ -153,4 +169,40 @@ export const togglePasswordView = (passwordInput: HTMLInputElement, passwordBtn:
 
   btn.innerText = isVisible ? 'SHOW' : 'HIDE';
   input.type = isVisible ? 'password' : 'text';
+};
+
+type SVGAttributes = {
+  [key: string]: string;
+};
+
+export const createSvg = <T extends keyof SVGElementTagNameMap>(elData: {
+  tagName: T;
+  classNames?: string[];
+  attributes?: SVGAttributes;
+  parent?: SVGElement | HTMLElement;
+}): SVGElementTagNameMap[T] => {
+  const { tagName, classNames, attributes, parent } = elData;
+
+  const ns = 'http://www.w3.org/2000/svg'; // SVG namespace
+  const element: SVGElementTagNameMap[T] = document.createElementNS(ns, tagName);
+
+  if (classNames) {
+    element.classList.add(...classNames);
+  }
+
+  if (attributes) {
+    Object.entries(attributes).forEach(([key, value]) => {
+      if (key === 'xlinkHref') {
+        element.setAttributeNS('http://www.w3.org/1999/xlink', 'href', value);
+      } else {
+        element.setAttributeNS(null, key, value);
+      }
+    });
+  }
+
+  if (parent) {
+    parent.append(element);
+  }
+
+  return element;
 };
