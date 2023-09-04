@@ -48,11 +48,7 @@ export const toggleAddressButtonsDisable = (mode: string): void => {
 
   profileDataBtns.forEach((element) => {
     const button = element as HTMLButtonElement;
-    if (mode === Mode.Create && button.getAttribute('type') !== ProfileDataBtns.Save) {
-      button.disabled = true;
-    } else {
-      button.disabled = false;
-    }
+    button.disabled = mode === Mode.Create && button.getAttribute('type') !== ProfileDataBtns.Save;
   });
 
   const addAddressBtn: HTMLButtonElement = getElement(`.profile-content [type="${ProfileDataBtns.Add}"]`);
@@ -119,7 +115,7 @@ export const setValueToCountrySelect = (id: string, value: string): void => {
   const selectOptions = getElementCollection(`[address-id="${id}"] [data-type="${FieldNames.Country}"] option`);
   selectOptions.forEach((element) => {
     const option = element as HTMLOptionElement;
-    option.selected = Boolean(option.value === value);
+    option.selected = option.value === value;
   });
 };
 
