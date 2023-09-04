@@ -34,7 +34,7 @@ const headerTemplate = (mobilMenu: HTMLElement, desktopMenu: HTMLElement): HTMLE
   createSvg({
     tagName: 'use',
     attributes: {
-      xlinkHref: './image/sprite.svg#logo',
+      xlinkHref: '../image/sprite.svg#logo',
     },
     parent: svgElement,
   });

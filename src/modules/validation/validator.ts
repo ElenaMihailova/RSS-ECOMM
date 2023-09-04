@@ -1,4 +1,12 @@
-import { AddressCategories, Countries, FieldNames, InputUserError, PostalCodes } from '../../types/enums';
+import {
+  AddressCategories,
+  Countries,
+  FieldNames,
+  InputUserError,
+  PopupMessages,
+  PostalCodes,
+  ProfileDataCategories,
+} from '../../types/enums';
 import { removeError, removeHelp, createError, createHelp } from './validationHelpers';
 import {
   dateFormatLength,
@@ -20,8 +28,8 @@ import {
   isOnlyNumbers,
   isOverOrEqualMaxLength,
 } from './validationChecks';
-import { getElement } from '../helpers/functions';
-import { getAddressContainerSelector } from '../pages/profile/profileHelpers';
+import { getElement, renderPopup } from '../helpers/functions';
+import { getAddressContainerSelector, getAddressID, isAdressCategoryChecked } from '../pages/profile/profileHelpers';
 
 class Validator {
   private billingCountry: string | null;
@@ -195,6 +203,25 @@ class Validator {
     });
 
     return isValid;
+  }
+
+  public isValidProfileData(button: HTMLButtonElement, formElements: NodeListOf<Element>): boolean {
+    const category = button.getAttribute('category');
+
+    if (!this.validateProfileFormELements(formElements)) {
+      renderPopup(false, PopupMessages.ProfileCorrectData);
+      return false;
+    }
+
+    if (category === ProfileDataCategories.Address) {
+      const addressID = getAddressID(button) || undefined;
+      if (!isAdressCategoryChecked(addressID)) {
+        renderPopup(false, PopupMessages.UnmarkedAdressCategory);
+        return false;
+      }
+    }
+
+    return true;
   }
 
   public validateFocusOut(element: HTMLInputElement): void {

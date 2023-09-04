@@ -1,59 +1,47 @@
-import { Customer, CustomerChangePassword, CustomerDraft, CustomerUpdate } from '@commercetools/platform-sdk';
-import { UpdateAction } from '@commercetools/sdk-client-v2';
 import { PageUrls } from '../../../assets/data/constants';
-import { getUpdatedCustomer, getUpdatedVersion, changePassword, updateCustomer } from '../../api/apiClient';
+import { getUpdatedCustomer, getUpdatedVersion } from '../../api/apiClient';
 import {
   getFromLS,
   getElementCollection,
   renderPopup,
   getElement,
   togglePasswordView,
-  getCountryFromCountryCode,
-  getCountryCode,
-  createElement,
+  setToLS,
 } from '../../helpers/functions';
 import Router from '../../router/router';
 import Validator from '../../validation/validator';
 import {
-  FieldNames,
   PopupMessages,
-  ProfileDataBtnsTitles,
   ProfileDataBtns,
   ProfileDataCategories,
-  AddressCategories,
   Mode,
   ProfileDataContainersTitles,
-  CheckboxTypes,
-  PasswordTypes,
-  InputUserError,
 } from '../../../types/enums';
-import {
-  createError,
-  getDateDMYFormatFromIsoString,
-  getDateFromString,
-  getDateISOStringWithoutTime,
-} from '../../validation/validationHelpers';
 import ProfileView from './profilePageView';
 import { createAddressesData, createNewAddress } from './profileItemsData';
-import { BaseAddress, ChangePasswordData, ProfileData } from '../../../types/interfaces';
 import {
-  clearInputFields,
   createNewBaseAdress,
   getAddressContainerMode,
   getAddressContainerSelector,
-  getAddressID,
   getFormElements,
-  isAdressCategoryChecked,
-  renderErrorResponsePopup,
   renderUpdateSuccesPopup,
+} from './profileHelpers';
+import { updatePassword, updateAddressCategories, updateCustomerData, updateData } from './apiHelpers';
+import {
+  addAddressesValues,
+  addContactDataValue,
+  addPersonalDataValues,
+  renderAddressContainers,
+  renderEditBtn,
+  renderRemoveBtn,
+  rerenderAddressDetails,
   setNewContainerTitle,
-  setValueToCountrySelect,
   toggleAddressButtonsDisable,
   toggleAddressCheckboxesView,
   toggleAdressDetailsView,
   toggleBtnEditMode,
   toggleFormElementsEditMode,
-} from './profileHelpers';
+} from './rerenderProfileHelpers';
 
 class ProfileController {
   private router: Router;
@@ -84,16 +72,16 @@ class ProfileController {
 
     switch (window.location.pathname.slice(1)) {
       case PageUrls.ProfilePageUrl:
-        this.addPersonalDataValues(data);
-        this.addContactDataValue(data);
+        addPersonalDataValues(data);
+        addContactDataValue(data);
         break;
       case `${PageUrls.ProfilePageUrl}/${PageUrls.AddressesPageUrl}`:
         if (data.addresses) {
           const dataAddress = await createAddressesData(this.authorizedCustomerID);
 
-          this.renderAddressContainers(dataAddress);
+          renderAddressContainers(dataAddress);
 
-          await this.addAddressesValues(data);
+          addAddressesValues(data);
           await this.addRemoveBtnsHandler();
         }
         this.view.renderAddNewAddressButton();
@@ -136,8 +124,9 @@ class ProfileController {
     if (!this.authorizedCustomerID) {
       return;
     }
-
-    this.authorizedCustomerVersion = (await getUpdatedVersion(this.authorizedCustomerID)) || 0;
+    const version = await getUpdatedVersion(this.authorizedCustomerID);
+    setToLS('version', JSON.stringify(version));
+    this.authorizedCustomerVersion = version || 0;
   }
 
   private addProfileDataHandlers(): void {
@@ -179,17 +168,19 @@ class ProfileController {
       return;
     }
 
-    if (!this.isValidData(editButton, formElements)) {
+    if (!this.validator.isValidProfileData(editButton, formElements)) {
       return;
     }
 
     const oldCustomerVersion = Number(this.authorizedCustomerVersion);
 
-    await this.updateData(editButton, category, formElements);
+    await updateData(editButton, category, formElements);
 
-    if (!this.isValidData(editButton, formElements)) {
+    if (!this.validator.isValidProfileData(editButton, formElements)) {
       return;
     }
+
+    await this.setCurrentCustomerVersion();
 
     if (oldCustomerVersion < Number(this.authorizedCustomerVersion)) {
       renderUpdateSuccesPopup(category);
@@ -284,81 +275,6 @@ class ProfileController {
     });
   }
 
-  private async updateData(
-    button: HTMLButtonElement,
-    category: string,
-    formElements: NodeListOf<Element>,
-  ): Promise<void> {
-    switch (category) {
-      case ProfileDataCategories.Personal:
-      case ProfileDataCategories.Contact:
-        await this.updatePersonalData(formElements);
-        break;
-      case ProfileDataCategories.Address:
-        await this.updateAddressData(formElements, getAddressID(button) as string);
-        break;
-      default:
-    }
-  }
-
-  public async addPersonalDataValues(data: Customer): Promise<void> {
-    const personalDataElements = getElementCollection('.personal-data-item__element');
-
-    personalDataElements.forEach((element) => {
-      const personalDataElement = element as HTMLInputElement;
-      switch (personalDataElement.dataset.type) {
-        case FieldNames.Name:
-          personalDataElement.value = data.firstName || '';
-          break;
-        case FieldNames.Surname:
-          personalDataElement.value = data.lastName || '';
-          break;
-        case FieldNames.Age:
-          personalDataElement.value = getDateDMYFormatFromIsoString(data.dateOfBirth || '') || '';
-          break;
-        default:
-      }
-    });
-  }
-
-  public async addContactDataValue(data: CustomerDraft): Promise<void> {
-    const contactDataElement: HTMLInputElement = getElement('.contact-data-item__element');
-    contactDataElement.value = data.email || '';
-  }
-
-  private renderAddressContainers(dataAddress: ProfileData[]): void {
-    const container: HTMLElement = getElement('.profile-content__addresses');
-
-    dataAddress.forEach((addressData: ProfileData) => {
-      this.view.renderUserDataContainer(container, ProfileDataCategories.Address, addressData);
-    });
-  }
-
-  public async updateCustomerData(actions: UpdateAction[], withoutErrorMessages?: boolean): Promise<Customer | null> {
-    if (!this.authorizedCustomerVersion || !this.authorizedCustomerID) {
-      return null;
-    }
-
-    const updateRequestBody = {
-      version: this.authorizedCustomerVersion,
-      actions,
-    };
-
-    const response = await updateCustomer(this.authorizedCustomerID, updateRequestBody as CustomerUpdate);
-
-    if (response instanceof Error) {
-      if (!withoutErrorMessages) {
-        renderErrorResponsePopup(ProfileDataCategories.Contact, response);
-      }
-
-      return null;
-    }
-
-    await this.setCurrentCustomerVersion();
-
-    return response;
-  }
-
   private async addRemoveBtnsHandler(): Promise<void> {
     const removeBtns: NodeListOf<Element> = getElementCollection(
       `.address-data__btns [type="${ProfileDataBtns.Remove}"]`,
@@ -387,7 +303,7 @@ class ProfileController {
       },
     ];
 
-    const response = await this.updateCustomerData(actions);
+    const response = await updateCustomerData(actions);
 
     if (!response) {
       return;
@@ -408,7 +324,7 @@ class ProfileController {
       }
 
       const dataAddress = await createNewAddress(this.authorizedCustomerID);
-      this.renderAddressContainers(dataAddress);
+      renderAddressContainers(dataAddress);
       this.addProfileDataHandlers();
       toggleAddressButtonsDisable(Mode.Create);
       this.addBtnSaveHandler();
@@ -434,7 +350,7 @@ class ProfileController {
       return;
     }
 
-    if (!this.isValidData(saveButton, formELements)) {
+    if (!this.validator.isValidProfileData(saveButton, formELements)) {
       return;
     }
 
@@ -445,7 +361,7 @@ class ProfileController {
       },
     ];
 
-    const response = await this.updateCustomerData(actions);
+    const response = await updateCustomerData(actions);
 
     if (!response) {
       return;
@@ -464,8 +380,10 @@ class ProfileController {
     container?.setAttribute('mode', Mode.Edit);
 
     await this.setCurrentCustomerVersion();
-    await this.updateAddressCategories(addressID);
-    await this.rerenderAddressDetails(this.authorizedCustomerID);
+    await updateAddressCategories(addressID);
+    await rerenderAddressDetails(this.authorizedCustomerID);
+
+    this.addAddressCheckboxesHandler();
 
     setNewContainerTitle(getAddressContainerSelector(saveButton), ProfileDataContainersTitles.SavedAddress);
 
@@ -476,289 +394,12 @@ class ProfileController {
     toggleAddressButtonsDisable(Mode.View);
   }
 
-  public async addAddressesValues(data: Customer): Promise<void> {
-    const { addresses } = data;
-
-    if (!addresses || !this.authorizedCustomerID) {
-      return;
-    }
-
-    for await (const address of addresses) {
-      const { id } = address;
-
-      if (!id) {
-        return;
-      }
-
-      const addressDataElements = getElementCollection(`[address-id="${id}"] .address-data-item__element`);
-
-      addressDataElements.forEach((element) => {
-        const addressDataElement = element as HTMLInputElement | HTMLSelectElement;
-
-        switch (addressDataElement.dataset.type) {
-          case FieldNames.Country:
-            setValueToCountrySelect(id, getCountryFromCountryCode(address.country));
-            break;
-          case FieldNames.City:
-            addressDataElement.value = address.city || '';
-            break;
-          case FieldNames.Street:
-            addressDataElement.value = address.streetName || '';
-            break;
-          case FieldNames.PostalCode:
-            addressDataElement.value = address.postalCode || '';
-            break;
-          default:
-        }
-      });
-
-      this.setValuesToCheckboxes(data, AddressCategories.Shipping, id);
-      this.setValuesToCheckboxes(data, AddressCategories.Billing, id);
-    }
-  }
-
-  public async updatePersonalData(formELements: NodeListOf<Element>): Promise<void> {
-    for await (const element of formELements) {
-      const personalDataElement = element as HTMLInputElement;
-
-      const version = this.authorizedCustomerVersion;
-
-      if (!version || !this.authorizedCustomerID) {
-        return;
-      }
-
-      const { value } = personalDataElement;
-
-      let actions;
-
-      switch (personalDataElement.dataset.type) {
-        case FieldNames.Name:
-          actions = [
-            {
-              action: 'setFirstName',
-              firstName: value,
-            },
-          ];
-          break;
-        case FieldNames.Surname:
-          actions = [
-            {
-              action: 'setLastName',
-              lastName: value,
-            },
-          ];
-          break;
-        case FieldNames.Age:
-          actions = [
-            {
-              action: 'setDateOfBirth',
-              dateOfBirth: getDateISOStringWithoutTime(getDateFromString(value)),
-            },
-          ];
-          break;
-        case FieldNames.Email:
-          actions = [
-            {
-              action: 'changeEmail',
-              email: value,
-            },
-          ];
-          break;
-        default:
-      }
-
-      await this.updateCustomerData(actions as UpdateAction[]);
-    }
-  }
-
-  public async updateAddressData(elements: NodeListOf<Element>, addressID: string): Promise<void> {
-    if (!this.authorizedCustomerVersion || !this.authorizedCustomerID) {
-      return;
-    }
-
-    const updatedAddress: Partial<BaseAddress> = {};
-
-    elements.forEach((element) => {
-      const formElement = element as HTMLInputElement | HTMLSelectElement;
-
-      switch (formElement.dataset.type) {
-        case FieldNames.Country:
-          updatedAddress.country = getCountryCode(formElement.value);
-          break;
-        case FieldNames.City:
-          updatedAddress.city = formElement.value;
-          break;
-        case FieldNames.Street:
-          updatedAddress.streetName = formElement.value;
-          break;
-        case FieldNames.PostalCode:
-          updatedAddress.postalCode = formElement.value;
-          break;
-        default:
-      }
-    });
-
-    const actions = [
-      {
-        action: 'changeAddress',
-        addressId: addressID,
-        address: updatedAddress as BaseAddress,
-      },
-    ];
-
-    const responce = await this.updateCustomerData(actions);
-
-    if (!responce) {
-      return;
-    }
-
-    await this.updateAddressCategories(addressID);
-    await this.rerenderAddressDetails(this.authorizedCustomerID);
-  }
-
-  public async updateAddressCategories(addressID: string): Promise<void> {
-    if (!this.authorizedCustomerVersion || !this.authorizedCustomerID) {
-      return;
-    }
-
-    const data = await getUpdatedCustomer(this.authorizedCustomerID);
-
-    const { defaultShippingAddressId, defaultBillingAddressId, shippingAddressIds, billingAddressIds } = data;
-
-    const addressesCategoriesCheckboxes = getElementCollection(`[address-id="${addressID}"] [type="checkbox"]`);
-
-    for await (const element of addressesCategoriesCheckboxes) {
-      const checkbox = element as HTMLInputElement;
-      const category = checkbox.getAttribute('category');
-      const type = checkbox.getAttribute('data-type');
-
-      const existsInShipping = shippingAddressIds?.includes(`${addressID}`);
-      const existsInBilling = billingAddressIds?.includes(`${addressID}`);
-      const defaultShipping = defaultShippingAddressId === addressID;
-      const defaultBilling = defaultBillingAddressId === addressID;
-
-      let id = addressID || undefined;
-      let action;
-
-      switch (type) {
-        case CheckboxTypes.AddressCategory:
-          if (category === AddressCategories.Shipping) {
-            if (!checkbox.checked && existsInShipping) {
-              action = 'removeShippingAddressId';
-            } else if (checkbox.checked && !existsInShipping) {
-              action = 'addShippingAddressId';
-            }
-          }
-
-          if (category === AddressCategories.Billing) {
-            if (!checkbox.checked && existsInBilling) {
-              action = 'removeBillingAddressId';
-            } else if (checkbox.checked && !existsInBilling) {
-              action = 'addBillingAddressId';
-            }
-          }
-          break;
-        case CheckboxTypes.DefaultAddress:
-          if (category === AddressCategories.Shipping) {
-            if (checkbox.checked && !defaultShipping) {
-              action = 'setDefaultShippingAddress';
-            } else if (!checkbox.checked && defaultShipping) {
-              action = 'setDefaultShippingAddress';
-              id = undefined;
-            }
-          }
-          if (category === AddressCategories.Billing) {
-            if (checkbox.checked && !defaultBilling) {
-              action = 'setDefaultBillingAddress';
-            } else if (!checkbox.checked && defaultBilling) {
-              action = 'setDefaultBillingAddress';
-              id = undefined;
-            }
-          }
-          break;
-        default:
-      }
-      const actions = [
-        {
-          action,
-          addressId: id,
-        },
-      ];
-
-      await this.updateCustomerData(actions as UpdateAction[], true);
-    }
-  }
-
-  private setValuesToCheckboxes(data: Customer, category: AddressCategories, addressID: string): void {
-    const { defaultBillingAddressId, defaultShippingAddressId, shippingAddressIds, billingAddressIds } = data;
-
-    const currentAddresses = category === AddressCategories.Shipping ? shippingAddressIds : billingAddressIds;
-    const currentDefaultAddress =
-      category === AddressCategories.Shipping ? defaultShippingAddressId : defaultBillingAddressId;
-
-    const checkboxes = getElementCollection(`[address-id="${addressID}"] .${category}-address-checkboxes .input`);
-
-    checkboxes.forEach((element) => {
-      const checkbox = element as HTMLInputElement;
-      switch (checkbox.getAttribute('data-type')) {
-        case CheckboxTypes.AddressCategory:
-          checkbox.checked = Boolean(currentAddresses?.includes(`${addressID}`));
-          break;
-        case CheckboxTypes.DefaultAddress:
-          checkbox.checked = Boolean(currentDefaultAddress === addressID);
-          break;
-        default:
-      }
-
-      toggleAddressCheckboxesView(checkbox);
-    });
-  }
-
-  public async rerenderAddressDetails(customerID: string): Promise<void> {
-    const addressesData = await createAddressesData(customerID);
-
-    const addressContainers = getElementCollection('.profile-data');
-
-    for await (const container of addressContainers) {
-      const id = container.getAttribute('address-id');
-
-      const address = addressesData.find((addressData) => addressData.id === id);
-
-      const addressDescriptionContainer: HTMLDivElement = getElement(
-        `[address-id="${id}"] .address-description-container`,
-      );
-      addressDescriptionContainer.innerHTML = '';
-
-      if (id && address?.addressDetails && this.authorizedCustomerID) {
-        this.view.renderAddressDescription(addressDescriptionContainer, address?.addressDetails);
-        const data = await getUpdatedCustomer(this.authorizedCustomerID);
-        this.setValuesToCheckboxes(data, AddressCategories.Shipping, id);
-        this.setValuesToCheckboxes(data, AddressCategories.Billing, id);
-      }
-    }
-
-    this.addAddressCheckboxesHandler();
-  }
-
   public async rerenderAddressDataBtns(addressID: string): Promise<void> {
     const btsContainer: HTMLDivElement = getElement(`[address-id="${addressID}"] .profile-data-btns`);
     btsContainer.innerHTML = '';
 
-    const editBtn = createElement({
-      tagName: 'button',
-      classNames: [`address-data__btn`, 'profile-data-btn', `profile-data-btn--edit`],
-      attributes: [{ category: ProfileDataCategories.Address }, { type: `${ProfileDataBtns.Edit}` }],
-      text: ProfileDataBtnsTitles.EditAddress,
-      parent: btsContainer,
-    });
-
-    const removeBtn = createElement({
-      tagName: 'button',
-      classNames: [`address-data__btn`, 'profile-data-btn', `profile-data-btn--remove`],
-      attributes: [{ category: ProfileDataCategories.Address }, { type: `${ProfileDataBtns.Remove}` }],
-      text: ProfileDataBtnsTitles.RemoveAddress,
-      parent: btsContainer,
-    });
+    const editBtn = renderEditBtn(btsContainer);
+    const removeBtn = renderRemoveBtn(btsContainer);
 
     editBtn.addEventListener('click', this.btnEditHandler.bind(this));
     removeBtn.addEventListener('click', this.removeAddressBtnHandler.bind(this));
@@ -785,93 +426,14 @@ class ProfileController {
 
     btnSave.addEventListener('click', async (e: Event) => {
       e.preventDefault();
-      await this.updatePassword(btnSave);
-    });
-  }
-
-  public createPasswordData(passwordFormElements: NodeListOf<Element>): Partial<ChangePasswordData> {
-    const passwordData: Partial<ChangePasswordData> = {};
-
-    passwordFormElements.forEach((element) => {
-      const formElement = element as HTMLInputElement;
-
-      switch (formElement.getAttribute('password-type')) {
-        case PasswordTypes.CurrentPassword:
-          passwordData.currentPassword = formElement.value;
-          break;
-        case PasswordTypes.NewPassword:
-          passwordData.newPassword = formElement.value;
-          break;
-        case PasswordTypes.NewPasswordConfirm:
-          passwordData.newPasswordRepeat = formElement.value;
-          break;
-        default:
+      if (!this.authorizedCustomerID) {
+        return;
+      }
+      const succes = await updatePassword(btnSave, this.authorizedCustomerVersion, this.authorizedCustomerID);
+      if (succes) {
+        await this.setCurrentCustomerVersion();
       }
     });
-
-    return passwordData;
-  }
-
-  public async updatePassword(button: HTMLButtonElement): Promise<void> {
-    if (!this.authorizedCustomerVersion || !this.authorizedCustomerID) {
-      return;
-    }
-
-    const passwordFormElements = getElementCollection(`[data-type="${FieldNames.Password}"]`);
-
-    if (!passwordFormElements) {
-      return;
-    }
-
-    const passwordData = this.createPasswordData(passwordFormElements);
-
-    if (!this.isValidData(button, passwordFormElements)) {
-      return;
-    }
-
-    if (passwordData.newPassword !== passwordData.newPasswordRepeat) {
-      const NewPasswordInput: HTMLInputElement = getElement(`[password-type="${PasswordTypes.NewPasswordConfirm}"]`);
-      createError(NewPasswordInput, InputUserError.ConfirmPasswordNoMatch);
-      renderPopup(false, PopupMessages.NewPasswordsNoMatch);
-      return;
-    }
-
-    const customerChangePassword: CustomerChangePassword = {
-      id: this.authorizedCustomerID,
-      version: this.authorizedCustomerVersion,
-      currentPassword: passwordData.currentPassword as string,
-      newPassword: passwordData.newPassword as string,
-    };
-
-    const response = await changePassword(customerChangePassword);
-
-    if (response instanceof Error) {
-      renderErrorResponsePopup(ProfileDataCategories.Password, response);
-      return;
-    }
-
-    renderUpdateSuccesPopup(ProfileDataCategories.Password);
-    clearInputFields(passwordFormElements);
-    await this.setCurrentCustomerVersion();
-  }
-
-  public isValidData(button: HTMLButtonElement, formElements: NodeListOf<Element>): boolean {
-    const category = button.getAttribute('category');
-
-    if (!this.validator.validateProfileFormELements(formElements)) {
-      renderPopup(false, PopupMessages.ProfileCorrectData);
-      return false;
-    }
-
-    if (category === ProfileDataCategories.Address) {
-      const addressID = getAddressID(button) || undefined;
-      if (!isAdressCategoryChecked(addressID)) {
-        renderPopup(false, PopupMessages.UnmarkedAdressCategory);
-        return false;
-      }
-    }
-
-    return true;
   }
 }
 

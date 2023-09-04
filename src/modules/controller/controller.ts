@@ -1,7 +1,7 @@
 import { CustomerSignInResult } from '@commercetools/platform-sdk';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { PageUrls } from '../../assets/data/constants';
-import { createApiRootWithPasswordFlow, loginUser } from '../api/apiClient';
+import { createApiRootWithPasswordFlow, getUpdatedVersion, loginUser } from '../api/apiClient';
 import MyTokenCache from '../api/myTokenCache';
 import { setMenuBtnsView, setToLS } from '../helpers/functions';
 import Router from '../router/router';
@@ -33,6 +33,8 @@ class Controller {
       setToLS('userID', loginData.customer.id);
       const tokenInfo = tokenCache.get();
       setToLS('token', tokenInfo.token);
+      const version = await getUpdatedVersion(loginData.customer.id);
+      setToLS('version', JSON.stringify(version));
       router.navigateFromButton(PageUrls.IndexPageUrl);
 
       setMenuBtnsView();

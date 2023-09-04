@@ -78,7 +78,8 @@
   text-align: center;
 }
 
-.profile-element {
+.profile-element,
+.profile-data-form .select {
   width: 100%;
   max-width: 600px;
   height: 56px;
@@ -101,11 +102,6 @@
 
 .profile-data-item .form-item--error {
   display: flex;
-}
-
-.form-item {
-  display: flex;
-  width: 100%;
 }
 
 .profile-data-btn {

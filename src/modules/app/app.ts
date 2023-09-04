@@ -170,6 +170,8 @@ class App {
     e.preventDefault();
     if (getFromLS('token')) {
       removeFromLS('token');
+      removeFromLS('userID');
+      removeFromLS('version');
       setMenuBtnsView();
       this.logoutRedirect();
     } else {
