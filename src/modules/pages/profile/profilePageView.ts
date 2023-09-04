@@ -61,7 +61,7 @@ class ProfileView extends PageView {
     createElement({
       tagName: 'button',
       text: 'Add new address',
-      classNames: ['profile-content__btn'],
+      classNames: ['profile-content__btn', 'button'],
       attributes: [{ category: 'address' }, { type: 'add' }],
       parent: profileContent,
     });
@@ -105,11 +105,17 @@ class ProfileView extends PageView {
       parent: container,
     });
 
+    const titleContainer = createElement({
+      tagName: 'div',
+      classNames: ['profile-data__title-container', 'title-container'],
+      parent: dataContainer,
+    });
+
     createElement({
       tagName: 'span',
       text: data.title,
       classNames: ['title', 'profile-data-title'],
-      parent: dataContainer,
+      parent: titleContainer,
     });
 
     const dataForm = createElement({
@@ -309,7 +315,7 @@ class ProfileView extends PageView {
 
     createElement({
       tagName: 'button',
-      classNames: ['profile-page-btns__btn', 'profile-page-btn', 'profile-data-page-btn'],
+      classNames: ['profile-page-btns__btn', 'profile-page-btn', 'profile-data-page-btn', 'button'],
       attributes: [{ type: 'button' }],
       text: ProfilePageBtnsTitles.Profile,
       parent: btnsContainer,
@@ -317,7 +323,7 @@ class ProfileView extends PageView {
 
     createElement({
       tagName: 'button',
-      classNames: ['profile-page-btns__btn', 'profile-page-btn', 'addresses-page-btn'],
+      classNames: ['profile-page-btns__btn', 'profile-page-btn', 'addresses-page-btn', 'button'],
       attributes: [{ type: 'button' }],
       text: ProfilePageBtnsTitles.Addresses,
       parent: btnsContainer,
@@ -325,7 +331,7 @@ class ProfileView extends PageView {
 
     createElement({
       tagName: 'button',
-      classNames: ['profile-page-btns__btn', 'profile-page-btn', 'change-password-page-btn'],
+      classNames: ['profile-page-btns__btn', 'profile-page-btn', 'change-password-page-btn', 'button'],
       attributes: [{ type: 'button' }],
       text: ProfilePageBtnsTitles.ChangePassword,
       parent: btnsContainer,

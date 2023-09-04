@@ -2,37 +2,43 @@
 
 .profile-page__container {
   margin: 0 auto;
-  max-width: 800px;
+  max-width: 1000px;
   width: 100%;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
   padding-bottom: 40px;
 }
 
-.profile-page__content {
-  min-height: 700px;
-}
-
-.profile-data,
 .profile-data-form,
 .profile-page__content,
 .profile-content__addresses,
 .buttons__content {
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
+}
+
+.title-container {
+  text-align: center;
 }
 
 .profile-page-btns {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   gap: 30px;
+}
+
+.profile-page-btns .button {
+  max-width: 235px;
 }
 
 .profile-data {
   padding-bottom: 20px;
   padding: 20px 40px;
+  max-width: 600px;
+  width: 100%;
   background-color: $color-background-variant;
+  margin: 0 auto;
 }
 
 .profile-data-title {
@@ -46,7 +52,7 @@
 .profile-data-form {
   display: flex;
   flex-direction: column;
-  gap: 19px;
+  gap: 25px;
   padding: 20px 0px 40px 0px;
 }
 
@@ -62,7 +68,7 @@
 .profile-page__content,
 .profile-content__addresses {
   gap: 40px;
-  max-width: 552px;
+  max-width: 600px;
   width: 100%;
 }
 
@@ -112,7 +118,8 @@
 }
 
 .address-details {
-  padding-bottom: 30px;
+  padding-top: 10px;
+  padding-bottom: 40px;
 }
 
 .address-checkboxes-container {
@@ -135,8 +142,44 @@
   display: none;
 }
 
+.profile-content__btn {
+  margin: 0 auto;
+}
+
 .profile-data-btn:disabled,
 .profile-content__btn:disabled {
   opacity: 1;
   color: $color-primary;
+}
+
+@media (max-width: 1200px) {
+  .profile-page__container {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .profile-page-btns {
+    padding: 30px 30px 0px 30px;
+    max-width: 100%;
+    gap: 10px;
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 550px) {
+  .profile-page-btns {
+    padding: 30px 5px 0px 5px;
+  }
+}
+
+@media (max-width: 426px) {
+  .profile-page-btns {
+    padding: 30px 0px 0px 0px;
+  }
+
+  .profile-page-btns .button {
+    padding: 2px 2px;
+  }
 }
