@@ -1,3 +1,4 @@
+import { ProductProjection } from '@commercetools/platform-sdk';
 import { Icon, InputBtn, SelectOption } from '../../types/interfaces';
 import { createElement, createSvgElement } from '../helpers/functions';
 
@@ -8,7 +9,7 @@ abstract class PageView {
     this.container = document.createElement('div');
   }
 
-  public render(): HTMLElement {
+  public render(item?: ProductProjection): HTMLElement {
     return this.container;
   }
 

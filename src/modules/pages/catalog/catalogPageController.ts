@@ -1,6 +1,7 @@
 import { ProductProjection } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product';
+import { PageUrls } from '../../../assets/data/constants';
 import { QueryArgs } from '../../../types/interfaces';
-import { filterProducts, getCategoryId, getProductByProductKey } from '../../api/apiClient';
+import { filterProducts, getCategoryId, getCategoryName, getProductByProductKey, getProductByProductUrl } from '../../api/apiClient';
 import { getElement, getElementCollection } from '../../helpers/functions';
 import Router from '../../router/router';
 
@@ -369,8 +370,10 @@ class CatalogController {
       }
 
       item.addEventListener('click', async () => {
-        await getProductByProductKey(productKey);
-        this.router.navigateFromButton('product');
+        const product = (await getProductByProductKey(productKey)) as ProductProjection;
+        const link = product.slug['en-US'];
+        this.router.navigateFromButton(`${PageUrls.CatalogPageUrl}/${link}`);
+        console.log(await getCategoryName('7c51122e-c79e-475f-924c-ec21604c5426'));
       });
     });
   }

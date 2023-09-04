@@ -73,16 +73,40 @@ export const getCustomerByID = async (ID: string): Promise<MyCustomerDraft | obj
   return {};
 };
 
-export const getProductByProductKey = async (key: string): Promise<MyCustomerDraft | object> => {
-  try {
-    const res = await apiProjectRoot.productProjections().withKey({ key }).get().execute();
-    const resData = await res.body;
-    console.log('product', resData);
-    return resData;
-  } catch (err) {
-    console.error(err);
-  }
-  return {};
+export const getProductByProductKey = async (key: string): Promise<ProductProjection | object> => {
+  let resData = {};
+  await apiProjectRoot
+    .productProjections()
+    .withKey({ key })
+    .get()
+    .execute()
+    .then((r) => {
+      resData = r.body;
+    })
+    .catch((e) => {
+      console.error(e.message);
+    });
+  return resData;
+};
+
+export const getProductByProductUrl = async (url: string): Promise<ProductProjection | object> => {
+  let resData = {};
+  await apiProjectRoot
+    .productProjections()
+    .get({
+      queryArgs: {
+        where: `slug(en-US="${url}")`,
+      },
+    })
+    .execute()
+    .then((r) => {
+      // eslint-disable-next-line prefer-destructuring
+      resData = r.body.results[0];
+    })
+    .catch((e) => {
+      console.error(e.message);
+    });
+  return resData;
 };
 
 export const updateCustomer = async (customerId: string, body: CustomerUpdate): Promise<Customer | Error> => {
@@ -226,5 +250,24 @@ export const filterProducts = async (queryArgs: QueryArgs): Promise<ProductProje
       console.error(e.message);
     });
 
+  return resData;
+};
+
+export const getCategoryName = async (id: string): Promise<string> => {
+  let resData = '';
+  await apiProjectRoot
+    .categories()
+    .get({
+      queryArgs: {
+        where: `id="${id}"`,
+      },
+    })
+    .execute()
+    .then((r) => {
+      resData = r.body.results[0].name['en-us'];
+    })
+    .catch((e) => {
+      console.error(e.message);
+    });
   return resData;
 };

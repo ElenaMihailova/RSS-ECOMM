@@ -30,7 +30,10 @@ export default async function generateCatalogList(): Promise<HTMLElement> {
             ? product.masterVariant.images[0].url
             : '';
 
-        const { key } = product;
+        let key = '';
+        if (product.key) {
+          key = product.key;
+        }
 
         const productCard = generateProductCard({
           link: product.slug['en-US'],
