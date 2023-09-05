@@ -2,10 +2,6 @@ import {
   CustomerSignInResult,
   MyCustomerDraft,
   createApiBuilderFromCtpClient,
-  ProductPagedQueryResponse,
-  Product,
-  ApiRoot,
-  Category,
   Customer,
   CustomerChangePassword,
   CustomerUpdate,
@@ -264,7 +260,8 @@ export const getCategoryName = async (id: string): Promise<string> => {
     })
     .execute()
     .then((r) => {
-      resData = r.body.results[0].name['en-us'];
+      resData = r.body.results[0].name['en-US'];
+      console.log(resData);
     })
     .catch((e) => {
       console.error(e.message);

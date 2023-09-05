@@ -20,6 +20,7 @@ import CatalogView from '../pages/catalog/catalogPageView';
 import catalogContent from '../templates/CatalogTemplate';
 import CatalogController from '../pages/catalog/catalogPageController';
 import ProductView from '../pages/catalog/productPageView';
+import { getCategoryName } from '../api/apiClient';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -110,7 +111,6 @@ class App {
         path: `${PageUrls.CatalogPageUrl}/${ProductUrl}`,
         callback: (link): void => {
           if (this.main && link) {
-            console.log(link);
             this.main.clearContent();
             const productView = new ProductView(this.router, link);
             this.main.setViewContent(productView);

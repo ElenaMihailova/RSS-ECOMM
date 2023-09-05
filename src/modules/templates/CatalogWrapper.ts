@@ -1,4 +1,5 @@
 import { Flavors, Origins, SortMethods, SortOptions } from '../../assets/data/constants';
+import { getProductProjections } from '../api/apiClient';
 import generateCatalogList from '../components/catalogList/generateCatalogList';
 import { createElement } from '../helpers/functions';
 
@@ -24,6 +25,19 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     tagName: 'ul',
     classNames: ['catalog__categories-list'],
     parent: categories,
+  });
+
+  const categoryAll = createElement({
+    tagName: 'li',
+    classNames: ['catalog__category-all', 'category__item'],
+    parent: categoriesList,
+  });
+
+  const linkAll = createElement({
+    tagName: 'a',
+    classNames: ['category-all__link', 'category__link'],
+    text: 'ALL PRODUCTS',
+    parent: categoryAll,
   });
 
   const categoryClassic = createElement({
@@ -224,6 +238,14 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     });
   }
 
+  const resetButton = createElement({
+    tagName: 'button',
+    classNames: ['reset__button', 'button'],
+    attributes: [{ type: 'button' }],
+    text: 'RESET ALL',
+    parent: navigationBlock,
+  });
+
   const wrap = createElement({
     tagName: 'div',
     classNames: ['catalog__sortSearch'],
@@ -276,9 +298,17 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
   selectTitle.setAttribute('selected', 'selected');
   selectTitle.setAttribute('disabled', 'disabled');
 
-  const catalogList = await generateCatalogList();
+  const catalogContainer = createElement({
+    tagName: 'div',
+    classNames: ['catalog__container'],
+    parent: container,
+  });
 
-  container.appendChild(catalogList);
+  const productData = await getProductProjections();
+
+  const catalogList = await generateCatalogList(productData);
+
+  catalogContainer.appendChild(catalogList);
 
   return container;
 };

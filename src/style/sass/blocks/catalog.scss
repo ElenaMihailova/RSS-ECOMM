@@ -110,8 +110,13 @@
 
 .category__link {
   cursor: pointer;
+
+  &.active {
+    font-weight: 600;
+  }
 }
 
+.catalog__category-all,
 .catalog__category-classic,
 .catalog__category-breakfast {
   padding-bottom: 10px;
@@ -120,6 +125,7 @@
 .catalog__filter {
   display: flex;
   flex-direction: column;
+  padding-bottom: 50px;
 }
 
 .filter-origin__title,
@@ -177,6 +183,12 @@
     top: 2px;
     left: 6px;
   }
+}
+
+.reset__button {
+  width: 120px;
+  height: 38px;
+  padding: 0;
 }
 
 .catalog__sortSearch {

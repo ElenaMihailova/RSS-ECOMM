@@ -17,9 +17,6 @@ const navMenu = ({ router }: { router: Router }): HTMLElement => {
     });
 
     const classNames = [...baseClasses];
-    // if (item.inactive) {
-    //   classNames.push('no-active');
-    // }
 
     createElement({
       tagName: 'a',

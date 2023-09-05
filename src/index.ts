@@ -5,4 +5,3 @@ import modal from './modules/helpers/createNotifacation';
 
 // eslint-disable-next-line no-new
 new App();
-modal();
