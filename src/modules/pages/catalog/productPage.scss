@@ -2,14 +2,13 @@
 
 .product-page__container {
   max-width: 1000px;
-  padding: 0px 20px 80px 20px;
+  padding: 0px 56px 125px 0px;
   margin: 0px auto;
 }
 
 .product-card {
   width: 100%;
   display: flex;
-  gap: 5%;
 }
 
 .product-description,
@@ -44,7 +43,13 @@
   width:100%;
 }
 
+.image-container__image-link {
+  display: flex;
+  justify-content: center;
+}
+
 .image-container__image {
+  padding: 0 40px;
   max-width: 456px;
   width: 100%;
 }
@@ -58,7 +63,7 @@
 
 .title {
   font-family: Prosto One;
-  font-size: 36px;
+  font-size: 33px;
   font-style: normal;
   font-weight: 400;
   line-height: 44px;
@@ -120,20 +125,33 @@
 }
 
 .product-description__button {
-  margin: 0px auto 5px auto;
+  margin: 0 auto;
 }
 
 .price-container {
   display: flex;
 }
 
+.fancybox__content {
+  width: 80%;
+  height: 80%;
+}
+
 @media (max-width: 840px) {
+  .product-page__container {
+    padding: 0px 0px 40px 0px;
+  }
+  
   .title {
-    font-size: calc((100vw - 320px) / (800 - 320) * (36 - 24) + 24px);
+    font-size: calc((100vw - 320px) / (800 - 320) * (33 - 24) + 24px);
   }
 
   .product-decription-container {
     gap: 5px;
+  }
+
+  .f-carousel__dots {
+    display: none;
   }
 
   .product-card {
@@ -147,20 +165,48 @@
   .image-container {
     display: flex;
     align-items: center;
+    max-width: 456px;
+    width: 100%;
   }
 
   .image-container__image {
-    margin: 0 auto;
+    padding: 0 50px;
   }
 
+  .product-price-container__price {
+    font-size: calc((100vw - 320px) / (800 - 320) * (24 - 16) + 16px);
+   }
+
   .product-decription-container {
-    max-width: 456px;
+    padding-top: 10px;
+    max-width: 350px;
     width: 100%;
-    gap: 10px;
+    gap: 15px;
   }
 }
 
-.fancybox__content {
-  width: 80%;
-  height: 80%;
+@media (max-width: 380px) {
+
+  .product-decription-container {
+    gap: 5px;
+    padding: 0px 10px;
+  }
+
+  .image-container {
+    display: flex;
+    align-items: center;
+    max-width: 456px;
+    width: 100%;
+  }
+
+  .image-container__image {
+    padding: 0 50px;
+  }
+
+  .product-decription-container {
+    padding-top: 10px;
+    max-width: 350px;
+    width: 100%;
+    gap: 10px;
+  }
 }

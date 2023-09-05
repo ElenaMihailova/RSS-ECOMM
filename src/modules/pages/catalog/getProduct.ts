@@ -19,10 +19,15 @@ export const getProduct = async (link: string): Promise<ProductData> => {
 
   const description = product.description && product.description['en-US'] ? product.description['en-US'] : '';
 
-  const imageURL =
-    product.masterVariant.images && product.masterVariant.images.length > 0 ? product.masterVariant.images[0].url : '';
-
   const categories: string[] = [];
+
+  const imageURLs: string[] = [];
+
+  if (product.masterVariant.images) {
+    product.masterVariant.images.forEach((image) => {
+      imageURLs.push(image.url);
+    });
+  }
 
   for await (const category of product.categories) {
     const { id } = category;
@@ -36,7 +41,7 @@ export const getProduct = async (link: string): Promise<ProductData> => {
     price,
     categories,
     description,
-    imageURL,
+    imageURLs,
     details: product.masterVariant.attributes,
   };
 

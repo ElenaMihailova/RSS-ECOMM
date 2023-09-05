@@ -110,7 +110,7 @@ export interface ProductData {
   title: string;
   price: number;
   categories?: string[];
-  imageURL: string;
+  imageURLs: string[];
   description: string;
   details?: Attribute[];
 }

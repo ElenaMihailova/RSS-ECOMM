@@ -1,8 +1,9 @@
-import { Fancybox } from '@fancyapps/ui';
+import { Fancybox, Carousel } from '@fancyapps/ui';
 import '@fancyapps/ui/dist/fancybox/fancybox.css';
+import '@fancyapps/ui/dist/carousel/carousel.css';
 import { Attribute } from '@commercetools/platform-sdk';
 import PageView from '../../core/pageView';
-import { createElement } from '../../helpers/functions';
+import { createElement, getElement } from '../../helpers/functions';
 import Router from '../../router/router';
 import './productPage.scss';
 import { getProduct } from './getProduct';
@@ -68,19 +69,7 @@ class ProductView extends PageView {
       parent: productCard,
     });
 
-    const image = createElement({
-      tagName: 'a',
-      classNames: ['image-container__image-link'],
-      attributes: [{ 'data-fancybox': 'gallery' }, { href: data.imageURL }],
-      parent: imageContainer,
-    });
-
-    createElement({
-      tagName: 'img',
-      classNames: ['image-container__image', 'image'],
-      attributes: [{ src: data.imageURL }],
-      parent: image,
-    });
+    this.createImageCarousel(imageContainer, data.imageURLs);
 
     const descriptionContainer = createElement({
       tagName: 'div',
@@ -191,6 +180,44 @@ class ProductView extends PageView {
         parent: detail,
       });
     });
+  }
+
+  public createImageCarousel(parentContainer: HTMLDivElement, imageURLs: string[]): void {
+    const carouselContainer = createElement({
+      tagName: 'div',
+      classNames: ['f-carousel'],
+      parent: parentContainer,
+    });
+
+    imageURLs.forEach((imageURL) => {
+      const carouselSlide = createElement({
+        tagName: 'div',
+        classNames: ['f-carousel__slide'],
+        parent: carouselContainer,
+      });
+
+      const image = createElement({
+        tagName: 'a',
+        classNames: ['image-container__image-link'],
+        attributes: [{ 'data-fancybox': 'gallery' }, { href: imageURL }],
+        parent: carouselSlide,
+      });
+
+      createElement({
+        tagName: 'img',
+        classNames: ['image-container__image', 'image'],
+        attributes: [{ src: imageURL }],
+        parent: image,
+      });
+    });
+
+    const container = getElement('.f-carousel');
+    if (!container) {
+      return;
+    }
+    const options = { infinite: true };
+
+    const carousel = new Carousel(container as HTMLElement, options);
   }
 }
 
