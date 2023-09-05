@@ -66,7 +66,6 @@ export const getProductByProductKey = async (key: string): Promise<ProductProjec
   try {
     const res = await apiProjectRoot.productProjections().withKey({ key }).get().execute();
     const resData = await res.body;
-    console.log('product', resData);
     return resData;
   } catch (err) {
     console.error(err);
@@ -85,8 +84,7 @@ export const getProductByProductUrl = async (url: string): Promise<ProductProjec
     })
     .execute()
     .then((r) => {
-      // eslint-disable-next-line prefer-destructuring
-      resData = r.body.results[0];
+      [resData] = [...r.body.results];
     })
     .catch((e) => {
       console.error(e.message);
@@ -106,7 +104,6 @@ export const getCategoryName = async (id: string): Promise<string> => {
     .execute()
     .then((r) => {
       resData = r.body.results[0].name['en-US'];
-      console.log(resData);
     })
     .catch((e) => {
       console.error(e.message);

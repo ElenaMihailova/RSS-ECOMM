@@ -175,7 +175,7 @@
 
   .product-price-container__price {
     font-size: calc((100vw - 320px) / (800 - 320) * (24 - 16) + 16px);
-   }
+  }
 
   .product-decription-container {
     padding-top: 10px;
@@ -186,7 +186,6 @@
 }
 
 @media (max-width: 380px) {
-
   .product-decription-container {
     gap: 5px;
     padding: 0px 10px;

@@ -24,7 +24,6 @@ class ProductView extends PageView {
   }
 
   public render(): HTMLElement {
-    console.log(this.product);
     const productPageContainer = createElement({
       tagName: 'div',
       classNames: ['product-page__container'],
@@ -32,7 +31,6 @@ class ProductView extends PageView {
     });
 
     getProduct(this.link).then((product) => {
-      console.log(product);
       this.renderProductCard(productPageContainer, product);
     });
 
@@ -40,7 +38,6 @@ class ProductView extends PageView {
   }
 
   public renderProductCard(container: HTMLDivElement, data: ProductData): void {
-    console.log(data);
     const productContainer = createElement({
       tagName: 'div',
       classNames: ['product-page__product-container', 'product-container'],
@@ -217,6 +214,7 @@ class ProductView extends PageView {
     }
     const options = { infinite: true };
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const carousel = new Carousel(container as HTMLElement, options);
   }
 }

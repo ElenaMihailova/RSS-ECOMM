@@ -45,7 +45,5 @@ export const getProduct = async (link: string): Promise<ProductData> => {
     details: product.masterVariant.attributes,
   };
 
-  console.log(productData);
-
   return productData;
 };

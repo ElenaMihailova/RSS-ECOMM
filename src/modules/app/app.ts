@@ -110,7 +110,6 @@ class App {
         path: `${PageUrls.CatalogPageUrl}/${ProductUrl}`,
         callback: (link): void => {
           if (this.main && link) {
-            console.log(link);
             this.main.clearContent();
             const productView = new ProductView(this.router, link);
             this.main.setViewContent(productView);
