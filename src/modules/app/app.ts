@@ -1,4 +1,4 @@
-import { PageUrls } from '../../assets/data/constants';
+import { PageUrls, ProductUrl } from '../../assets/data/constants';
 import { RouteAction } from '../../types/types';
 import Router from '../router/router';
 import Main from '../core/main';
@@ -19,6 +19,7 @@ import ProfileView from '../pages/profile/profilePageView';
 import CatalogView from '../pages/catalog/catalogPageView';
 import catalogContent from '../templates/CatalogTemplate';
 import CatalogController from '../pages/catalog/catalogPageController';
+import ProductView from '../pages/catalog/productPageView';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -102,6 +103,16 @@ class App {
             this.main.clearContent();
             this.main.setContent(new CatalogView(catalogContent).render());
             this.catalogController = new CatalogController(this.router);
+          }
+        },
+      },
+      {
+        path: `${PageUrls.CatalogPageUrl}/${ProductUrl}`,
+        callback: (link): void => {
+          if (this.main && link) {
+            this.main.clearContent();
+            const productView = new ProductView(this.router, link);
+            this.main.setViewContent(productView);
           }
         },
       },
