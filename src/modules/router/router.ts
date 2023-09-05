@@ -54,8 +54,6 @@ class Router {
 
     const route = this.routes.find((item) => item.path === pathForFind);
 
-    console.log(route);
-
     if (!route) {
       this.redirectToErrorPage();
       return;

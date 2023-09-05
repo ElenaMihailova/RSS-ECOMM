@@ -20,6 +20,16 @@ class CatalogController {
   private static searchWord = '';
 
   constructor(router: Router) {
+    CatalogController.activeCategoryId = '';
+    CatalogController.checkedOriginInputs = [];
+    CatalogController.checkedFlavorInputs = [];
+    CatalogController.searchWord = '';
+    CatalogController.activeSorting = '';
+    console.log(CatalogController.activeCategoryId);
+    console.log(CatalogController.checkedOriginInputs);
+    console.log(CatalogController.checkedFlavorInputs);
+    console.log(CatalogController.searchWord);
+    console.log(CatalogController.activeSorting);
     this.router = router;
     this.categoriesHandler();
     this.subcategoriesHandler();
@@ -578,7 +588,7 @@ class CatalogController {
   }
 
   private productItemsHandler(): void {
-    const productItems = getElementCollection('.catalog__item a');
+    const productItems = getElementCollection('.card__link');
 
     productItems.forEach((item) => {
       const productItem = item as HTMLDivElement;
@@ -636,6 +646,7 @@ class CatalogController {
     const catalogList = await generateCatalogList(products);
 
     container.appendChild(catalogList);
+    this.productItemsHandler();
   }
 }
 
