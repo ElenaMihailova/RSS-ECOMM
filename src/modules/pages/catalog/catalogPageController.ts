@@ -21,7 +21,6 @@ class CatalogController {
 
   constructor(router: Router) {
     this.router = router;
-    this.productItemsHandler();
     this.categoriesHandler();
     this.subcategoriesHandler();
     this.originInputsHandler();
@@ -30,6 +29,7 @@ class CatalogController {
     this.searchHandler();
     this.resetBtnHandler();
     this.breadcrumbController();
+    this.productItemsHandler();
   }
 
   public categoriesHandler(): void {

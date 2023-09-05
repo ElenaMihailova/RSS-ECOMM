@@ -15,7 +15,7 @@ class ProductView extends PageView {
   private link: string;
 
   private product: ProductData | null;
-  
+
   constructor(router: Router, link: string) {
     super();
     this.router = router;

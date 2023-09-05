@@ -20,7 +20,6 @@ import CatalogView from '../pages/catalog/catalogPageView';
 import catalogContent from '../templates/CatalogTemplate';
 import CatalogController from '../pages/catalog/catalogPageController';
 import ProductView from '../pages/catalog/productPageView';
-import { getCategoryName } from '../api/apiClient';
 
 class App {
   private static container: HTMLElement = document.body;

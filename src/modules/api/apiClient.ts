@@ -99,25 +99,6 @@ export const getProductByProductUrl = async (url: string): Promise<ProductProjec
   return resData;
 };
 
-export const getCategoryName = async (id: string): Promise<string> => {
-  let resData = '';
-  await apiProjectRoot
-    .categories()
-    .get({
-      queryArgs: {
-        where: `id="${id}"`,
-      },
-    })
-    .execute()
-    .then((r) => {
-      resData = r.body.results[0].name['en-US'];
-    })
-    .catch((e) => {
-      console.error(e.message);
-    });
-  return resData;
-};
-
 export const updateCustomer = async (customerId: string, body: CustomerUpdate): Promise<Customer | Error> => {
   try {
     const res = await apiProjectRoot

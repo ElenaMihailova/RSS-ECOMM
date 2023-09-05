@@ -17,10 +17,6 @@ export const enum PageUrls {
   ProductPageUrl = 'product',
 }
 
-export const ProductUrls = ['ceylon-ginger-cinnamon-chai-tea', 'himalayan-rose-petal-blend'];
-
-export const ProductUrl = '{link}';
-
 export const Origins = ['China', 'India', 'Morocco', 'Kenya', 'Japan'];
 
 export const Flavors = ['Spice', 'Floral', 'Citrus', 'Bright', 'Smooth', 'Sweet'];
