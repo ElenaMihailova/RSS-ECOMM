@@ -89,9 +89,9 @@ class ProfileView extends PageView {
     });
 
     if (addressDetailsContainer.closest('.profile-data')?.getAttribute('address-id')) {
-      addressCheckboxes.classList.add('hidden');
+      addressCheckboxes.classList.add('visually-hidden');
     } else {
-      addressDescription.classList.add('hidden');
+      addressDescription.classList.add('visually-hidden');
     }
 
     this.renderAddressCheckboxes(addressCheckboxes, AddressCategories.Shipping);
@@ -288,7 +288,7 @@ class ProfileView extends PageView {
 
     const defaultAddress = createElement({
       tagName: 'label',
-      classNames: [`${category}-address-checkbox`, 'address-checkbox', 'checkbox', 'hidden'],
+      classNames: [`${category}-address-checkbox`, 'address-checkbox', 'checkbox', 'visually-hidden'],
       text: `Default ${category} address`,
       parent: categoryCheckboxesContainer,
     });

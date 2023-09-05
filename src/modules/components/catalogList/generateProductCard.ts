@@ -2,7 +2,7 @@ import { ProductCardData } from './productTypes';
 import { createElement } from '../../helpers/functions';
 
 export default function generateProductCard(productData: ProductCardData): HTMLElement {
-  const { link, imageUrl, title, price, description, key } = productData;
+  const { link, imageUrl, title, price, description, key, discount } = productData;
 
   const productCard = createElement({
     tagName: 'a',
@@ -34,7 +34,15 @@ export default function generateProductCard(productData: ProductCardData): HTMLE
 
   const priceWrap = createElement({
     tagName: 'div',
+    classNames: ['card__price-wrap'],
     parent: productCard,
+  });
+
+  const weightCard = createElement({
+    tagName: 'p',
+    classNames: ['card__weight'],
+    text: '50 g',
+    parent: priceWrap,
   });
 
   const priceCard = createElement({
@@ -44,12 +52,16 @@ export default function generateProductCard(productData: ProductCardData): HTMLE
     parent: priceWrap,
   });
 
-  const weightCard = createElement({
-    tagName: 'p',
-    classNames: ['card__weight'],
-    text: '50 g',
-    parent: priceWrap,
-  });
+  let discountCard;
+
+  if (typeof discount !== 'undefined' && price !== discount) {
+    discountCard = createElement({
+      tagName: 'p',
+      classNames: ['card__discount'],
+      text: `€ ${discount}`,
+      parent: priceWrap,
+    });
+  }
 
   return productCard;
 }
