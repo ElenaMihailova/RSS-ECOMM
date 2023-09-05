@@ -1,9 +1,10 @@
-import { ProductProjection } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product';
 import { PageUrls } from '../../../assets/data/constants';
 import { QueryArgs } from '../../../types/interfaces';
 import { filterProducts, getCategoryId, getProductByProductKey, getProductProjections } from '../../api/apiClient';
 import generateCatalogList from '../../components/catalogList/generateCatalogList';
 import { getElement, getElementCollection } from '../../helpers/functions';
+import { ProductProjection } from '@commercetools/platform-sdk';
+import { getElementCollection } from '../../helpers/functions';
 import Router from '../../router/router';
 
 class CatalogController {
