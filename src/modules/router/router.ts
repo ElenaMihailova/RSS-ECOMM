@@ -1,4 +1,4 @@
-import { PageUrls } from '../../assets/data/constants';
+import { PageUrls, ProductUrls } from '../../assets/data/constants';
 import { RouteAction, UserRequest } from '../../types/types';
 
 class Router {
@@ -44,6 +44,12 @@ class Router {
   }
 
   private urlHandler(request: UserRequest): void {
+    if (request.resource && request.path === 'catalog' && ProductUrls.includes(request.resource)) {
+      const route = this.routes[3];
+      route.callback(request.resource);
+      return;
+    }
+
     const pathForFind = request.resource === '' ? request.path : `${request.path}/${request.resource}`;
 
     const route = this.routes.find((item) => item.path === pathForFind);
