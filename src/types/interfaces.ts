@@ -109,6 +109,7 @@ export interface ProductData {
   link: string;
   title: string;
   price: number;
+  discount?: number;
   categories?: string[];
   imageURLs: string[];
   description: string;
