@@ -20,10 +20,8 @@ class ProductView extends PageView {
   }
 
   private async getProduct(): Promise<void> {
-    console.log(`LINK: ${this.link}`);
     const product = (await getProductByProductUrl(this.link)) as ProductProjection;
     ProductView.product = product;
-    console.log(ProductView.product.name['en-US']);
   }
 
   public render(item: ProductProjection): HTMLElement {
