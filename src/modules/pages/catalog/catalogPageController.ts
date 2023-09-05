@@ -1,4 +1,4 @@
-import { ProductProjection } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product';
+import { ProductProjection } from '@commercetools/platform-sdk';
 import { PageUrls } from '../../../assets/data/constants';
 import { QueryArgs } from '../../../types/interfaces';
 import { filterProducts, getCategoryId, getProductByProductKey, getProductProjections } from '../../api/apiClient';

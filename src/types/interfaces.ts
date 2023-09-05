@@ -1,5 +1,7 @@
 import { QueryParam } from '@commercetools/sdk-client-v2';
 
+import { Attribute } from '@commercetools/platform-sdk';
+
 export interface AttrSet {
   [key: string]: string;
 }
@@ -115,4 +117,14 @@ export interface ChangePasswordData {
 export interface MainData {
   title: string;
   content: string | HTMLDivElement;
+}
+
+export interface ProductData {
+  link: string;
+  title: string;
+  price: number;
+  categories?: string[];
+  imageURLs: string[];
+  description: string;
+  details?: Attribute[];
 }
