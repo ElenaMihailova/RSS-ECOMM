@@ -1,3 +1,5 @@
+import { Fancybox } from '@fancyapps/ui';
+import '@fancyapps/ui/dist/fancybox/fancybox.css';
 import { Attribute } from '@commercetools/platform-sdk';
 import PageView from '../../core/pageView';
 import { createElement } from '../../helpers/functions';
@@ -66,11 +68,18 @@ class ProductView extends PageView {
       parent: productCard,
     });
 
+    const image = createElement({
+      tagName: 'a',
+      classNames: ['image-container__image-link'],
+      attributes: [{ 'data-fancybox': 'gallery' }, { href: data.imageURL }],
+      parent: imageContainer,
+    });
+
     createElement({
       tagName: 'img',
       classNames: ['image-container__image', 'image'],
       attributes: [{ src: data.imageURL }],
-      parent: imageContainer,
+      parent: image,
     });
 
     const descriptionContainer = createElement({
@@ -143,6 +152,10 @@ class ProductView extends PageView {
     });
 
     button.disabled = true;
+
+    Fancybox.bind('[data-fancybox]', {
+      contentClick: 'close',
+    });
   }
 
   public renderProductCardCategories(container: HTMLDivElement, categories: string[]): void {
