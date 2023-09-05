@@ -17,7 +17,7 @@
   line-height: 16px;
   letter-spacing: 0.5px;
   padding: 5px;
-  margin-right: 5px;
+  cursor: pointer;
 
   @include vp-768 {
     font-size: 14px;

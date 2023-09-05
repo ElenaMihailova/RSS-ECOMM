@@ -3,7 +3,7 @@ import { PageUrls } from '../../../assets/data/constants';
 import { QueryArgs } from '../../../types/interfaces';
 import { filterProducts, getCategoryId, getProductByProductKey, getProductProjections } from '../../api/apiClient';
 import generateCatalogList from '../../components/catalogList/generateCatalogList';
-import { getElement, getElementCollection } from '../../helpers/functions';
+import { createElement, getElement, getElementCollection } from '../../helpers/functions';
 import Router from '../../router/router';
 
 class CatalogController {
@@ -29,6 +29,7 @@ class CatalogController {
     this.sortHandler();
     this.searchHandler();
     this.resetBtnHandler();
+    this.breadcrumbController();
   }
 
   public categoriesHandler(): void {
@@ -42,36 +43,17 @@ class CatalogController {
 
     categoryAll.addEventListener('click', async (e: Event) => {
       e.preventDefault();
-      this.removeActiveCondition();
-      const searchInput: HTMLInputElement = getElement('.search__input');
-      searchInput.value = '';
-      categoryAll.classList.add('active');
-      CatalogController.searchWord = '';
-      const categories = getElementCollection('.subcategory__item');
-      categories.forEach((cat) => {
-        const categoryHtml = cat as HTMLAnchorElement;
-        categoryHtml.classList.add('hidden');
-      });
-      CatalogController.activeCategoryId = '';
-
-      const queryArgs: QueryArgs = {};
-
-      if (CatalogController.checkedOriginInputs.length) {
-        queryArgs.filter = [`variants.attributes.Origin.en-US:${CatalogController.checkedOriginInputs.join(',')}`];
+      this.allProductsAction();
+      const bcList: HTMLElement = getElement('.breadcrumbs__list');
+      if (bcList.childElementCount > 3) {
+        const items = bcList.children;
+        for (let i = items.length - 1; i >= 0; i -= 1) {
+          if (i <= 2) {
+            break;
+          }
+          bcList.removeChild(items[i]);
+        }
       }
-
-      if (CatalogController.checkedFlavorInputs.length && CatalogController.checkedOriginInputs.length) {
-        queryArgs.filter!.push(`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`);
-      } else if (CatalogController.checkedFlavorInputs.length) {
-        queryArgs.filter = [`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`];
-      }
-
-      if (CatalogController.activeSorting.length) {
-        queryArgs.sort = [CatalogController.activeSorting];
-      }
-
-      const products = await filterProducts(queryArgs);
-      this.setProducts(products);
     });
 
     categoryClassic.addEventListener('click', async (e: Event) => {
@@ -80,6 +62,7 @@ class CatalogController {
       categoryClassic.classList.add('active');
       this.openCategory(categoryClassicList);
       this.filterByCategory('Classic Teas');
+      this.categoryBCHandler('Classic Teas');
     });
 
     categoryBreakfast.addEventListener('click', async (e: Event) => {
@@ -88,6 +71,7 @@ class CatalogController {
       categoryBreakfast.classList.add('active');
       this.openCategory(categoryBreakfastList);
       this.filterByCategory('Breakfast Teas');
+      this.categoryBCHandler('Breakfast Teas');
     });
 
     categoryFall.addEventListener('click', async (e: Event) => {
@@ -96,6 +80,7 @@ class CatalogController {
       categoryFall.classList.add('active');
       this.openCategory(categoryFallList);
       this.filterByCategory('Fall Teas');
+      this.categoryBCHandler('Fall Teas');
     });
   }
 
@@ -111,6 +96,7 @@ class CatalogController {
       this.removeActiveCondition();
       categoryBlack.classList.add('active');
       this.filterByCategory('Black teas');
+      this.subcategoryBCHandler('Black teas');
     });
 
     categoryChai.addEventListener('click', async (e: Event) => {
@@ -118,6 +104,7 @@ class CatalogController {
       this.removeActiveCondition();
       categoryChai.classList.add('active');
       this.filterByCategory('Chai');
+      this.subcategoryBCHandler('Chai');
     });
 
     categoryGreen.addEventListener('click', async (e: Event) => {
@@ -125,6 +112,7 @@ class CatalogController {
       this.removeActiveCondition();
       categoryGreen.classList.add('active');
       this.filterByCategory('Green Teas');
+      this.subcategoryBCHandler('Green Teas');
     });
 
     categoryWhite.addEventListener('click', async (e: Event) => {
@@ -132,6 +120,7 @@ class CatalogController {
       this.removeActiveCondition();
       categoryWhite.classList.add('active');
       this.filterByCategory('White Teas');
+      this.subcategoryBCHandler('White Teas');
     });
 
     categoryHerbal.addEventListener('click', async (e: Event) => {
@@ -139,6 +128,33 @@ class CatalogController {
       this.removeActiveCondition();
       categoryHerbal.classList.add('active');
       this.filterByCategory('Herbal Teas');
+      this.subcategoryBCHandler('Herbal Teas');
+    });
+  }
+
+  public breadcrumbController(): void {
+    const homeLink = getElement('.breadcrumbs__home-link');
+    const catalogLink = getElement('.breadcrumbs__catalog-link');
+
+    homeLink.addEventListener('click', (e: Event) => {
+      e.preventDefault();
+      this.router.navigateFromButton(PageUrls.IndexPageUrl);
+    });
+
+    catalogLink.addEventListener('click', (e: Event) => {
+      e.preventDefault();
+      this.removeActiveCondition();
+      this.allProductsAction();
+      const bcList: HTMLElement = getElement('.breadcrumbs__list');
+      if (bcList.childElementCount > 3) {
+        const items = bcList.children;
+        for (let i = items.length - 1; i >= 0; i -= 1) {
+          if (i <= 2) {
+            break;
+          }
+          bcList.removeChild(items[i]);
+        }
+      }
     });
   }
 
@@ -401,6 +417,89 @@ class CatalogController {
     });
   }
 
+  private categoryBCHandler(category: string): void {
+    const classLink = category.split(' ')[0].toLowerCase();
+    const bcList: HTMLElement = getElement('.breadcrumbs__list');
+    if (bcList.childElementCount === 3) {
+      this.createNewLink(bcList, category);
+    } else if (bcList.childElementCount > 3) {
+      const items = bcList.children;
+      for (let i = items.length - 1; i >= 0; i -= 1) {
+        if (i <= 2) {
+          break;
+        }
+        bcList.removeChild(items[i]);
+      }
+      this.createNewLink(bcList, category);
+    }
+    const link = getElement(`.breadcrumbs__${classLink}-link`);
+    link.addEventListener('click', () => {
+      this.filterByCategory(category);
+    });
+  }
+
+  private subcategoryBCHandler(category: string): void {
+    const classLink = category.split(' ')[0].toLowerCase();
+    const bcList: HTMLElement = getElement('.breadcrumbs__list');
+    if (bcList.childElementCount === 5) {
+      this.createNewLink(bcList, category);
+    } else if (bcList.childElementCount > 5) {
+      const items = bcList.children;
+      for (let i = items.length - 1; i >= 0; i -= 1) {
+        if (i <= 4) {
+          break;
+        }
+        bcList.removeChild(items[i]);
+      }
+      this.createNewLink(bcList, category);
+      const link = getElement(`.breadcrumbs__${classLink}-link`);
+      link.addEventListener('click', () => {
+        this.filterByCategory(category);
+      });
+    }
+  }
+
+  private createNewLink(parent: HTMLElement, link: string): void {
+    const classLink = link.split(' ')[0].toLowerCase();
+
+    createElement({
+      tagName: 'span',
+      text: '/',
+      parent,
+    });
+
+    const breadcrumbItem = createElement({
+      tagName: 'li',
+      classNames: ['breadcrumbs__link'],
+      parent,
+    });
+
+    const breadcrumbLink = createElement({
+      tagName: 'a',
+      classNames: ['breadcrumbs__link', `breadcrumbs__${classLink}-link`],
+      text: `${link.toUpperCase()}`,
+      parent: breadcrumbItem,
+    });
+
+    breadcrumbLink.addEventListener('click', async () => {
+      this.removeActiveCondition();
+
+      this.filterByCategory(link);
+      const bcList: HTMLElement = getElement('.breadcrumbs__list');
+      const category = getElement(`.category-${classLink}__link`);
+      category.classList.add('active');
+      if (link === 'Classic Teas' || link === 'Black Teas' || (link === 'Fall Teas' && bcList.childElementCount > 5)) {
+        const items = bcList.children;
+        for (let i = items.length - 1; i >= 0; i -= 1) {
+          if (i <= 4) {
+            break;
+          }
+          bcList.removeChild(items[i]);
+        }
+      }
+    });
+  }
+
   private openCategory(category: Element): void {
     const categories = getElementCollection('.subcategory__item');
     categories.forEach((cat) => {
@@ -494,6 +593,40 @@ class CatalogController {
         this.router.navigateFromButton(`${PageUrls.CatalogPageUrl}/${link}`);
       });
     });
+  }
+
+  private async allProductsAction(): Promise<void> {
+    this.removeActiveCondition();
+    const categoryAll = getElement('.category-all__link');
+    categoryAll.classList.add('active');
+    const searchInput: HTMLInputElement = getElement('.search__input');
+    searchInput.value = '';
+    CatalogController.searchWord = '';
+    const categories = getElementCollection('.subcategory__item');
+    categories.forEach((cat) => {
+      const categoryHtml = cat as HTMLAnchorElement;
+      categoryHtml.classList.add('hidden');
+    });
+    CatalogController.activeCategoryId = '';
+
+    const queryArgs: QueryArgs = {};
+
+    if (CatalogController.checkedOriginInputs.length) {
+      queryArgs.filter = [`variants.attributes.Origin.en-US:${CatalogController.checkedOriginInputs.join(',')}`];
+    }
+
+    if (CatalogController.checkedFlavorInputs.length && CatalogController.checkedOriginInputs.length) {
+      queryArgs.filter!.push(`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`);
+    } else if (CatalogController.checkedFlavorInputs.length) {
+      queryArgs.filter = [`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`];
+    }
+
+    if (CatalogController.activeSorting.length) {
+      queryArgs.sort = [CatalogController.activeSorting];
+    }
+
+    const products = await filterProducts(queryArgs);
+    this.setProducts(products);
   }
 
   private async setProducts(products: ProductProjection[]): Promise<void> {

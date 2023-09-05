@@ -261,7 +261,6 @@ export const getCategoryName = async (id: string): Promise<string> => {
     .execute()
     .then((r) => {
       resData = r.body.results[0].name['en-US'];
-      console.log(resData);
     })
     .catch((e) => {
       console.error(e.message);

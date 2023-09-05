@@ -1,11 +1,6 @@
+import { MainData } from '../../../types/interfaces';
 import PageView from '../../core/pageView';
 
-interface MainData {
-  title: string;
-  content: string | HTMLDivElement;
-}
-
-// todo класс похож на IndexPageView может можно вынести в общий класс и использовать его
 class CatalogView extends PageView {
   private title: string;
 

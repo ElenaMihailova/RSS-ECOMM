@@ -1,3 +1,3 @@
-const breadcrumbLinksCatalog = [{ text: 'Home', href: './index' }, { text: 'Tea collections' }];
+const breadcrumbLinksCatalog = [{ text: 'Home', href: '' }, { text: 'Tea collections' }];
 
 export default breadcrumbLinksCatalog;

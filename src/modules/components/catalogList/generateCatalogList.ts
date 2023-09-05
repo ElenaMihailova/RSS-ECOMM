@@ -20,6 +20,8 @@ export default function generateCatalogList(productData: ProductProjection[]): H
           ? product.masterVariant.prices[0].value.centAmount / 100
           : 0;
 
+      const description = product.description && product.description['en-US'] ? product.description['en-US'] : '';
+
       const imageUrl =
         product.masterVariant.images && product.masterVariant.images.length > 0
           ? product.masterVariant.images[0].url
@@ -32,6 +34,7 @@ export default function generateCatalogList(productData: ProductProjection[]): H
         title: product.name['en-US'],
         price,
         imageUrl,
+        description,
         key,
       });
 

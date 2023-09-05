@@ -2,7 +2,7 @@ import { ProductCardData } from './productTypes';
 import { createElement } from '../../helpers/functions';
 
 export default function generateProductCard(productData: ProductCardData): HTMLElement {
-  const { link, imageUrl, title, price, key } = productData;
+  const { link, imageUrl, title, price, description, key } = productData;
 
   const productCard = createElement({
     tagName: 'a',
@@ -22,6 +22,13 @@ export default function generateProductCard(productData: ProductCardData): HTMLE
     tagName: 'h2',
     classNames: ['card__name'],
     text: title,
+    parent: productCard,
+  });
+
+  const descriptionCard = createElement({
+    tagName: 'p',
+    classNames: ['card__description'],
+    text: description,
     parent: productCard,
   });
 

@@ -111,3 +111,8 @@ export interface ChangePasswordData {
   newPassword: string;
   newPasswordRepeat: string;
 }
+
+export interface MainData {
+  title: string;
+  content: string | HTMLDivElement;
+}

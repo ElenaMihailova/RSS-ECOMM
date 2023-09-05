@@ -3,12 +3,12 @@ import { createElement, createSvg } from '../helpers/functions';
 const createMenuUser = (): HTMLElement => {
   const menuItems = [
     {
-      href: '#',
+      href: '',
       svgHref: '../image/sprite.svg#search',
       text: 'Search',
     },
     {
-      href: '#',
+      href: '',
       svgHref: '../image/sprite.svg#card',
       text: 'Card',
     },

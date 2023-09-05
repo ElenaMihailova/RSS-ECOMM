@@ -3,6 +3,7 @@ export interface ProductCardData {
   imageUrl: string;
   title: string;
   price: number;
+  description: string;
   weight?: string;
   key: string;
 }
