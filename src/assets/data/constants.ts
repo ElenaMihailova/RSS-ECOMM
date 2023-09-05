@@ -14,6 +14,7 @@ export const enum PageUrls {
   ChangePasswordPageUrl = 'change-password',
   ErrorPageUrl = 'not-found',
   CatalogPageUrl = 'catalog',
+  ProductPageUrl = 'product',
 }
 
 export const Origins = ['China', 'India', 'Morocco', 'Kenya', 'Japan'];
@@ -21,3 +22,15 @@ export const Origins = ['China', 'India', 'Morocco', 'Kenya', 'Japan'];
 export const Flavors = ['Spice', 'Floral', 'Citrus', 'Bright', 'Smooth', 'Sweet'];
 
 export const SortOptions = ['SORT BY', 'Name: A to Z', 'Name: Z to A', 'Price: Low to high', 'Price: High to low'];
+
+export const ProductUrls = [
+  'ceylon-ginger-cinnamon-chai-tea',
+  'himalayan-rose-petal-blend',
+  'moroccan-minty-lemon-fusion',
+  'golden-jasmine-blossom-harmony',
+  'tibetan-wild-berry-infusion',
+  'japanese-cherry-blossom-serenity',
+  'mystical-lavender-eucalyptus-soothe',
+];
+
+export const ProductUrl = '{link}';

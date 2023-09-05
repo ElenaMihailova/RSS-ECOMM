@@ -1,6 +1,8 @@
+import { ProductProjection } from '@commercetools/platform-sdk';
 import { getElementCollection } from '../../helpers/functions';
 import Router from '../../router/router';
 import { getProductByProductKey } from '../../api/apiClient';
+import { PageUrls } from '../../../assets/data/constants';
 
 class CatalogController {
   private router: Router;
@@ -21,8 +23,9 @@ class CatalogController {
       }
 
       item.addEventListener('click', async () => {
-        await getProductByProductKey(productKey);
-        this.router.navigateFromButton('product');
+        const product = (await getProductByProductKey(productKey)) as ProductProjection;
+        const link = product.slug['en-US'];
+        this.router.navigateFromButton(`${PageUrls.CatalogPageUrl}/${link}`);
       });
     });
   }
