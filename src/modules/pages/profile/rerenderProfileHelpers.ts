@@ -57,9 +57,9 @@ export const toggleAddressCheckboxesView = (element: HTMLInputElement): void => 
 
     if (!element.checked) {
       defaultAddressCheckbox.checked = false;
-      defaultAddressLabel?.classList.add('hidden');
+      defaultAddressLabel?.classList.add('visually-hidden');
     } else {
-      defaultAddressLabel?.classList.remove('hidden');
+      defaultAddressLabel?.classList.remove('visually-hidden');
     }
   }
 };
@@ -181,8 +181,8 @@ export const toggleAdressDetailsView = (dataContainer: HTMLDivElement): void => 
   const addressDescription = getElement(`[address-id="${addressID}"] .address-description-container`);
   const addressCheckboxes = getElement(`[address-id="${addressID}"] .address-checkboxes-container`);
 
-  addressDescription.classList.toggle('hidden');
-  addressCheckboxes.classList.toggle('hidden');
+  addressDescription.classList.toggle('visually-hidden');
+  addressCheckboxes.classList.toggle('visually-hidden');
 };
 
 export const clearInputFields = (inputFields: NodeListOf<Element>): void => {

@@ -23,6 +23,11 @@ export default async function generateCatalogList(): Promise<HTMLElement> {
             ? product.masterVariant.prices[0].value.centAmount / 100
             : 0;
 
+        const discount =
+          product.masterVariant.prices && product.masterVariant.prices[0] && product.masterVariant.prices[0].discounted
+            ? product.masterVariant.prices[0].discounted.value.centAmount / 100
+            : price;
+
         const description = product.description && product.description['en-US'] ? product.description['en-US'] : '';
 
         const imageUrl =
@@ -39,6 +44,7 @@ export default async function generateCatalogList(): Promise<HTMLElement> {
           imageUrl,
           description,
           key,
+          discount,
         });
 
         li.appendChild(productCard);

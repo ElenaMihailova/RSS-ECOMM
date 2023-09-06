@@ -123,6 +123,15 @@ class ProductView extends PageView {
       parent: priceContainer,
     });
 
+    if (data.price !== data.discount) {
+      createElement({
+        tagName: 'p',
+        classNames: ['product-price-container__discount'],
+        text: `€ ${data.discount}`,
+        parent: priceContainer,
+      });
+    }
+
     createElement({
       tagName: 'p',
       classNames: ['product-price-container__weight'],
