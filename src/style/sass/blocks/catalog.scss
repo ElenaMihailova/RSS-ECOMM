@@ -18,8 +18,7 @@
   padding-top: 24px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 3%;
+  justify-content: space-between;
 }
 
 .catalog__item {
@@ -228,8 +227,11 @@
 }
 
 .catalog__list--catalog {
-  display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  padding-left: 20px;
+  justify-content: center;
+  gap: 3%;
+
   @include vp-768 {
     flex-direction: row;
     padding-left: 20px;
