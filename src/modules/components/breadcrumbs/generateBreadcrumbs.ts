@@ -1,7 +1,6 @@
-import { BreadcrumbsType } from './breadcrumbsType';
 import { createElement } from '../../helpers/functions';
 
-function generateBreadcrumbs(links: BreadcrumbsType[]): HTMLElement {
+function generateBreadcrumbs(): HTMLElement {
   const breadcrumbsNav = createElement({
     tagName: 'nav',
     attributes: [{ 'aria-label': 'breadcrumbs' }],
@@ -11,40 +10,40 @@ function generateBreadcrumbs(links: BreadcrumbsType[]): HTMLElement {
   const breadcrumbsList = createElement({
     tagName: 'ol',
     classNames: ['breadcrumbs__list'],
+    parent: breadcrumbsNav,
   });
 
-  links.forEach((link, index) => {
-    const listItem = createElement({
-      tagName: 'li',
-      classNames: ['breadcrumbs__link'],
-    });
-
-    if (!link.href) {
-      listItem.innerText = link.text;
-    } else {
-      const anchor = createElement({
-        tagName: 'a',
-        classNames: ['breadcrumbs__link'],
-        attributes: [{ href: link.href }],
-        text: link.text,
-      });
-
-      listItem.appendChild(anchor);
-    }
-
-    breadcrumbsList.appendChild(listItem);
-
-    if (index !== links.length - 1) {
-      const separator = createElement({
-        tagName: 'li',
-        text: '/',
-      });
-
-      breadcrumbsList.appendChild(separator);
-    }
+  const homeItem = createElement({
+    tagName: 'li',
+    classNames: ['breadcrumbs__link'],
+    parent: breadcrumbsList,
   });
 
-  breadcrumbsNav.appendChild(breadcrumbsList);
+  createElement({
+    tagName: 'a',
+    classNames: ['breadcrumbs__link', 'breadcrumbs__home-link'],
+    text: 'HOME',
+    parent: homeItem,
+  });
+
+  createElement({
+    tagName: 'span',
+    text: '/',
+    parent: breadcrumbsList,
+  });
+
+  const catalogItem = createElement({
+    tagName: 'li',
+    classNames: ['breadcrumbs__link'],
+    parent: breadcrumbsList,
+  });
+
+  createElement({
+    tagName: 'a',
+    classNames: ['breadcrumbs__link', 'breadcrumbs__catalog-link'],
+    text: 'TEA COLLECTIONS',
+    parent: catalogItem,
+  });
 
   return breadcrumbsNav;
 }

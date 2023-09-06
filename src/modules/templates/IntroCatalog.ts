@@ -12,7 +12,7 @@ const IntroCatalog = createElement({
   `,
 });
 
-const breadcrumbsCatalog = generateBreadcrumbs(breadcrumbLinksCatalog);
+const breadcrumbsCatalog = generateBreadcrumbs();
 
 IntroCatalog.appendChild(breadcrumbsCatalog);
 

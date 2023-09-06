@@ -23,6 +23,8 @@ export const Flavors = ['Spice', 'Floral', 'Citrus', 'Bright', 'Smooth', 'Sweet'
 
 export const SortOptions = ['SORT BY', 'Name: A to Z', 'Name: Z to A', 'Price: Low to high', 'Price: High to low'];
 
+export const SortMethods = ['none', 'name.en-us asc', 'name.en-us desc', 'price asc', 'price desc'];
+
 export const ProductUrls = [
   'ceylon-ginger-cinnamon-chai-tea',
   'himalayan-rose-petal-blend',

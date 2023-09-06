@@ -1,3 +1,5 @@
+import { QueryParam } from '@commercetools/sdk-client-v2';
+
 import { Attribute } from '@commercetools/platform-sdk';
 
 export interface AttrSet {
@@ -99,10 +101,22 @@ export interface CustomerData {
   billingAddresses?: number[];
 }
 
+export interface QueryArgs {
+  filter?: string[];
+  sort?: string[];
+  ['text.en-US']?: string;
+  [key: string]: QueryParam;
+}
+
 export interface ChangePasswordData {
   currentPassword: string;
   newPassword: string;
   newPasswordRepeat: string;
+}
+
+export interface MainData {
+  title: string;
+  content: string | HTMLDivElement;
 }
 
 export interface ProductData {
