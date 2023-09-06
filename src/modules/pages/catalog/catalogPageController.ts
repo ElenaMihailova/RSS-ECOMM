@@ -25,11 +25,6 @@ class CatalogController {
     CatalogController.checkedFlavorInputs = [];
     CatalogController.searchWord = '';
     CatalogController.activeSorting = '';
-    console.log(CatalogController.activeCategoryId);
-    console.log(CatalogController.checkedOriginInputs);
-    console.log(CatalogController.checkedFlavorInputs);
-    console.log(CatalogController.searchWord);
-    console.log(CatalogController.activeSorting);
     this.router = router;
     this.categoriesHandler();
     this.subcategoriesHandler();
@@ -406,7 +401,7 @@ class CatalogController {
 
       const subacategories = getElementCollection('.subcategory__item');
       subacategories.forEach((subcategory) => {
-        subcategory.classList.add('hidden');
+        subcategory.classList.add('visually-hidden');
       });
 
       const searchInput: HTMLInputElement = getElement('.search__input');
@@ -514,12 +509,12 @@ class CatalogController {
     const categories = getElementCollection('.subcategory__item');
     categories.forEach((cat) => {
       const categoryHtml = cat as HTMLAnchorElement;
-      categoryHtml.classList.add('hidden');
+      categoryHtml.classList.add('visually-hidden');
     });
-    if (category.classList.contains('hidden')) {
-      category.classList.remove('hidden');
+    if (category.classList.contains('visually-hidden')) {
+      category.classList.remove('visually-hidden');
     } else {
-      category.classList.add('hidden');
+      category.classList.add('visually-hidden');
     }
   }
 
@@ -615,7 +610,7 @@ class CatalogController {
     const categories = getElementCollection('.subcategory__item');
     categories.forEach((cat) => {
       const categoryHtml = cat as HTMLAnchorElement;
-      categoryHtml.classList.add('hidden');
+      categoryHtml.classList.add('visually-hidden');
     });
     CatalogController.activeCategoryId = '';
 
