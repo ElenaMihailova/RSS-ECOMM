@@ -1,7 +1,13 @@
 import { AddressCategories, CheckboxNames, FieldNames, InputUserError, PopupMessages } from '../../../types/enums';
 import { BaseAddress, CustomerData, FormAddressData } from '../../../types/interfaces';
 import { createCustomer } from '../../api/apiClient';
-import { getCountryCode, getElement, getElementCollection, renderPopup } from '../../helpers/functions';
+import {
+  getCountryCode,
+  getElement,
+  getElementCollection,
+  renderPopup,
+  togglePasswordView,
+} from '../../helpers/functions';
 import Router from '../../router/router';
 import {
   createError,
@@ -39,6 +45,7 @@ class RegistrationController {
     this.addCommonAddressCheckboxHandler();
     this.addSubmitFormButtonHandler();
     this.addLoginBtnHandler();
+    this.addPasswordViewBtnHandler();
   }
 
   public addFormInputHandlers(): void {
@@ -88,6 +95,15 @@ class RegistrationController {
     submitFormButton.addEventListener('click', async (e: Event) => {
       e.preventDefault();
       await this.validateSubmit();
+    });
+  }
+
+  public addPasswordViewBtnHandler(): void {
+    const passwordBtn: HTMLButtonElement = getElement('.password-input-btn');
+    const passwordInput: HTMLInputElement = getElement('[data-type="password"]');
+
+    passwordBtn.addEventListener('click', () => {
+      togglePasswordView(passwordInput, passwordBtn);
     });
   }
 

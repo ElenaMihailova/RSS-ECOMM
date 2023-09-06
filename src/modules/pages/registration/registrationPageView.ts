@@ -46,7 +46,7 @@ class RegistrationView extends PageView {
     createElement({
       tagName: 'span',
       text: 'Create an account!',
-      classNames: ['title', 'form-title__title'],
+      classNames: ['form-title__title'],
       parent: formTitleContainer,
     });
 
@@ -224,7 +224,7 @@ class RegistrationView extends PageView {
     createElement({
       tagName: 'span',
       text: 'Already a customer?',
-      classNames: ['title', 'login-title__title'],
+      classNames: ['login-title__title'],
       parent: loginTitleContainer,
     });
 
