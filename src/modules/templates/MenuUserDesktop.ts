@@ -4,11 +4,13 @@ const createMenuUser = (): HTMLElement => {
   const menuItems = [
     {
       href: '',
+      classNames: ['search-header--desktop'],
       svgHref: '../image/sprite.svg#search',
       text: 'Search',
     },
     {
       href: '',
+      classNames: ['card-header--desktop'],
       svgHref: '../image/sprite.svg#card',
       text: 'Card',
     },

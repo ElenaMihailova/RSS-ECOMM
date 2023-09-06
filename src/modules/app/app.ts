@@ -59,6 +59,7 @@ class App {
     this.registrationBtnsHandlers();
     this.profileBtnsHandlers();
     this.router.navigate();
+    this.disableHeaderBtns();
   }
 
   private createView(): void {
@@ -262,6 +263,19 @@ class App {
         break;
       default:
     }
+  }
+
+  private disableHeaderBtns(): void {
+    const searchBtn = getElement('.search-header--desktop');
+    const cardBtn = getElement('.card-header--desktop');
+
+    searchBtn.addEventListener('click', (e: Event) => {
+      e.preventDefault();
+    });
+
+    cardBtn.addEventListener('click', (e: Event) => {
+      e.preventDefault();
+    });
   }
 }
 
