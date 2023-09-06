@@ -185,6 +185,11 @@
   width: 120px;
   height: 38px;
   padding: 0;
+  margin-bottom: 30px;
+
+  @include vp-768 {
+    margin-bottom: 0;
+  }
 }
 
 .catalog__sortSearch {
