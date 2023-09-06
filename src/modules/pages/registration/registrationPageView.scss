@@ -3,7 +3,6 @@ $color-error: #ff0000;
 $font-Montserrat: Montserrat;
 
 .registration-page {
-  font-family: Montserrat;
   color: $color-primary;
 }
 
@@ -41,6 +40,7 @@ $font-Montserrat: Montserrat;
 
 .login-title__title,
 .form-title__title {
+  font-family: Montserrat;
   font-size: 22px;
   font-style: normal;
   font-weight: 400;
