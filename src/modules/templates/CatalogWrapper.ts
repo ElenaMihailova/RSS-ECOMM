@@ -81,7 +81,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
 
   const classicList = createElement({
     tagName: 'ul',
-    classNames: ['category-classic__list', 'subcategory__item', 'hidden'],
+    classNames: ['category-classic__list', 'subcategory__item', 'visually-hidden'],
     parent: categoryClassic,
   });
 
@@ -113,7 +113,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
 
   const breakfastList = createElement({
     tagName: 'ul',
-    classNames: ['category-breakfast__list', 'subcategory__item', 'hidden'],
+    classNames: ['category-breakfast__list', 'subcategory__item', 'visually-hidden'],
     parent: categoryBreakfast,
   });
 
@@ -145,7 +145,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
 
   const fallList = createElement({
     tagName: 'ul',
-    classNames: ['category-fall__list', 'subcategory__item', 'hidden'],
+    classNames: ['category-fall__list', 'subcategory__item', 'visually-hidden'],
     parent: categoryFall,
   });
 

@@ -17,6 +17,11 @@ export const getProduct = async (link: string): Promise<ProductData> => {
       ? product.masterVariant.prices[0].value.centAmount / 100
       : 0;
 
+  const discount =
+    product.masterVariant.prices && product.masterVariant.prices[0] && product.masterVariant.prices[0].discounted
+      ? product.masterVariant.prices[0].discounted.value.centAmount / 100
+      : price;
+
   const description = product.description && product.description['en-US'] ? product.description['en-US'] : '';
 
   const categories: string[] = [];
@@ -39,6 +44,7 @@ export const getProduct = async (link: string): Promise<ProductData> => {
     link: product.slug['en-US'],
     title: product.name['en-US'],
     price,
+    discount,
     categories,
     description,
     imageURLs,
