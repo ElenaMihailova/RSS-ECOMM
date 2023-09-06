@@ -48,7 +48,7 @@ export default function generateProductCard(productData: ProductCardData): HTMLE
   const priceCard = createElement({
     tagName: 'p',
     classNames: ['card__price'],
-    text: `€ ${price}`,
+    text: `€${price}`,
     parent: priceWrap,
   });
 
@@ -58,7 +58,7 @@ export default function generateProductCard(productData: ProductCardData): HTMLE
     discountCard = createElement({
       tagName: 'p',
       classNames: ['card__discount'],
-      text: `€ ${discount}`,
+      text: `€${discount}`,
       parent: priceWrap,
     });
   }
