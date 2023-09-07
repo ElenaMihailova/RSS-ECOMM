@@ -1,5 +1,5 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
-import { getCategoryName, getProductByProductUrl } from '../../api/apiClient';
+import { getCategoryName, getProductByProductUrl } from '../../api/apiCatalog';
 import { ProductData } from '../../../types/interfaces';
 
 export const getProductCategoryName = async (id: string): Promise<string> => {

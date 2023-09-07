@@ -1,7 +1,8 @@
 import { CustomerSignInResult } from '@commercetools/platform-sdk';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { PageUrls } from '../../assets/data/constants';
-import { createApiRootWithPasswordFlow, getUpdatedVersion, loginUser } from '../api/apiClient';
+import { getUpdatedVersion, loginUser } from '../api';
+import { createApiRootWithPasswordFlow } from '../api/buildRoot';
 import MyTokenCache from '../api/myTokenCache';
 import { setMenuBtnsView, setToLS } from '../helpers/functions';
 import Router from '../router/router';

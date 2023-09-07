@@ -8,7 +8,7 @@ import {
 } from '../../../types/enums';
 import { AddressDetails, ProfileData, ProfileDataItem } from '../../../types/interfaces';
 import { ProfileAddressData } from '../../../types/types';
-import { getUpdatedCustomer } from '../../api/apiClient';
+import { getUpdatedCustomer } from '../../api';
 
 const personalDataInputClassNames = [
   'personal-data-item__element',

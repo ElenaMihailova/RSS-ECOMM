@@ -1,5 +1,5 @@
 import { Flavors, Origins, SortMethods, SortOptions } from '../../assets/data/constants';
-import { getProductProjections } from '../api/apiClient';
+import { getProductProjections } from '../api/apiCatalog';
 import generateCatalogList from '../components/catalogList/generateCatalogList';
 import { createElement } from '../helpers/functions';
 

@@ -1,7 +1,7 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { PageUrls } from '../../../assets/data/constants';
 import { QueryArgs } from '../../../types/interfaces';
-import { filterProducts, getCategoryId, getProductByProductKey, getProductProjections } from '../../api/apiClient';
+import { filterProducts, getCategoryId, getProductByProductKey, getProductProjections } from '../../api';
 import generateCatalogList from '../../components/catalogList/generateCatalogList';
 import { createElement, getElement, getElementCollection } from '../../helpers/functions';
 import Router from '../../router/router';

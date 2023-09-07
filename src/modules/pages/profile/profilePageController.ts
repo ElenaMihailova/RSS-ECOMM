@@ -1,5 +1,5 @@
 import { PageUrls } from '../../../assets/data/constants';
-import { getUpdatedCustomer, getUpdatedVersion } from '../../api/apiClient';
+import { getUpdatedCustomer, getUpdatedVersion } from '../../api';
 import {
   getFromLS,
   getElementCollection,

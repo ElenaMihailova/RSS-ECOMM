@@ -1,6 +1,6 @@
 import { AddressCategories, CheckboxNames, FieldNames, InputUserError, PopupMessages } from '../../../types/enums';
 import { BaseAddress, CustomerData, FormAddressData } from '../../../types/interfaces';
-import { createCustomer } from '../../api/apiClient';
+import { createCustomer } from '../../api';
 import { getCountryCode, getElement, getElementCollection, renderPopup } from '../../helpers/functions';
 import Router from '../../router/router';
 import {

@@ -9,7 +9,7 @@ import {
   PopupMessages,
   ProfileDataCategories,
 } from '../../../types/enums';
-import { changePassword, getUpdatedCustomer, getUpdatedVersion, updateCustomer } from '../../api/apiClient';
+import { changePassword, getUpdatedCustomer, getUpdatedVersion, updateCustomer } from '../../api';
 import { getCountryCode, getElement, getElementCollection, renderPopup, setToLS } from '../../helpers/functions';
 import {
   createError,

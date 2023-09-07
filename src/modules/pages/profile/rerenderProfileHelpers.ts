@@ -9,7 +9,7 @@ import {
   FieldNames,
   Mode,
 } from '../../../types/enums';
-import { getUpdatedCustomer } from '../../api/apiClient';
+import { getUpdatedCustomer } from '../../api';
 import { getElementCollection, getElement, createElement, getCountryFromCountryCode } from '../../helpers/functions';
 import { createAddressesData } from './profileItemsData';
 import ProfileView from './profilePageView';
