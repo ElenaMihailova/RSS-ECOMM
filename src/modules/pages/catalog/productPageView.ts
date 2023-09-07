@@ -77,7 +77,7 @@ class ProductView extends PageView {
     createElement({
       tagName: 'p',
       text: data.title,
-      classNames: ['product-decription-container__title', 'title'],
+      classNames: ['product-decription-container__title'],
       parent: descriptionContainer,
     });
 

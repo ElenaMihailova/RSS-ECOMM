@@ -61,7 +61,7 @@
   justify-content: space-between;
 }
 
-.title {
+.product-decription-container__title {
   font-family: Prosto One;
   font-size: 33px;
   font-style: normal;
@@ -142,7 +142,7 @@
     padding: 0px 0px 40px 0px;
   }
 
-  .title {
+  .product-decription-container__title {
     font-size: calc((100vw - 320px) / (800 - 320) * (33 - 24) + 24px);
   }
 

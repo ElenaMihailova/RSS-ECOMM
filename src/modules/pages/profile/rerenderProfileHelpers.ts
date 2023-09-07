@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import { Customer, CustomerDraft } from '@commercetools/platform-sdk';
 import {
   AddressCategories,
@@ -18,6 +17,26 @@ import { ProfileData } from '../../../types/interfaces';
 import { getAddressContainerSelector, getAddressContainerMode } from './profileHelpers';
 
 const view = new ProfileView();
+
+export const toggleAddressCheckboxesView = (element: HTMLInputElement): void => {
+  const category = element.closest('.address-checkboxes')?.getAttribute('category');
+  const containerSelector = getAddressContainerSelector(element);
+
+  if (element.getAttribute('data-type') === 'address-category') {
+    const defaultAddressCheckbox: HTMLInputElement = getElement(
+      `${containerSelector} .${category}-address-checkboxes [data-type="default-address"]`,
+    );
+
+    const defaultAddressLabel = defaultAddressCheckbox.closest('.checkbox');
+
+    if (!element.checked) {
+      defaultAddressCheckbox.checked = false;
+      defaultAddressLabel?.classList.add('visually-hidden');
+    } else {
+      defaultAddressLabel?.classList.remove('visually-hidden');
+    }
+  }
+};
 
 export const setValuesToCheckboxes = (data: Customer, category: AddressCategories, addressID: string): void => {
   const { defaultBillingAddressId, defaultShippingAddressId, shippingAddressIds, billingAddressIds } = data;
@@ -42,26 +61,6 @@ export const setValuesToCheckboxes = (data: Customer, category: AddressCategorie
 
     toggleAddressCheckboxesView(checkbox);
   });
-};
-
-export const toggleAddressCheckboxesView = (element: HTMLInputElement): void => {
-  const category = element.closest('.address-checkboxes')?.getAttribute('category');
-  const containerSelector = getAddressContainerSelector(element);
-
-  if (element.getAttribute('data-type') === 'address-category') {
-    const defaultAddressCheckbox: HTMLInputElement = getElement(
-      `${containerSelector} .${category}-address-checkboxes [data-type="default-address"]`,
-    );
-
-    const defaultAddressLabel = defaultAddressCheckbox.closest('.checkbox');
-
-    if (!element.checked) {
-      defaultAddressCheckbox.checked = false;
-      defaultAddressLabel?.classList.add('visually-hidden');
-    } else {
-      defaultAddressLabel?.classList.remove('visually-hidden');
-    }
-  }
 };
 
 export const rerenderAddressDetails = async (customerID: string): Promise<void> => {
@@ -101,7 +100,7 @@ export const toggleAddressButtonsDisable = (mode: string): void => {
 };
 
 export const setNewContainerTitle = (containerSelector: string, newTitle: string): void => {
-  const title: HTMLSpanElement = getElement(`${containerSelector} [type="${ProfileDataBtns.Save}"]`);
+  const title: HTMLSpanElement = getElement(`${containerSelector} .profile-data-title`);
   title.innerText = newTitle;
 };
 
