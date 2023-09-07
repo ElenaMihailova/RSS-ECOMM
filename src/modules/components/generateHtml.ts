@@ -1,30 +1,49 @@
-import { generateLink } from '../helpers/renderHelpers';
-import { NavLink, FooterLinksType } from '../../types/nav.types';
+import generateLink from '../helpers/renderHelpers';
+import { NavLink, FooterLinks } from './layout/nav.types';
 import desktopMenuTemplate from '../templates/DesktopMenuTemplate';
 import mobileMenuTemplate from '../templates/MobileMenuModule';
 import headerTemplate from '../templates/HeaderTemplate';
 import footerTemplate from '../templates/FooterTemplate';
+import { createElement } from '../helpers/functions';
+import Router from '../router/router';
 
-export const createHeader = (navLinks: NavLink[]): string => {
-  const linksHtml = navLinks
-    .map((link) => {
-      return link.href === '#'
-        ? `<li><a class='titleMonserrat titleMonserrat--small' onclick="event.preventDefault();" href="${link.href}">${link.text}</a></li>`
-        : `<li><a class='titleMonserrat titleMonserrat--small' href="${link.href}">${link.text}</a></li>`;
-    })
-    .join('');
+export const createHeader = (navLinks: NavLink[], router: Router): HTMLElement => {
+  const ul = createElement({
+    tagName: 'ul',
+  });
 
-  const mobilMenuHtml = mobileMenuTemplate(linksHtml);
-  const desktopMenuHtml = desktopMenuTemplate(linksHtml);
+  navLinks.forEach((link) => {
+    const li = createElement({
+      tagName: 'li',
+    });
 
-  return headerTemplate(mobilMenuHtml, desktopMenuHtml);
+    const a = createElement({
+      tagName: 'a',
+      classNames: ['titleMonserrat', 'titleMonserrat--small'],
+      href: link.href,
+      text: link.text,
+    });
+
+    if (link.href === '#') {
+      a.classList.add('no-active');
+      a.addEventListener('click', (e) => e.preventDefault());
+    }
+
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+
+  const mobilMenu = mobileMenuTemplate({ router });
+  const desktopMenu = desktopMenuTemplate({ router });
+
+  return headerTemplate(mobilMenu, desktopMenu);
 };
 
 export const createFooter = ({
   collectionLinks = [],
   learnLinks = [],
   customerServiceLinks = [],
-}: FooterLinksType): string => {
+}: FooterLinks): string => {
   const collectionHtml = collectionLinks.map((item) => generateLink(item.text, item.href)).join('');
   const learnHtml = learnLinks.map((item) => generateLink(item.text, item.href)).join('');
   const customerServiceHtml = customerServiceLinks.map((item) => generateLink(item.text, item.href)).join('');

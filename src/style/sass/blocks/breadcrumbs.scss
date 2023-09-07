@@ -1,0 +1,27 @@
+.breadcrumbs__list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+  align-items: center;
+}
+
+.breadcrumbs__link {
+  text-decoration: none;
+  text-transform: uppercase;
+  color: $color-primary;
+  font-family: $font-monserrat;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  padding: 5px;
+  cursor: pointer;
+
+  @include vp-768 {
+    font-size: 14px;
+    line-height: 20px; /* 142.857% */
+    letter-spacing: 0.1px;
+  }
+}

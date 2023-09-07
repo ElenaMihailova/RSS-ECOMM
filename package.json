@@ -17,6 +17,7 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/preset-typescript": "^7.22.5",
+    "@fancyapps/ui": "^5.0.22",
     "@types/jest": "^29.5.3",
     "@types/node-fetch": "^2.6.4",
     "@types/toastify-js": "^1.12.0",
@@ -34,7 +35,9 @@
     "html-webpack-plugin": "^5.5.3",
     "husky": "^8.0.3",
     "jest": "^29.6.2",
+    "jest-environment-jsdom": "^29.6.4",
     "mini-css-extract-plugin": "^2.7.6",
+    "netlify-cli": "^16.2.0",
     "prettier": "^3.0.1",
     "sass": "^1.64.2",
     "sass-loader": "^13.3.2",
@@ -51,7 +54,8 @@
     "@commercetools/importapi-sdk": "^4.6.2",
     "@commercetools/platform-sdk": "^5.0.0",
     "@commercetools/sdk-client-v2": "^2.2.0",
-    "dotenv": "^16.3.1",
+    "dotenv-defaults": "^5.0.2",
+    "netlify-plugin-contextual-env": "^0.3.0",
     "toastify-js": "^1.12.0"
   }
 }

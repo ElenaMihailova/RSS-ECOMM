@@ -1,4 +1,4 @@
-import { PageUrls } from '../../assets/data/constants';
+import { PageUrls, ProductUrls } from '../../assets/data/constants';
 import { RouteAction, UserRequest } from '../../types/types';
 
 class Router {
@@ -7,13 +7,15 @@ class Router {
   constructor(routes: RouteAction[]) {
     this.routes = routes;
 
-    window.addEventListener('DOMContentLoaded', (): void => {
-      this.navigate();
-    });
-
     window.addEventListener('popstate', (): void => {
       this.navigate();
     });
+  }
+
+  public navigateToLink(url: string): void {
+    window.history.pushState({}, '', url);
+
+    this.navigate();
   }
 
   public navigateFromButton(url: string): void {
@@ -22,7 +24,7 @@ class Router {
     this.navigate();
   }
 
-  private navigate(): void {
+  public navigate(): void {
     const urlString = window.location.pathname.slice(1);
 
     const res = { path: '', resource: '' };
@@ -42,6 +44,12 @@ class Router {
   }
 
   private urlHandler(request: UserRequest): void {
+    if (request.resource && request.path === 'catalog' && ProductUrls.includes(request.resource)) {
+      const route = this.routes[3];
+      route.callback(request.resource);
+      return;
+    }
+
     const pathForFind = request.resource === '' ? request.path : `${request.path}/${request.resource}`;
 
     const route = this.routes.find((item) => item.path === pathForFind);

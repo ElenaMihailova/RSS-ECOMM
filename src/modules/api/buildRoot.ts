@@ -1,3 +1,5 @@
+import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import {
   ClientBuilder,
   // Import middlewares
@@ -27,14 +29,14 @@ const authMiddlewareOptions: AuthMiddlewareOptions = {
   fetch,
 };
 
-export const ctpClient = new ClientBuilder()
+const ctpClient = new ClientBuilder()
   .withProjectKey(projectKey) // .withProjectKey() is not required if the projectKey is included in authMiddlewareOptions
   .withClientCredentialsFlow(authMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
   .withLoggerMiddleware() // Include middleware for logging
   .build();
 
-export const buildClientWithPasswordFlow = (options: PasswordAuthMiddlewareOptions): Client => {
+const buildClientWithPasswordFlow = (options: PasswordAuthMiddlewareOptions): Client => {
   const client = new ClientBuilder()
     .withProjectKey(projectKey) // .withProjectKey() is not required if the projectKey is included in authMiddlewareOptions
     .withPasswordFlow(options)
@@ -42,4 +44,15 @@ export const buildClientWithPasswordFlow = (options: PasswordAuthMiddlewareOptio
     .build();
 
   return client;
+};
+
+export const apiProjectRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
+  projectKey: process.env.CTP_PROJECT_KEY as string,
+});
+
+export const createApiRootWithPasswordFlow = (options: PasswordAuthMiddlewareOptions): ByProjectKeyRequestBuilder => {
+  const apiRoot = createApiBuilderFromCtpClient(buildClientWithPasswordFlow(options)).withProjectKey({
+    projectKey: process.env.CTP_PROJECT_KEY as string,
+  });
+  return apiRoot;
 };

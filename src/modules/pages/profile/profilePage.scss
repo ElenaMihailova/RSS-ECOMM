@@ -1,0 +1,180 @@
+@import '../../../style/sass/variables.scss';
+
+.profile-page__container {
+  margin: 0 auto;
+  max-width: 1000px;
+  width: 100%;
+  display: flex;
+  padding-bottom: 40px;
+}
+
+.profile-data-form,
+.profile-page__content,
+.profile-content__addresses,
+.buttons__content {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.title-container {
+  text-align: center;
+}
+
+.profile-page-btns {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 30px;
+  min-height: 500px;
+}
+
+.profile-page-btns .button {
+  max-width: 235px;
+}
+
+.profile-data {
+  padding-bottom: 20px;
+  padding: 20px 40px;
+  max-width: 600px;
+  width: 100%;
+  background-color: $color-background-variant;
+  margin: 0 auto;
+}
+
+.profile-data-title {
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 32px;
+  letter-spacing: 0.11px;
+}
+
+.profile-data-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  padding: 20px 0px 40px 0px;
+}
+
+.profile-data-btns {
+  display: flex;
+  align-items: center;
+}
+
+.address-data-form {
+  padding: 20px 0px 20px 0px;
+}
+
+.profile-page__content,
+.profile-content__addresses {
+  gap: 40px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.profile-data-title {
+  text-align: center;
+}
+
+.profile-element,
+.profile-data-form .select {
+  width: 100%;
+  max-width: 600px;
+  height: 56px;
+  padding-left: 16px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+  cursor: auto;
+}
+
+.profile-element--hidden {
+  appearance: none;
+  opacity: 1;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid;
+  background-color: $color-background-variant;
+}
+
+.profile-data-item .form-item--error {
+  display: flex;
+}
+
+.profile-data-btn {
+  cursor: pointer;
+  width: fit-content;
+  background-color: $color-background-variant;
+  padding-bottom: 10px;
+  border: none;
+  border-bottom: 1px solid;
+  margin: 0 auto;
+}
+
+.address-details {
+  padding-top: 10px;
+  padding-bottom: 40px;
+}
+
+.address-checkboxes-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.address-checkboxes-container__checkboxes {
+  display: flex;
+  gap: 10px;
+}
+
+.address-checkboxes-container__checkboxes:first-child {
+  border-bottom: 1px solid;
+  padding-bottom: 20px;
+}
+
+.profile-content__btn {
+  margin: 0 auto;
+}
+
+.profile-data-btn:disabled,
+.profile-content__btn:disabled {
+  opacity: 1;
+  color: $color-primary;
+}
+
+@media (max-width: 1200px) {
+  .profile-page__container {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    min-height: 700px;
+  }
+
+  .profile-page-btns {
+    padding: 30px 30px 0px 30px;
+    max-width: 100%;
+    gap: 10px;
+    display: flex;
+    flex-direction: row;
+    min-height: 0;
+  }
+}
+
+@media (max-width: 550px) {
+  .profile-page-btns {
+    padding: 30px 5px 0px 5px;
+  }
+}
+
+@media (max-width: 426px) {
+  .profile-page-btns {
+    padding: 30px 0px 0px 0px;
+  }
+
+  .profile-page-btns .button {
+    padding: 2px 2px;
+  }
+}
