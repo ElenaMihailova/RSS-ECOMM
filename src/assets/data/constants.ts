@@ -3,6 +3,7 @@ export const ButtonsNamesAndUrls: { [key: string]: string } = {
   Login: 'login',
   Registration: 'registration',
   Catalog: 'catalog',
+  Basket: 'basket',
 };
 
 export const enum PageUrls {
@@ -15,6 +16,7 @@ export const enum PageUrls {
   ErrorPageUrl = 'not-found',
   CatalogPageUrl = 'catalog',
   ProductPageUrl = 'product',
+  BasketPageUrl = 'basket',
 }
 
 export const Origins = ['China', 'India', 'Morocco', 'Kenya', 'Japan'];
