@@ -9,7 +9,7 @@ const delivery = (): HTMLElement => {
 
   const title = createElement({
     tagName: 'h2',
-    classNames: ['delivery__title'],
+    classNames: ['delivery__title', 'titleMonserrat--medium'],
     parent: container,
     html: 'Delivery and retour',
   });

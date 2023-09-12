@@ -33,7 +33,7 @@ const payment = (): HTMLElement => {
 
   createElement({
     tagName: 'h2',
-    classNames: ['payment__title'],
+    classNames: ['payment__title', 'titleMonserrat--medium'],
     parent: container,
     html: 'Payment type',
   });

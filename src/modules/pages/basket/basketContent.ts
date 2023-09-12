@@ -1,17 +1,20 @@
-import { createElement } from '../../helpers/functions';
+import basket from './basket';
 import delivery from '../../templates/Delivery';
 import payment from '../../templates/Payment';
+import basketSum from './sumBasket';
 
-const basket = createElement({
-  tagName: 'section',
-  classNames: ['cart', 'container'],
-});
+const basketElement = basket();
+const basketSumElement = basketSum();
+
+const itemsContainer = document.createElement('section');
+itemsContainer.classList.add('cart', 'container');
+itemsContainer.append(basketElement, basketSumElement);
 
 const deliveryElement = delivery();
 const paymentElement = payment();
 
 const basketContentContainer = document.createElement('div');
-basketContentContainer.append(basket, paymentElement, deliveryElement);
+basketContentContainer.append(itemsContainer, paymentElement, deliveryElement);
 
 const basketContent = {
   title: 'Basket',
