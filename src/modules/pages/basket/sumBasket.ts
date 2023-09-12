@@ -3,7 +3,7 @@ import { createElement } from '../../helpers/functions';
 const basketSum = (): HTMLElement => {
   const order = createElement({
     tagName: 'div',
-    classNames: ['cart__sum', 'sum'],
+    classNames: ['cart__sum', 'sum', 'container'],
   });
 
   const orderTitle = createElement({
@@ -30,7 +30,7 @@ const basketSum = (): HTMLElement => {
     tagName: 'p',
     classNames: ['sum__amount'],
     html: `€3.90`,
-    parent: order,
+    parent: wrap,
   });
 
   const wrap2 = createElement({
@@ -51,6 +51,12 @@ const basketSum = (): HTMLElement => {
     classNames: ['sum__amount'],
     html: `€3.95`,
     parent: wrap2,
+  });
+
+  const line = createElement({
+    tagName: 'div',
+    classNames: ['sum__line'],
+    parent: order,
   });
 
   const wrap3 = createElement({

@@ -7,7 +7,7 @@ const basketElement = basket();
 const basketSumElement = basketSum();
 
 const itemsContainer = document.createElement('section');
-itemsContainer.classList.add('cart', 'container');
+itemsContainer.classList.add('cart');
 itemsContainer.append(basketElement, basketSumElement);
 
 const deliveryElement = delivery();

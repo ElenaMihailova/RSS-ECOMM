@@ -3,7 +3,13 @@ import { createElement } from '../../helpers/functions';
 const basket = (): HTMLElement => {
   const items = createElement({
     tagName: 'div',
-    classNames: ['cart__items'],
+    classNames: ['cart__items', 'items', 'container'],
+  });
+
+  const line = createElement({
+    tagName: 'div',
+    classNames: ['sum__line'],
+    parent: items,
   });
 
   const wrapItem = createElement({
