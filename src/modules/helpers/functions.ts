@@ -188,7 +188,7 @@ export const createSvg = <T extends keyof SVGElementTagNameMap>(elData: {
 }): SVGElementTagNameMap[T] => {
   const { tagName, classNames, attributes, parent } = elData;
 
-  const ns = 'http://www.w3.org/2000/svg'; // SVG namespace
+  const ns = 'http://www.w3.org/2000/svg';
   const element: SVGElementTagNameMap[T] = document.createElementNS(ns, tagName);
 
   if (classNames) {
