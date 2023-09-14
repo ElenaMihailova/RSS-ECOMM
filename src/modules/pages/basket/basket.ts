@@ -1,10 +1,14 @@
 import { createElement } from '../../helpers/functions';
+import basketItems from './basketItems';
 
 const basket = (): HTMLElement => {
   const items = createElement({
     tagName: 'div',
     classNames: ['cart__items', 'items', 'container'],
   });
+
+  const itemsElement = basketItems();
+  items.appendChild(itemsElement);
 
   const line = createElement({
     tagName: 'div',
