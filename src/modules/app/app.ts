@@ -20,6 +20,8 @@ import CatalogView from '../pages/catalog/catalogPageView';
 import CatalogController from '../pages/catalog/catalogPageController';
 import ProductView from '../pages/catalog/product/productPageView';
 import createCatalogContent from '../templates/CatalogTemplate';
+import BasketView from '../pages/basket/basketPageView';
+import basketContent from '../pages/basket/basketContent';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -163,6 +165,15 @@ class App {
       {
         path: `${PageUrls.ProfilePageUrl}/${PageUrls.ChangePasswordPageUrl}`,
         callback: this.redirectToProfile.bind(this),
+      },
+      {
+        path: `${PageUrls.BasketPageUrl}`,
+        callback: (): void => {
+          if (this.main) {
+            this.main.clearContent();
+            this.main.setContent(new BasketView(basketContent).render());
+          }
+        },
       },
       {
         path: `${PageUrls.ErrorPageUrl}`,
