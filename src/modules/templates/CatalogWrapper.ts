@@ -1,6 +1,6 @@
 import { AnonymousAuthMiddlewareOptions, RefreshAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { Flavors, Origins, SortMethods, SortOptions } from '../../assets/data/constants';
-import { getProductProjections } from '../api/apiCatalog';
+import { getProductProjections } from '../api';
 import ApiClientBuilder, { scopes } from '../api/buildRoot';
 import MyTokenCache from '../api/myTokenCache';
 import generateCatalogList from '../components/catalogList/generateCatalogList';

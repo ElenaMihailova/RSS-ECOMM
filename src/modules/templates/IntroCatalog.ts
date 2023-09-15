@@ -1,6 +1,5 @@
 import { createElement } from '../helpers/functions';
 import generateBreadcrumbs from '../components/breadcrumbs/generateBreadcrumbs';
-import breadcrumbLinksCatalog from '../../assets/data/breadcrumbs';
 
 const IntroCatalog = createElement({
   tagName: 'section',

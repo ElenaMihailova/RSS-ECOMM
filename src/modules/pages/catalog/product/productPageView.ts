@@ -3,7 +3,7 @@ import '@fancyapps/ui/dist/fancybox/fancybox.css';
 import '@fancyapps/ui/dist/carousel/carousel.css';
 import { Attribute } from '@commercetools/platform-sdk';
 import PageView from '../../../core/pageView';
-import { createElement, createSvgElement, getElement } from '../../../helpers/functions';
+import { createElement, getElement } from '../../../helpers/functions';
 import Router from '../../../router/router';
 import './productPage.scss';
 import { getProduct } from './getProduct';
