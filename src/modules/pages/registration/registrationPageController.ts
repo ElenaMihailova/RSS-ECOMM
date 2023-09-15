@@ -1,11 +1,15 @@
+import { AnonymousAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { AddressCategories, CheckboxNames, FieldNames, InputUserError, PopupMessages } from '../../../types/enums';
 import { BaseAddress, CustomerData, FormAddressData } from '../../../types/interfaces';
-import { createCustomer } from '../../api';
+import { createCustomer, getProductProjections } from '../../api';
 import {
   getCountryCode,
   getElement,
   getElementCollection,
+  getFromLS,
+  removeFromLS,
   renderPopup,
+  setToLS,
   togglePasswordView,
 } from '../../helpers/functions';
 import Router from '../../router/router';
@@ -21,6 +25,8 @@ import '../../../style/toastify.css';
 import { PageUrls } from '../../../assets/data/constants';
 import { emailWord } from '../../validation/regExpVariables';
 import Controller from '../../controller/controller';
+import ApiClientBuilder, { scopes } from '../../api/buildRoot';
+import MyTokenCache from '../../api/myTokenCache';
 
 class RegistrationController {
   private validator: Validator;
@@ -269,12 +275,41 @@ class RegistrationController {
     if (this.isValidForm()) {
       const formCommonDataElements = getElementCollection('.common-data-container .form-item-element');
       const customerData = this.createCustomerData(formCommonDataElements);
-      const responce = await createCustomer(customerData);
       const emailInput: HTMLInputElement = getElement('.input[data-type="email"]');
       const passwordInput: HTMLInputElement = getElement('.input[data-type="password"]');
 
-      if (responce instanceof Error) {
-        const errorMessage = `${responce.message}`;
+      let response = null;
+
+      if (!getFromLS('refreshToken')) {
+        const tokenCache = new MyTokenCache();
+
+        const anonymousAuthMiddlewareOptions: AnonymousAuthMiddlewareOptions = {
+          host: process.env.CTP_AUTH_URL as string,
+          projectKey: process.env.CTP_PROJECT_KEY as string,
+          credentials: {
+            clientId: process.env.CTP_CLIENT_ID as string,
+            clientSecret: process.env.CTP_CLIENT_SECRET as string,
+          },
+          tokenCache,
+          scopes,
+          fetch,
+        };
+
+        ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithAnonymousFlow(anonymousAuthMiddlewareOptions);
+
+        response = await createCustomer(ApiClientBuilder.currentRoot, customerData);
+
+        const tokenInfo = tokenCache.get();
+        setToLS('token', tokenInfo.token);
+        if (tokenInfo.refreshToken) {
+          setToLS('refreshToken', tokenInfo.refreshToken);
+        }
+      } else {
+        response = await createCustomer(ApiClientBuilder.currentRoot, customerData);
+      }
+
+      if (response instanceof Error) {
+        const errorMessage = `${response.message}`;
 
         if (errorMessage.match(emailWord)) {
           const inputErrorMessage = InputUserError.ExistingEmailError;

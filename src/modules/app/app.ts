@@ -7,7 +7,7 @@ import RegistrationView from '../pages/registration/registrationPageView';
 import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
 import LoginController from '../pages/login/loginPageController';
-import { getElement, getFromLS, removeFromLS, setMenuBtnsView } from '../helpers/functions';
+import { getElement, getFromLS, removeFromLS, setMenuBtnsView, setToLS } from '../helpers/functions';
 import { FooterLinks, NavLink } from '../components/layout/nav.types';
 import createLayout from '../components/layout/createLayout';
 import { headerLinks, footerLinks } from '../../assets/data/navigationData';
@@ -17,9 +17,9 @@ import RegistrationController from '../pages/registration/registrationPageContro
 import ProfileController from '../pages/profile/profilePageController';
 import ProfileView from '../pages/profile/profilePageView';
 import CatalogView from '../pages/catalog/catalogPageView';
-import catalogContent from '../templates/CatalogTemplate';
 import CatalogController from '../pages/catalog/catalogPageController';
-import ProductView from '../pages/catalog/productPageView';
+import ProductView from '../pages/catalog/product/productPageView';
+import createCatalogContent from '../templates/CatalogTemplate';
 import BasketView from '../pages/basket/basketPageView';
 import basketContent from '../pages/basket/basketContent';
 
@@ -48,15 +48,16 @@ class App {
 
   constructor() {
     this.main = null;
-    this.loginController = null;
-    this.registrationController = null;
-    this.catalogController = null;
-    this.profileController = null;
     this.profilePage = null;
     const routes = this.createRoutes();
     this.router = new Router(routes);
     this.createView();
+    this.loginController = null;
+    this.registrationController = null;
+    this.catalogController = null;
+    this.profileController = null;
     this.indexBtnHandler();
+    this.navCatalogBtnHandler();
     this.loginBtnsHandlers();
     this.registrationBtnsHandlers();
     this.profileBtnsHandlers();
@@ -101,8 +102,9 @@ class App {
       },
       {
         path: `${PageUrls.CatalogPageUrl}`,
-        callback: (): void => {
+        callback: async (): Promise<void> => {
           if (this.main) {
+            const catalogContent = await createCatalogContent();
             this.main.clearContent();
             this.main.setContent(new CatalogView(catalogContent).render());
             this.catalogController = new CatalogController(this.router);
@@ -125,7 +127,7 @@ class App {
           if (this.main) {
             this.main.clearContent();
 
-            if (getFromLS('token')) {
+            if (getFromLS('userID')) {
               this.router.navigateFromButton(PageUrls.IndexPageUrl);
               return;
             }
@@ -142,7 +144,7 @@ class App {
           if (this.main) {
             this.main.clearContent();
 
-            if (getFromLS('token')) {
+            if (getFromLS('userID')) {
               this.router.navigateFromButton(PageUrls.IndexPageUrl);
               return;
             }
@@ -197,8 +199,9 @@ class App {
 
   private btnMoveToLoginHandler(e: Event): void {
     e.preventDefault();
-    if (getFromLS('token')) {
+    if (getFromLS('userID')) {
       removeFromLS('token');
+      removeFromLS('refreshToken');
       removeFromLS('userID');
       removeFromLS('version');
       setMenuBtnsView();
@@ -218,7 +221,7 @@ class App {
 
   private btnMoveToRegistrationHandler(e: Event): void {
     e.preventDefault();
-    const url = getFromLS('token') ? PageUrls.IndexPageUrl : PageUrls.RegistrationPageUrl;
+    const url = getFromLS('userID') ? PageUrls.IndexPageUrl : PageUrls.RegistrationPageUrl;
     this.router.navigateFromButton(url);
   }
 
@@ -232,7 +235,7 @@ class App {
 
   private btnMoveToProfileHandler(e: Event): void {
     e.preventDefault();
-    const url = getFromLS('token') ? PageUrls.ProfilePageUrl : PageUrls.IndexPageUrl;
+    const url = getFromLS('userID') ? PageUrls.ProfilePageUrl : PageUrls.IndexPageUrl;
     this.router.navigateFromButton(url);
   }
 
@@ -246,6 +249,14 @@ class App {
     homeBtn.addEventListener('click', this.btnMoveToIndexHandler.bind(this));
   }
 
+  private navCatalogBtnHandler(): void {
+    const navCatalogBtn = getElement('.menu__nav--tc');
+    navCatalogBtn.addEventListener('click', (e: Event) => {
+      e.preventDefault();
+      this.router.navigateFromButton(PageUrls.CatalogPageUrl);
+    });
+  }
+
   private btnMoveToIndexHandler(e: Event): void {
     e.preventDefault();
     this.router.navigateFromButton(PageUrls.IndexPageUrl);
@@ -255,7 +266,7 @@ class App {
     if (this.main) {
       this.main.clearContent();
 
-      if (!getFromLS('token')) {
+      if (!getFromLS('passwordToken')) {
         this.router.navigateFromButton(PageUrls.LoginPageUrl);
         return;
       }
@@ -265,8 +276,9 @@ class App {
     }
   }
 
-  private logoutRedirect(): void {
+  private async logoutRedirect(): Promise<void> {
     switch (window.location.pathname.slice(1)) {
+      case PageUrls.CatalogPageUrl:
       case PageUrls.ProfilePageUrl:
       case `${PageUrls.ProfilePageUrl}/${PageUrls.AddressesPageUrl}`:
       case `${PageUrls.ProfilePageUrl}/${PageUrls.ChangePasswordPageUrl}`:

@@ -42,6 +42,7 @@ import {
   toggleBtnEditMode,
   toggleFormElementsEditMode,
 } from './rerenderProfileHelpers';
+import ApiClientBuilder from '../../api/buildRoot';
 
 class ProfileController {
   private router: Router;
@@ -68,7 +69,7 @@ class ProfileController {
       return;
     }
 
-    const data = await getUpdatedCustomer(this.authorizedCustomerID);
+    const data = await getUpdatedCustomer(ApiClientBuilder.currentRoot, this.authorizedCustomerID);
 
     switch (window.location.pathname.slice(1)) {
       case PageUrls.ProfilePageUrl:
@@ -124,7 +125,7 @@ class ProfileController {
     if (!this.authorizedCustomerID) {
       return;
     }
-    const version = await getUpdatedVersion(this.authorizedCustomerID);
+    const version = await getUpdatedVersion(ApiClientBuilder.currentRoot, this.authorizedCustomerID);
     setToLS('version', JSON.stringify(version));
     this.authorizedCustomerVersion = version || 0;
   }

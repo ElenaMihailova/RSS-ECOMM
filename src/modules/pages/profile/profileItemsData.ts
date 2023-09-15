@@ -9,6 +9,7 @@ import {
 import { AddressDetails, ProfileData, ProfileDataItem } from '../../../types/interfaces';
 import { ProfileAddressData } from '../../../types/types';
 import { getUpdatedCustomer } from '../../api';
+import ApiClientBuilder from '../../api/buildRoot';
 
 const personalDataInputClassNames = [
   'personal-data-item__element',
@@ -142,7 +143,7 @@ export const createAddressDataItems = (mode: string): ProfileDataItem[] => {
 };
 
 export const createAddressDetails = async (customerID: string, addressID?: string): Promise<AddressDetails> => {
-  const data = await getUpdatedCustomer(customerID);
+  const data = await getUpdatedCustomer(ApiClientBuilder.currentRoot, customerID);
   const { defaultBillingAddressId, defaultShippingAddressId, shippingAddressIds, billingAddressIds } = data;
 
   const details: AddressDetails = {
@@ -178,7 +179,7 @@ export const createAddressData = async (mode: string, customerID: string, addres
 };
 
 export const createAddressesData = async (customerID: string): Promise<ProfileAddressData | []> => {
-  const data = await getUpdatedCustomer(customerID);
+  const data = await getUpdatedCustomer(ApiClientBuilder.currentRoot, customerID);
   const { addresses } = data;
   const addressesData: ProfileAddressData = [];
 

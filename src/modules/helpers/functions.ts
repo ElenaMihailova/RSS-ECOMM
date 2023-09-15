@@ -213,7 +213,7 @@ export const createSvg = <T extends keyof SVGElementTagNameMap>(elData: {
 };
 
 export const setMenuBtnsView = (): void => {
-  const token = getFromLS('token');
+  const user = getFromLS('userID');
   const loginSvg = getElement('.login svg');
   const logoutSvg = getElement('.logout-svg');
   const loginDesktopBtn = getElement('.login--desktop svg:nth-child(1)');
@@ -225,7 +225,7 @@ export const setMenuBtnsView = (): void => {
   const profileMobileContainer = getElement('.profile--mobile').closest('a');
   const tooltip = getElement('.tooltip--login');
 
-  if (token) {
+  if (user) {
     loginSvg.classList.add('visually-hidden');
     logoutSvg.classList.remove('visually-hidden');
     loginDesktopBtn.classList.add('visually-hidden');

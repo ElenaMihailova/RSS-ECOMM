@@ -106,3 +106,8 @@ export interface Data {
 }
 
 export type ProfileAddressData = ProfileData[];
+
+export type CatalogContent = {
+  title: string;
+  content: HTMLDivElement;
+};
