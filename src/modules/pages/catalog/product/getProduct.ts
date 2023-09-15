@@ -1,14 +1,15 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
-import { getCategoryName, getProductByProductUrl } from '../../api/apiCatalog';
-import { ProductData } from '../../../types/interfaces';
+import { getCategoryName, getProductByProductUrl } from '../../../api/apiCatalog';
+import { ProductData } from '../../../../types/interfaces';
+import ApiClientBuilder from '../../../api/buildRoot';
 
 export const getProductCategoryName = async (id: string): Promise<string> => {
-  const categoryName = await getCategoryName(id);
+  const categoryName = await getCategoryName(ApiClientBuilder.currentRoot, id);
   return categoryName;
 };
 
 export const getProduct = async (link: string): Promise<ProductData> => {
-  const response = await getProductByProductUrl(link);
+  const response = await getProductByProductUrl(ApiClientBuilder.currentRoot, link);
 
   const product = response as ProductProjection;
 

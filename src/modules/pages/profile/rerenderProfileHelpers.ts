@@ -15,6 +15,7 @@ import ProfileView from './profilePageView';
 import { getDateDMYFormatFromIsoString } from '../../validation/validationHelpers';
 import { ProfileData } from '../../../types/interfaces';
 import { getAddressContainerSelector, getAddressContainerMode } from './profileHelpers';
+import ApiClientBuilder from '../../api/buildRoot';
 
 const view = new ProfileView();
 
@@ -80,7 +81,7 @@ export const rerenderAddressDetails = async (customerID: string): Promise<void> 
 
     if (id && address?.addressDetails && customerID) {
       view.renderAddressDescription(addressDescriptionContainer, address?.addressDetails);
-      const data = await getUpdatedCustomer(customerID);
+      const data = await getUpdatedCustomer(ApiClientBuilder.currentRoot, customerID);
       setValuesToCheckboxes(data, AddressCategories.Shipping, id);
       setValuesToCheckboxes(data, AddressCategories.Billing, id);
     }

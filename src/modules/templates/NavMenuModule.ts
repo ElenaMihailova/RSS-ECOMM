@@ -8,19 +8,26 @@ const navMenu = ({ router }: { router: Router }): HTMLElement => {
     classNames: ['menu__nav'],
   });
 
-  const baseClasses = ['titleMonserrat', 'titleMonserrat--small'];
+  const navClasses = [
+    'menu__nav--tc',
+    'menu__nav--acc',
+    'menu__nav--blog',
+    'menu__nav--contact',
+    'asd',
+    'asdf',
+    'asdgag',
+    'asdadad',
+  ];
 
-  headerLinks.forEach((item) => {
+  headerLinks.forEach((item, i) => {
     const li = createElement({
       tagName: 'li',
       parent: ulNav,
     });
 
-    const classNames = [...baseClasses];
-
     createElement({
       tagName: 'a',
-      classNames,
+      classNames: ['titleMonserrat', 'titleMonserrat--small', `${navClasses[i]}`],
       text: item.text,
       parent: li,
       href: item.href,
