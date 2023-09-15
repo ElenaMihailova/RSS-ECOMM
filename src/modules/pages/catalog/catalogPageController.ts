@@ -1,10 +1,12 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
+import { AnonymousAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { PageUrls } from '../../../assets/data/constants';
 import { QueryArgs } from '../../../types/interfaces';
-import { filterProducts, getCategoryId, getProductByProductKey, getProductProjections } from '../../api';
+import { createCart, filterProducts, getCategoryId, getProductByProductKey, getProductProjections } from '../../api';
 import generateCatalogList from '../../components/catalogList/generateCatalogList';
-import { createElement, getElement, getElementCollection } from '../../helpers/functions';
+import { createElement, getElement, getElementCollection, setToLS } from '../../helpers/functions';
 import Router from '../../router/router';
+import MyTokenCache from '../../api/myTokenCache';
 
 class CatalogController {
   private router: Router;
@@ -35,6 +37,7 @@ class CatalogController {
     this.resetBtnHandler();
     this.breadcrumbController();
     this.productItemsHandler();
+    this.addToCartBtnHandler();
   }
 
   public categoriesHandler(): void {
@@ -582,6 +585,18 @@ class CatalogController {
     });
   }
 
+  private addToCartBtnHandler(): void {
+    const addToCartBtns = getElementCollection('.button-add-to-cart');
+
+    addToCartBtns.forEach(async (item) => {
+      const addToCartBtn = item as HTMLButtonElement;
+
+      addToCartBtn.addEventListener('click', async () => {
+        const cart = await createCart();
+      });
+    });
+  }
+
   private productItemsHandler(): void {
     const productItems = getElementCollection('.card__link');
 
@@ -592,7 +607,10 @@ class CatalogController {
         return;
       }
 
-      item.addEventListener('click', async () => {
+      item.addEventListener('click', async (e: Event) => {
+        if (e.target && e.target instanceof HTMLElement && e.target.classList.contains('button-add-to-cart')) {
+          return;
+        }
         const product = (await getProductByProductKey(productKey)) as ProductProjection;
         const link = product.slug['en-US'];
         this.router.navigateFromButton(`${PageUrls.CatalogPageUrl}/${link}`);

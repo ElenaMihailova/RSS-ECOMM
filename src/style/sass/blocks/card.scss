@@ -4,6 +4,7 @@
   border-radius: 20px;
   transition: transform $trans-default;
   cursor: pointer;
+  min-width: 180px;
 
   &:hover {
     transform: scale(1.05);
@@ -63,4 +64,17 @@
 
 .card__weight {
   order: 3;
+}
+
+.card__button-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.card__button {
+  width: 100%;
+  height: 40px;
+  line-height: 1;
 }
