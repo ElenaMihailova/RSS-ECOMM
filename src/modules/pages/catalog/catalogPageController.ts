@@ -4,8 +4,9 @@ import { QueryArgs } from '../../../types/interfaces';
 import { createCart, filterProducts, getCategoryId, getProductByProductKey, getProductProjections } from '../../api';
 import ApiClientBuilder from '../../api/buildRoot';
 import generateCatalogList from '../../components/catalogList/generateCatalogList';
-import { createElement, getElement, getElementCollection } from '../../helpers/functions';
+import { createElement, getElement, getElementCollection, getFromLS, setToLS } from '../../helpers/functions';
 import Router from '../../router/router';
+import addProductToCart from './product/addProductToCart';
 
 class CatalogController {
   private router: Router;
@@ -36,7 +37,6 @@ class CatalogController {
     this.resetBtnHandler();
     this.breadcrumbController();
     this.productItemsHandler();
-    this.addToCartBtnHandler();
   }
 
   public categoriesHandler(): void {
@@ -584,18 +584,6 @@ class CatalogController {
     });
   }
 
-  private addToCartBtnHandler(): void {
-    const addToCartBtns = getElementCollection('.button-add-to-cart');
-
-    addToCartBtns.forEach(async (item) => {
-      const addToCartBtn = item as HTMLButtonElement;
-
-      addToCartBtn.addEventListener('click', async () => {
-        await createCart(ApiClientBuilder.currentRoot);
-      });
-    });
-  }
-
   private productItemsHandler(): void {
     const productItems = getElementCollection('.card__link');
 
@@ -607,11 +595,25 @@ class CatalogController {
       }
 
       item.addEventListener('click', async (e: Event) => {
-        if (e.target && e.target instanceof HTMLElement && e.target.classList.contains('button-add-to-cart')) {
-          return;
-        }
+        const target = e.target as HTMLElement;
         const product = (await getProductByProductKey(ApiClientBuilder.currentRoot, productKey)) as ProductProjection;
         const link = product.slug['en-US'];
+
+        if (target.classList.contains('button-add-to-cart')) {
+          if (!getFromLS('cartID')) {
+            const cart = await createCart(ApiClientBuilder.currentRoot);
+            if (cart instanceof Error) {
+              return;
+            }
+            setToLS('cartID', cart.id);
+            setToLS('cartVersion', cart.version.toString());
+          }
+
+          await addProductToCart(product);
+
+          return;
+        }
+
         this.router.navigateFromButton(`${PageUrls.CatalogPageUrl}/${link}`);
       });
     });
