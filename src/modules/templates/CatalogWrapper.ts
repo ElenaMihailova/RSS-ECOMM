@@ -288,7 +288,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
   });
 
   for (let i = 0; i < SortOptions.length; i += 1) {
-    const sortOption = createElement({
+    createElement({
       tagName: 'option',
       classNames: ['sort__option'],
       text: `${SortOptions[i]}`,
@@ -357,8 +357,6 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     productData = await getProductProjections(ApiClientBuilder.currentRoot);
 
     const tokenInfo = tokenCache.get();
-
-    console.log(tokenInfo);
 
     if (tokenInfo.token) {
       setToLS('token', tokenInfo.token);

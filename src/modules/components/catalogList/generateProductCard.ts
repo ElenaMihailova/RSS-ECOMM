@@ -63,5 +63,18 @@ export default function generateProductCard(productData: ProductCardData): HTMLE
     });
   }
 
+  const buttonWrap = createElement({
+    tagName: 'div',
+    classNames: ['card__button-wrap'],
+    parent: productCard,
+  });
+
+  const buttonCard = createElement({
+    tagName: 'button',
+    classNames: ['card__button', 'button', 'button--black', 'button-add-to-cart'],
+    text: 'ADD TO BAG',
+    parent: buttonWrap,
+  });
+
   return productCard;
 }
