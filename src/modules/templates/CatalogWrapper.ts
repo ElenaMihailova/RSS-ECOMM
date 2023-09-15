@@ -1,7 +1,10 @@
+import { AnonymousAuthMiddlewareOptions, RefreshAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { Flavors, Origins, SortMethods, SortOptions } from '../../assets/data/constants';
 import { getProductProjections } from '../api/apiCatalog';
+import ApiClientBuilder, { scopes } from '../api/buildRoot';
+import MyTokenCache from '../api/myTokenCache';
 import generateCatalogList from '../components/catalogList/generateCatalogList';
-import { createElement } from '../helpers/functions';
+import { createElement, getFromLS, setToLS } from '../helpers/functions';
 
 const catalogWrapper = async (): Promise<HTMLElement> => {
   const container = createElement({
@@ -33,7 +36,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     parent: categoriesList,
   });
 
-  const linkAll = createElement({
+  createElement({
     tagName: 'a',
     classNames: ['category-all__link', 'category__link'],
     text: 'ALL PRODUCTS',
@@ -46,7 +49,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     parent: categoriesList,
   });
 
-  const linkClassic = createElement({
+  createElement({
     tagName: 'a',
     classNames: ['category-classic__link', 'category__link'],
     text: 'CLASSIC TEAS',
@@ -59,7 +62,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     parent: categoriesList,
   });
 
-  const linkBreakfast = createElement({
+  createElement({
     tagName: 'a',
     classNames: ['category-breakfast__link', 'category__link'],
     text: 'BREAKFAST TEAS',
@@ -72,7 +75,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     parent: categoriesList,
   });
 
-  const linkFall = createElement({
+  createElement({
     tagName: 'a',
     classNames: ['category-fall__link', 'category__link'],
     text: 'FALL TEAS',
@@ -91,7 +94,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     parent: classicList,
   });
 
-  const linkBlack = createElement({
+  createElement({
     tagName: 'a',
     classNames: ['category-black__link', 'category__link'],
     text: 'BLACK TEAS',
@@ -104,7 +107,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     parent: classicList,
   });
 
-  const linkChai = createElement({
+  createElement({
     tagName: 'a',
     classNames: ['category-chai__link', 'category__link'],
     text: 'CHAI',
@@ -123,7 +126,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     parent: breakfastList,
   });
 
-  const linkGreen = createElement({
+  createElement({
     tagName: 'a',
     classNames: ['category-green__link', 'category__link'],
     text: 'GREEN TEAS',
@@ -136,7 +139,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     parent: breakfastList,
   });
 
-  const linkWhite = createElement({
+  createElement({
     tagName: 'a',
     classNames: ['category-white__link', 'category__link'],
     text: 'WHITE TEAS',
@@ -155,7 +158,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     parent: fallList,
   });
 
-  const linkHerbal = createElement({
+  createElement({
     tagName: 'a',
     classNames: ['category-herbal__link', 'category__link'],
     text: 'HERBAL TEAS',
@@ -174,7 +177,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     parent: filter,
   });
 
-  const titleOrigin = createElement({
+  createElement({
     tagName: 'h4',
     classNames: ['filter-origin__title'],
     text: 'ORIGIN',
@@ -195,7 +198,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
       parent: listOrigin,
     });
 
-    const originInput = createElement({
+    createElement({
       tagName: 'input',
       classNames: ['filter__input', 'filter-origin__input', `input__${Origins[i].toLowerCase()}`],
       attributes: [{ type: 'checkbox' }, { value: `${Origins[i]}` }],
@@ -209,7 +212,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     parent: filter,
   });
 
-  const titleFlavor = createElement({
+  createElement({
     tagName: 'h4',
     classNames: ['filter-flavor__title'],
     text: 'FLAVOR',
@@ -230,7 +233,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
       parent: listFlavor,
     });
 
-    const flavorInput = createElement({
+    createElement({
       tagName: 'input',
       classNames: ['filter__input', 'filter-flavor__input', `input__${Flavors[i].toLowerCase()}`],
       attributes: [{ type: 'checkbox' }, { value: `${Flavors[i]}` }],
@@ -238,7 +241,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     });
   }
 
-  const resetButton = createElement({
+  createElement({
     tagName: 'button',
     classNames: ['reset__button', 'button'],
     attributes: [{ type: 'button' }],
@@ -258,14 +261,14 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     parent: wrap,
   });
 
-  const searchInput = createElement({
+  createElement({
     tagName: 'input',
     classNames: ['search__input', 'input'],
     attributes: [{ type: 'search' }],
     parent: searchContainer,
   });
 
-  const searchButton = createElement({
+  createElement({
     tagName: 'button',
     classNames: ['search__button', 'button'],
     text: 'Search',
@@ -304,7 +307,63 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     parent: container,
   });
 
-  const productData = await getProductProjections();
+  let productData = null;
+
+  if (!getFromLS('refreshToken')) {
+    const tokenCache = new MyTokenCache();
+
+    const options: AnonymousAuthMiddlewareOptions = {
+      host: process.env.CTP_AUTH_URL as string,
+      projectKey: process.env.CTP_PROJECT_KEY as string,
+      credentials: {
+        clientId: process.env.CTP_CLIENT_ID as string,
+        clientSecret: process.env.CTP_CLIENT_SECRET as string,
+      },
+      tokenCache,
+      scopes,
+      fetch,
+    };
+
+    ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithAnonymousFlow(options);
+
+    productData = await getProductProjections(ApiClientBuilder.currentRoot);
+
+    const tokenInfo = tokenCache.get();
+
+    if (tokenInfo.token) {
+      setToLS('token', tokenInfo.token);
+    }
+
+    if (tokenInfo.refreshToken) {
+      setToLS('refreshToken', tokenInfo.refreshToken);
+    }
+  } else {
+    const tokenCache = new MyTokenCache();
+
+    const options: RefreshAuthMiddlewareOptions = {
+      host: process.env.CTP_AUTH_URL as string,
+      projectKey: process.env.CTP_PROJECT_KEY as string,
+      credentials: {
+        clientId: process.env.CTP_CLIENT_ID as string,
+        clientSecret: process.env.CTP_CLIENT_SECRET as string,
+      },
+      refreshToken: getFromLS('refreshToken') as string,
+      tokenCache,
+      fetch,
+    };
+
+    ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithRefreshFlow(options);
+
+    productData = await getProductProjections(ApiClientBuilder.currentRoot);
+
+    const tokenInfo = tokenCache.get();
+
+    console.log(tokenInfo);
+
+    if (tokenInfo.token) {
+      setToLS('token', tokenInfo.token);
+    }
+  }
 
   const catalogList = await generateCatalogList(productData);
 

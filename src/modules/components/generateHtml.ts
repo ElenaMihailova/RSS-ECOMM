@@ -33,8 +33,8 @@ export const createHeader = (navLinks: NavLink[], router: Router): HTMLElement =
     ul.appendChild(li);
   });
 
-  const mobilMenu = mobileMenuTemplate({ router });
   const desktopMenu = desktopMenuTemplate({ router });
+  const mobilMenu = mobileMenuTemplate({ router });
 
   return headerTemplate(mobilMenu, desktopMenu);
 };

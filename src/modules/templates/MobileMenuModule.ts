@@ -1,6 +1,6 @@
 import { createElement, createSvg } from '../helpers/functions';
 import MenuUser from './MenuUserModule';
-import navMenu from './NavMenuModule';
+// import navMenu from './NavMenuModule';
 import Router from '../router/router';
 
 const mobileMenuTemplate = ({ router }: { router: Router }): HTMLElement => {
@@ -28,9 +28,9 @@ const mobileMenuTemplate = ({ router }: { router: Router }): HTMLElement => {
     parent: innerContainer,
   });
 
-  createElement({ tagName: 'span', classNames: ['line', 'line1'], parent: hamburgerLines });
-  createElement({ tagName: 'span', classNames: ['line', 'line2'], parent: hamburgerLines });
-  createElement({ tagName: 'span', classNames: ['line', 'line3'], parent: hamburgerLines });
+  createElement({ tagName: 'span', classNames: ['line1'], parent: hamburgerLines });
+  createElement({ tagName: 'span', classNames: ['line2'], parent: hamburgerLines });
+  createElement({ tagName: 'span', classNames: ['line3'], parent: hamburgerLines });
 
   const wrapper = createElement({
     tagName: 'div',
@@ -79,8 +79,8 @@ const mobileMenuTemplate = ({ router }: { router: Router }): HTMLElement => {
   const menuUserElement = MenuUser();
   wrapper.appendChild(menuUserElement);
 
-  const menuNavElement = navMenu({ router });
-  wrapper.appendChild(menuNavElement);
+  // const menuNavElement = navMenu({ router });
+  // wrapper.appendChild(menuNavElement);
   return container;
 };
 

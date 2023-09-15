@@ -1,12 +1,11 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
-import { AnonymousAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { PageUrls } from '../../../assets/data/constants';
 import { QueryArgs } from '../../../types/interfaces';
 import { createCart, filterProducts, getCategoryId, getProductByProductKey, getProductProjections } from '../../api';
+import ApiClientBuilder from '../../api/buildRoot';
 import generateCatalogList from '../../components/catalogList/generateCatalogList';
-import { createElement, getElement, getElementCollection, setToLS } from '../../helpers/functions';
+import { createElement, getElement, getElementCollection } from '../../helpers/functions';
 import Router from '../../router/router';
-import MyTokenCache from '../../api/myTokenCache';
 
 class CatalogController {
   private router: Router;
@@ -197,7 +196,7 @@ class CatalogController {
             queryArgs['text.en-us'] = CatalogController.searchWord;
           }
 
-          const products = await filterProducts(queryArgs);
+          const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
           this.setProducts(products);
           return;
         }
@@ -227,7 +226,7 @@ class CatalogController {
             queryArgs['text.en-us'] = CatalogController.searchWord;
           }
 
-          const products = await filterProducts(queryArgs);
+          const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
           this.setProducts(products);
           return;
         }
@@ -252,7 +251,7 @@ class CatalogController {
           queryArgs['text.en-us'] = CatalogController.searchWord;
         }
 
-        const products = await filterProducts(queryArgs);
+        const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
         this.setProducts(products);
       });
     });
@@ -289,7 +288,7 @@ class CatalogController {
             queryArgs['text.en-us'] = CatalogController.searchWord;
           }
 
-          const products = await filterProducts(queryArgs);
+          const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
           this.setProducts(products);
           return;
         }
@@ -319,7 +318,7 @@ class CatalogController {
             queryArgs['text.en-us'] = CatalogController.searchWord;
           }
 
-          const products = await filterProducts(queryArgs);
+          const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
           this.setProducts(products);
           return;
         }
@@ -343,7 +342,7 @@ class CatalogController {
           queryArgs['text.en-us'] = CatalogController.searchWord;
         }
 
-        const products = await filterProducts(queryArgs);
+        const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
         this.setProducts(products);
       });
     });
@@ -365,7 +364,7 @@ class CatalogController {
         queryBuild['text.en-us'] = CatalogController.searchWord;
       }
 
-      const products = await filterProducts(queryBuild);
+      const products = await filterProducts(ApiClientBuilder.currentRoot, queryBuild);
       this.setProducts(products);
     });
   }
@@ -385,7 +384,7 @@ class CatalogController {
         queryBuild.sort = [CatalogController.activeSorting];
       }
 
-      const products = await filterProducts(queryBuild);
+      const products = await filterProducts(ApiClientBuilder.currentRoot, queryBuild);
       this.setProducts(products);
     });
   }
@@ -420,7 +419,7 @@ class CatalogController {
       const menuHtml = menu as HTMLSelectElement;
       menuHtml.options[0].selected = true;
 
-      const products = await getProductProjections();
+      const products = await getProductProjections(ApiClientBuilder.currentRoot);
       this.setProducts(products);
     });
   }
@@ -522,7 +521,7 @@ class CatalogController {
   }
 
   private async filterByCategory(name: string): Promise<void> {
-    const categoryId = await getCategoryId(name);
+    const categoryId = await getCategoryId(ApiClientBuilder.currentRoot, name);
     CatalogController.searchWord = '';
     CatalogController.activeCategoryId = categoryId;
     const searchInput: HTMLInputElement = getElement('.search__input');
@@ -547,7 +546,7 @@ class CatalogController {
       queryArgs['text.en-us'] = CatalogController.searchWord;
     }
 
-    const products = await filterProducts(queryArgs);
+    const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
     this.setProducts(products);
   }
 
@@ -592,7 +591,7 @@ class CatalogController {
       const addToCartBtn = item as HTMLButtonElement;
 
       addToCartBtn.addEventListener('click', async () => {
-        const cart = await createCart();
+        await createCart(ApiClientBuilder.currentRoot);
       });
     });
   }
@@ -611,7 +610,7 @@ class CatalogController {
         if (e.target && e.target instanceof HTMLElement && e.target.classList.contains('button-add-to-cart')) {
           return;
         }
-        const product = (await getProductByProductKey(productKey)) as ProductProjection;
+        const product = (await getProductByProductKey(ApiClientBuilder.currentRoot, productKey)) as ProductProjection;
         const link = product.slug['en-US'];
         this.router.navigateFromButton(`${PageUrls.CatalogPageUrl}/${link}`);
       });
@@ -648,7 +647,7 @@ class CatalogController {
       queryArgs.sort = [CatalogController.activeSorting];
     }
 
-    const products = await filterProducts(queryArgs);
+    const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
     this.setProducts(products);
   }
 
