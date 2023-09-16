@@ -1,12 +1,12 @@
 const menuItems = [
   {
-    href: 'profile',
+    href: '',
     classNames: ['profile', 'profile--mobile'],
     svgHref: '../image/sprite.svg#person',
     text: 'USER PROFILE',
   },
   {
-    href: 'login',
+    href: '',
     classNames: ['login', 'login--mobile'],
     contents: [
       {
@@ -21,13 +21,13 @@ const menuItems = [
     ],
   },
   {
-    href: 'registration',
+    href: '',
     classNames: ['registration', 'registration--mobile'],
     svgHref: '../image/sprite.svg#add_person',
     text: 'USER REGISTRATION',
   },
   {
-    href: '#',
+    href: '',
     classNames: ['cart', 'cart--mobile'],
     svgHref: '../image/sprite.svg#cart',
     text: 'YOUR CART<span>(3) items have been added</span>',

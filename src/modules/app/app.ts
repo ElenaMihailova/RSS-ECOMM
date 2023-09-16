@@ -7,7 +7,7 @@ import RegistrationView from '../pages/registration/registrationPageView';
 import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
 import LoginController from '../pages/login/loginPageController';
-import { getElement, getFromLS, removeFromLS, setMenuBtnsView } from '../helpers/functions';
+import { getElement, getElementCollection, getFromLS, removeFromLS, setMenuBtnsView } from '../helpers/functions';
 import { FooterLinks, NavLink } from '../components/layout/nav.types';
 import createLayout from '../components/layout/createLayout';
 import { headerLinks, footerLinks } from '../../assets/data/navigationData';
@@ -58,8 +58,8 @@ class App {
     this.catalogController = null;
     this.profileController = null;
     this.indexBtnHandler();
-    this.navCatalogBtnHandler();
-    this.navAboutUsBtnHandler();
+    this.navCatalogLinksHandler();
+    this.navAboutUsLinksHandler();
     this.cartBtnsHandlers();
     this.loginBtnsHandlers();
     this.registrationBtnsHandlers();
@@ -275,19 +275,25 @@ class App {
     homeBtn.addEventListener('click', this.btnMoveToIndexHandler.bind(this));
   }
 
-  private navCatalogBtnHandler(): void {
-    const navCatalogBtn = getElement('.menu__nav--tc');
-    navCatalogBtn.addEventListener('click', (e: Event) => {
-      e.preventDefault();
-      this.router.navigateFromButton(PageUrls.CatalogPageUrl);
+  private navCatalogLinksHandler(): void {
+    const navCatalogLinks = getElementCollection('.menu__nav--tc');
+    navCatalogLinks.forEach((element) => {
+      const catalogLink = element as HTMLAnchorElement;
+      catalogLink.addEventListener('click', (e: Event) => {
+        e.preventDefault();
+        this.router.navigateFromButton(PageUrls.CatalogPageUrl);
+      });
     });
   }
 
-  private navAboutUsBtnHandler(): void {
-    const navAboutUsBtn = getElement('.menu__nav--about');
-    navAboutUsBtn.addEventListener('click', (e: Event) => {
-      e.preventDefault();
-      this.router.navigateFromButton(PageUrls.AboutUsPageUrl);
+  private navAboutUsLinksHandler(): void {
+    const navAboutUsLinks = getElementCollection('.menu__nav--about');
+    navAboutUsLinks.forEach((element) => {
+      const aboutUsLink = element as HTMLAnchorElement;
+      aboutUsLink.addEventListener('click', (e: Event) => {
+        e.preventDefault();
+        this.router.navigateFromButton(PageUrls.AboutUsPageUrl);
+      });
     });
   }
 

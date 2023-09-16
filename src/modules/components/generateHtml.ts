@@ -24,11 +24,6 @@ export const createHeader = (navLinks: NavLink[], router: Router): HTMLElement =
       text: link.text,
     });
 
-    if (link.href === '#') {
-      a.classList.add('no-active');
-      a.addEventListener('click', (e) => e.preventDefault());
-    }
-
     li.appendChild(a);
     ul.appendChild(li);
   });
