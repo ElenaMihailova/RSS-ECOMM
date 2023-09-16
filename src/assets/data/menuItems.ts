@@ -29,8 +29,8 @@ const menuItems = [
   {
     href: '#',
     classNames: [],
-    svgHref: '../image/sprite.svg#card',
-    text: 'YOUR BAG<span>(3) items have been added</span>',
+    svgHref: '../image/sprite.svg#cart',
+    text: 'YOUR CART<span>(3) items have been added</span>',
   },
 ];
 

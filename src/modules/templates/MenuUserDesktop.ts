@@ -10,9 +10,9 @@ const createMenuUser = (): HTMLElement => {
     },
     {
       href: '',
-      classNames: ['card-header--desktop'],
-      svgHref: '../image/sprite.svg#card',
-      text: 'Card',
+      classNames: ['cart-header--desktop'],
+      svgHref: '../image/sprite.svg#cart',
+      text: 'Cart',
     },
     {
       href: 'registration',
