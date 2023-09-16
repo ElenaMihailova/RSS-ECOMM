@@ -7,7 +7,7 @@ import RegistrationView from '../pages/registration/registrationPageView';
 import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
 import LoginController from '../pages/login/loginPageController';
-import { getElement, getFromLS, removeFromLS, setMenuBtnsView, setToLS } from '../helpers/functions';
+import { getElement, getElementCollection, getFromLS, removeFromLS, setMenuBtnsView } from '../helpers/functions';
 import { FooterLinks, NavLink } from '../components/layout/nav.types';
 import createLayout from '../components/layout/createLayout';
 import { headerLinks, footerLinks } from '../../assets/data/navigationData';
@@ -22,6 +22,7 @@ import ProductView from '../pages/catalog/product/productPageView';
 import createCatalogContent from '../templates/CatalogTemplate';
 import BasketView from '../pages/basket/basketPageView';
 import basketContent from '../pages/basket/basketContent';
+import AboutUsView from '../pages/about/aboutUsPageView';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -57,12 +58,13 @@ class App {
     this.catalogController = null;
     this.profileController = null;
     this.indexBtnHandler();
-    this.navCatalogBtnHandler();
+    this.navCatalogLinksHandler();
+    this.navAboutUsLinksHandler();
+    this.cartBtnsHandlers();
     this.loginBtnsHandlers();
     this.registrationBtnsHandlers();
     this.profileBtnsHandlers();
     this.router.navigate();
-    this.disableHeaderBtns();
   }
 
   private createView(): void {
@@ -118,6 +120,16 @@ class App {
             this.main.clearContent();
             const productView = new ProductView(this.router, link);
             this.main.setViewContent(productView);
+          }
+        },
+      },
+      {
+        path: `${PageUrls.AboutUsPageUrl}`,
+        callback: (): void => {
+          if (this.main) {
+            this.main.clearContent();
+            const aboutUsView = new AboutUsView();
+            this.main.setViewContent(aboutUsView);
           }
         },
       },
@@ -189,6 +201,19 @@ class App {
     ];
   }
 
+  private cartBtnsHandlers(): void {
+    const cartBtn = getElement('.cart--desktop');
+    const cartMobileBtn = getElement('.cart--mobile');
+
+    cartBtn.addEventListener('click', this.btnMoveToBasketHandler.bind(this));
+    cartMobileBtn.addEventListener('click', this.btnMoveToBasketHandler.bind(this));
+  }
+
+  private btnMoveToBasketHandler(e: Event): void {
+    e.preventDefault();
+    this.router.navigateFromButton(PageUrls.BasketPageUrl);
+  }
+
   private loginBtnsHandlers(): void {
     const loginBtn = getElement('.login--desktop');
     const loginMobileBtn = getElement('.login--mobile');
@@ -249,11 +274,25 @@ class App {
     homeBtn.addEventListener('click', this.btnMoveToIndexHandler.bind(this));
   }
 
-  private navCatalogBtnHandler(): void {
-    const navCatalogBtn = getElement('.menu__nav--tc');
-    navCatalogBtn.addEventListener('click', (e: Event) => {
-      e.preventDefault();
-      this.router.navigateFromButton(PageUrls.CatalogPageUrl);
+  private navCatalogLinksHandler(): void {
+    const navCatalogLinks = getElementCollection('.menu__nav--tc');
+    navCatalogLinks.forEach((element) => {
+      const catalogLink = element as HTMLAnchorElement;
+      catalogLink.addEventListener('click', (e: Event) => {
+        e.preventDefault();
+        this.router.navigateFromButton(PageUrls.CatalogPageUrl);
+      });
+    });
+  }
+
+  private navAboutUsLinksHandler(): void {
+    const navAboutUsLinks = getElementCollection('.menu__nav--about');
+    navAboutUsLinks.forEach((element) => {
+      const aboutUsLink = element as HTMLAnchorElement;
+      aboutUsLink.addEventListener('click', (e: Event) => {
+        e.preventDefault();
+        this.router.navigateFromButton(PageUrls.AboutUsPageUrl);
+      });
     });
   }
 
@@ -286,19 +325,6 @@ class App {
         break;
       default:
     }
-  }
-
-  private disableHeaderBtns(): void {
-    const searchBtn = getElement('.search-header--desktop');
-    const cardBtn = getElement('.card-header--desktop');
-
-    searchBtn.addEventListener('click', (e: Event) => {
-      e.preventDefault();
-    });
-
-    cardBtn.addEventListener('click', (e: Event) => {
-      e.preventDefault();
-    });
   }
 }
 
