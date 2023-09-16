@@ -8,7 +8,7 @@ import Router from '../../../router/router';
 import './productPage.scss';
 import { getProduct } from './getProduct';
 import { ProductData } from '../../../../types/interfaces';
-import { createCart, getActiveCart, getProductByProductUrl } from '../../../api';
+import { createCart, getProductByProductUrl } from '../../../api';
 import ApiClientBuilder from '../../../api/buildRoot';
 import addProductToCart from './addProductToCart';
 
@@ -147,16 +147,16 @@ class ProductView extends PageView {
       parent: priceContainer,
     });
 
-    const addToBagContainer = createElement({
+    const addToCartContainer = createElement({
       tagName: 'div',
-      classNames: ['product-description__bag'],
+      classNames: ['product-description__cart'],
       parent: descriptionContainer,
     });
 
     const amountContainer = createElement({
       tagName: 'div',
       classNames: ['product-description__amount'],
-      parent: addToBagContainer,
+      parent: addToCartContainer,
     });
 
     createElement({
@@ -180,11 +180,11 @@ class ProductView extends PageView {
       parent: amountContainer,
     });
 
-    const button = createElement({
+    createElement({
       tagName: 'button',
       classNames: ['product-description__product-button', 'button', 'button--black'],
       text: 'ADD TO BAG',
-      parent: addToBagContainer,
+      parent: addToCartContainer,
     });
 
     Fancybox.bind('[data-fancybox]', {
