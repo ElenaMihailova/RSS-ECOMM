@@ -17,6 +17,7 @@ export const enum PageUrls {
   CatalogPageUrl = 'catalog',
   ProductPageUrl = 'product',
   BasketPageUrl = 'basket',
+  AboutUsPageUrl = 'about-us',
 }
 
 export const Origins = ['China', 'India', 'Morocco', 'Kenya', 'Japan'];

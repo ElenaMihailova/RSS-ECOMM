@@ -22,6 +22,7 @@ import ProductView from '../pages/catalog/product/productPageView';
 import createCatalogContent from '../templates/CatalogTemplate';
 import BasketView from '../pages/basket/basketPageView';
 import basketContent from '../pages/basket/basketContent';
+import AboutUsView from '../pages/about/aboutUsPageView';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -58,6 +59,7 @@ class App {
     this.profileController = null;
     this.indexBtnHandler();
     this.navCatalogBtnHandler();
+    this.navAboutUsBtnHandler();
     this.cartBtnsHandlers();
     this.loginBtnsHandlers();
     this.registrationBtnsHandlers();
@@ -119,6 +121,16 @@ class App {
             this.main.clearContent();
             const productView = new ProductView(this.router, link);
             this.main.setViewContent(productView);
+          }
+        },
+      },
+      {
+        path: `${PageUrls.AboutUsPageUrl}`,
+        callback: (): void => {
+          if (this.main) {
+            this.main.clearContent();
+            const aboutUsView = new AboutUsView();
+            this.main.setViewContent(aboutUsView);
           }
         },
       },
@@ -268,6 +280,14 @@ class App {
     navCatalogBtn.addEventListener('click', (e: Event) => {
       e.preventDefault();
       this.router.navigateFromButton(PageUrls.CatalogPageUrl);
+    });
+  }
+
+  private navAboutUsBtnHandler(): void {
+    const navAboutUsBtn = getElement('.menu__nav--about');
+    navAboutUsBtn.addEventListener('click', (e: Event) => {
+      e.preventDefault();
+      this.router.navigateFromButton(PageUrls.AboutUsPageUrl);
     });
   }
 

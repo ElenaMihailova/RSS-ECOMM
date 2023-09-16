@@ -2,7 +2,7 @@ export const headerLinks = [
   { text: 'tea collections', href: '' },
   { text: 'accessories', href: '', inactive: true },
   { text: 'blog', href: '', inactive: true },
-  { text: 'contact us', href: '', inactive: true },
+  { text: 'about us', href: '' },
 ];
 
 export const footerLinks = {
