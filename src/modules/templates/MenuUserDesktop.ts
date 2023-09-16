@@ -10,7 +10,7 @@ const createMenuUser = (): HTMLElement => {
     },
     {
       href: '',
-      classNames: ['cart-header--desktop'],
+      classNames: ['cart', 'cart--desktop'],
       svgHref: '../image/sprite.svg#cart',
       text: 'Cart',
     },

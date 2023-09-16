@@ -58,6 +58,7 @@ class App {
     this.profileController = null;
     this.indexBtnHandler();
     this.navCatalogBtnHandler();
+    this.cartBtnsHandlers();
     this.loginBtnsHandlers();
     this.registrationBtnsHandlers();
     this.profileBtnsHandlers();
@@ -189,6 +190,19 @@ class App {
     ];
   }
 
+  private cartBtnsHandlers(): void {
+    const cartBtn = getElement('.cart--desktop');
+    const cartMobileBtn = getElement('.cart--mobile');
+
+    cartBtn.addEventListener('click', this.btnMoveToBasketHandler.bind(this));
+    cartMobileBtn.addEventListener('click', this.btnMoveToBasketHandler.bind(this));
+  }
+
+  private btnMoveToBasketHandler(e: Event): void {
+    e.preventDefault();
+    this.router.navigateFromButton(PageUrls.BasketPageUrl);
+  }
+
   private loginBtnsHandlers(): void {
     const loginBtn = getElement('.login--desktop');
     const loginMobileBtn = getElement('.login--mobile');
@@ -290,13 +304,8 @@ class App {
 
   private disableHeaderBtns(): void {
     const searchBtn = getElement('.search-header--desktop');
-    const cartBtn = getElement('.cart-header--desktop');
 
     searchBtn.addEventListener('click', (e: Event) => {
-      e.preventDefault();
-    });
-
-    cartBtn.addEventListener('click', (e: Event) => {
       e.preventDefault();
     });
   }
