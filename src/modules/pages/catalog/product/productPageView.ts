@@ -1,26 +1,29 @@
 import { Fancybox, Carousel } from '@fancyapps/ui';
 import '@fancyapps/ui/dist/fancybox/fancybox.css';
 import '@fancyapps/ui/dist/carousel/carousel.css';
-import { Attribute } from '@commercetools/platform-sdk';
+import { Attribute, Cart, ProductProjection } from '@commercetools/platform-sdk';
 import PageView from '../../../core/pageView';
-import { createElement, getElement } from '../../../helpers/functions';
+import { createElement, getElement, getFromLS, setToLS } from '../../../helpers/functions';
 import Router from '../../../router/router';
 import './productPage.scss';
 import { getProduct } from './getProduct';
 import { ProductData } from '../../../../types/interfaces';
+import { createCart, getActiveCart, getProductByProductUrl } from '../../../api';
+import ApiClientBuilder from '../../../api/buildRoot';
+import addProductToCart from './addProductToCart';
 
 class ProductView extends PageView {
   private router: Router;
 
   private link: string;
 
-  private product: ProductData | null;
+  private product: ProductProjection | object;
 
   constructor(router: Router, link: string) {
     super();
     this.router = router;
     this.link = link;
-    this.product = null;
+    this.product = {};
   }
 
   public render(): HTMLElement {
@@ -35,7 +38,8 @@ class ProductView extends PageView {
         this.renderProductCard(productPageContainer, product);
       })
       .then(() => {
-        this.runHandlers();
+        this.amountHandler();
+        this.addToBagHandler();
       });
 
     return this.container;
@@ -178,12 +182,10 @@ class ProductView extends PageView {
 
     const button = createElement({
       tagName: 'button',
-      classNames: ['product-description__button', 'button', 'button--black'],
+      classNames: ['product-description__product-button', 'button', 'button--black'],
       text: 'ADD TO BAG',
       parent: addToBagContainer,
     });
-
-    button.disabled = true;
 
     Fancybox.bind('[data-fancybox]', {
       contentClick: 'close',
@@ -264,7 +266,7 @@ class ProductView extends PageView {
     const carousel = new Carousel(container as HTMLElement, options);
   }
 
-  public async runHandlers(): Promise<void> {
+  public async amountHandler(): Promise<void> {
     const minusBtn = getElement('.product-description__minus-button');
     const plusBtn = getElement('.product-description__plus-button');
     const amount = getElement('.product-description__amount-number');
@@ -296,6 +298,26 @@ class ProductView extends PageView {
 
       newAmount = currentAmount + 1;
       amount.textContent = newAmount.toString();
+    });
+  }
+
+  public async addToBagHandler(): Promise<void> {
+    const addBtn = getElement('.product-description__product-button');
+
+    this.product = await getProductByProductUrl(ApiClientBuilder.currentRoot, this.link);
+
+    addBtn.addEventListener('click', async (e: Event): Promise<void> => {
+      e.preventDefault();
+      if (!getFromLS('cartID')) {
+        const cart = await createCart(ApiClientBuilder.currentRoot);
+        if (cart instanceof Error) {
+          return;
+        }
+        setToLS('cartID', cart.id);
+        setToLS('cartVersion', cart.version.toString());
+      }
+
+      await addProductToCart(this.product as ProductProjection);
     });
   }
 }

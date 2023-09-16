@@ -1,4 +1,4 @@
-import { CustomerSignInResult } from '@commercetools/platform-sdk';
+import { AnonymousCartSignInMode, CustomerSignInResult } from '@commercetools/platform-sdk';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { PageUrls } from '../../assets/data/constants';
 import { getUpdatedVersion, loginUser } from '../api';
@@ -8,7 +8,13 @@ import { removeFromLS, setMenuBtnsView, setToLS } from '../helpers/functions';
 import Router from '../router/router';
 
 class Controller {
-  public static async loginAction(email: string, password: string, router: Router): Promise<void> {
+  public static async loginAction(
+    email: string,
+    password: string,
+    activeCartSignInMode: AnonymousCartSignInMode,
+    updateProductData: boolean,
+    router: Router,
+  ): Promise<void> {
     const tokenCache = new MyTokenCache();
     const options: PasswordAuthMiddlewareOptions = {
       host: process.env.CTP_AUTH_URL as string,
@@ -27,7 +33,13 @@ class Controller {
     };
 
     ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithPasswordFlow(options);
-    const login = await loginUser(ApiClientBuilder.currentRoot, email, password);
+    const login = await loginUser(
+      ApiClientBuilder.currentRoot,
+      email,
+      password,
+      activeCartSignInMode,
+      updateProductData,
+    );
 
     if (Object.keys(login).length) {
       removeFromLS('token');

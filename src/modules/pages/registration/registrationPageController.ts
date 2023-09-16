@@ -326,8 +326,10 @@ class RegistrationController {
 
       const email = emailInput.value;
       const password = passwordInput.value;
+      const activeCartSignInMode = 'MergeWithExistingCustomerCart';
+      const updateProductData = true;
 
-      Controller.loginAction(email, password, this.router);
+      Controller.loginAction(email, password, activeCartSignInMode, updateProductData, this.router);
 
       this.router.navigateFromButton(PageUrls.IndexPageUrl);
     }
