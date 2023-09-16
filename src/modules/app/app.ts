@@ -65,7 +65,6 @@ class App {
     this.registrationBtnsHandlers();
     this.profileBtnsHandlers();
     this.router.navigate();
-    this.disableHeaderBtns();
   }
 
   private createView(): void {
@@ -326,14 +325,6 @@ class App {
         break;
       default:
     }
-  }
-
-  private disableHeaderBtns(): void {
-    const searchBtn = getElement('.search-header--desktop');
-
-    searchBtn.addEventListener('click', (e: Event) => {
-      e.preventDefault();
-    });
   }
 }
 
