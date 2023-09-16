@@ -143,16 +143,16 @@ class ProductView extends PageView {
       parent: priceContainer,
     });
 
-    const addToBagContainer = createElement({
+    const addToCartContainer = createElement({
       tagName: 'div',
-      classNames: ['product-description__bag'],
+      classNames: ['product-description__cart'],
       parent: descriptionContainer,
     });
 
     const amountContainer = createElement({
       tagName: 'div',
       classNames: ['product-description__amount'],
-      parent: addToBagContainer,
+      parent: addToCartContainer,
     });
 
     createElement({
@@ -179,8 +179,8 @@ class ProductView extends PageView {
     const button = createElement({
       tagName: 'button',
       classNames: ['product-description__button', 'button', 'button--black'],
-      text: 'ADD TO BAG',
-      parent: addToBagContainer,
+      text: 'ADD TO CART',
+      parent: addToCartContainer,
     });
 
     button.disabled = true;

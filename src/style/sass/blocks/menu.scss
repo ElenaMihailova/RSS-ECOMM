@@ -90,6 +90,7 @@
 
 .menu__nav--desktop {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
@@ -163,6 +164,3 @@
   }
 }
 
-.no-active {
-  opacity: 0.3;
-}
