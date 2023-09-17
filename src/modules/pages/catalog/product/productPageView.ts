@@ -1,14 +1,14 @@
 import { Fancybox, Carousel } from '@fancyapps/ui';
 import '@fancyapps/ui/dist/fancybox/fancybox.css';
 import '@fancyapps/ui/dist/carousel/carousel.css';
-import { Attribute, Cart, ProductProjection } from '@commercetools/platform-sdk';
+import { Attribute, ProductProjection } from '@commercetools/platform-sdk';
 import PageView from '../../../core/pageView';
 import { createElement, getElement, getFromLS, setToLS } from '../../../helpers/functions';
 import Router from '../../../router/router';
 import './productPage.scss';
 import { getProduct } from './getProduct';
 import { ProductData } from '../../../../types/interfaces';
-import { createCart, getActiveCart, getProductByProductUrl } from '../../../api';
+import { createCart, getActiveCart, getProductByProductUrl, removeItemFromCart } from '../../../api';
 import ApiClientBuilder from '../../../api/buildRoot';
 import addProductToCart from './addProductToCart';
 
@@ -17,15 +17,12 @@ class ProductView extends PageView {
 
   private link: string;
 
-  private product: ProductProjection | object;
-
   private quantity: number;
 
   constructor(router: Router, link: string) {
     super();
     this.router = router;
     this.link = link;
-    this.product = {};
     this.quantity = 1;
   }
 
@@ -185,8 +182,8 @@ class ProductView extends PageView {
 
     createElement({
       tagName: 'button',
-      classNames: ['product-description__product-button', 'button', 'button--black'],
-      text: 'ADD TO BAG',
+      classNames: ['product-description__add-button', 'button', 'button--black'],
+      text: 'ADD TO CART',
       parent: addToCartContainer,
     });
 
@@ -307,9 +304,57 @@ class ProductView extends PageView {
   }
 
   public async addToBagHandler(): Promise<void> {
-    const addBtn = getElement('.product-description__product-button');
+    const addBtn: HTMLButtonElement = getElement('.product-description__add-button');
+    const addToCartContainer: HTMLDivElement = getElement('.product-description__cart');
 
-    this.product = await getProductByProductUrl(ApiClientBuilder.currentRoot, this.link);
+    addBtn.textContent = 'ADD TO CART';
+    addBtn.removeAttribute('disabled');
+    addBtn.classList.remove('inactive');
+
+    const activeCart = await getActiveCart(ApiClientBuilder.currentRoot);
+    console.log(activeCart);
+
+    const product = (await getProductByProductUrl(ApiClientBuilder.currentRoot, this.link)) as ProductProjection;
+    const productName = product.name['en-US'];
+
+    if (!(activeCart instanceof Error)) {
+      const productToRemove = activeCart.lineItems.filter((item) => item.name['en-US'] === productName);
+      console.log(productToRemove);
+
+      if (productToRemove.length) {
+        const lineItemId = productToRemove[0].id;
+        console.log(lineItemId);
+        const productQuantity = productToRemove[0].quantity;
+        console.log(productQuantity);
+        const cartID = getFromLS('cartID') as string;
+        console.log(cartID);
+        const cartVersion = Number(getFromLS('cartVersion')) || 1;
+        console.log(cartVersion);
+
+        addBtn.textContent = 'ADDED';
+        addBtn.setAttribute('disabled', 'disabled');
+        addBtn.classList.add('inactive');
+
+        const removeBtn = createElement({
+          tagName: 'button',
+          classNames: ['product-description__remove-button', 'button', 'button--black'],
+          text: 'REMOVE',
+          parent: addToCartContainer,
+        });
+
+        removeBtn.addEventListener('click', async () => {
+          const response = await removeItemFromCart(
+            ApiClientBuilder.currentRoot,
+            cartID,
+            cartVersion,
+            lineItemId,
+            productQuantity,
+          );
+
+          console.log(response);
+        });
+      }
+    }
 
     addBtn.addEventListener('click', async (e: Event): Promise<void> => {
       e.preventDefault();
@@ -322,7 +367,18 @@ class ProductView extends PageView {
         setToLS('cartVersion', cart.version.toString());
       }
 
-      await addProductToCart(this.product as ProductProjection, this.quantity);
+      await addProductToCart(product, this.quantity);
+
+      addBtn.textContent = 'ADDED';
+      addBtn.setAttribute('disabled', 'disabled');
+      addBtn.classList.add('inactive');
+
+      createElement({
+        tagName: 'button',
+        classNames: ['product-description__remove-button', 'button', 'button--black'],
+        text: 'REMOVE',
+        parent: addToCartContainer,
+      });
     });
   }
 }
