@@ -1,5 +1,5 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
-import { getCategoryName, getProductByProductUrl } from '../../../api/apiCatalog';
+import { getCategoryName, getProductByProductUrl } from '../../../api';
 import { ProductData } from '../../../../types/interfaces';
 import ApiClientBuilder from '../../../api/buildRoot';
 

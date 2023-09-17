@@ -1,7 +1,7 @@
 import { AnonymousAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { AddressCategories, CheckboxNames, FieldNames, InputUserError, PopupMessages } from '../../../types/enums';
 import { BaseAddress, CustomerData, FormAddressData } from '../../../types/interfaces';
-import { createCustomer } from '../../api';
+import { createCart, createCustomer } from '../../api';
 import {
   getCountryCode,
   getElement,
@@ -326,8 +326,21 @@ class RegistrationController {
 
       const email = emailInput.value;
       const password = passwordInput.value;
+      const activeCartSignInMode = 'MergeWithExistingCustomerCart';
+      const updateProductData = true;
 
-      Controller.loginAction(email, password, this.router);
+      Controller.loginAction(email, password, activeCartSignInMode, updateProductData, this.router);
+
+      if (!getFromLS('cartID')) {
+        const cart = await createCart(ApiClientBuilder.currentRoot);
+
+        if (cart instanceof Error) {
+          return;
+        }
+
+        setToLS('cartID', cart.id);
+        setToLS('cartVersion', cart.version.toString());
+      }
 
       this.router.navigateFromButton(PageUrls.IndexPageUrl);
     }

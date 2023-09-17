@@ -132,6 +132,7 @@ export interface ProductData {
 
 export interface CartProduct {
   name: string;
+  productId: string;
   centAmount: number;
   slug: string;
   taxCategoryID: string;

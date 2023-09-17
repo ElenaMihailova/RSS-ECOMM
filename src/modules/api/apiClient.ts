@@ -1,7 +1,8 @@
 import {
+  AnonymousCartSignInMode,
   Customer,
   CustomerChangePassword,
-  CustomerSignInResult,
+  CustomerSignin,
   CustomerUpdate,
   MyCustomerDraft,
 } from '@commercetools/platform-sdk';
@@ -112,7 +113,9 @@ export const loginUser = async (
   root: ByProjectKeyRequestBuilder,
   email: string,
   password: string,
-): Promise<CustomerSignInResult | object> => {
+  activeCartSignInMode: AnonymousCartSignInMode,
+  updateProductData: boolean,
+): Promise<CustomerSignin | object> => {
   let resData = {};
   await root
     .login()
@@ -120,6 +123,8 @@ export const loginUser = async (
       body: {
         email,
         password,
+        anonymousCartSignInMode: 'MergeWithExistingCustomerCart',
+        updateProductData: true,
       },
     })
     .execute()

@@ -1,15 +1,14 @@
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { Cart } from '@commercetools/platform-sdk';
-import { getCartData } from '../../api';
+import { getActiveCart } from '../../api';
 import ApiClientBuilder from '../../api/buildRoot';
 import { createElement } from '../../helpers/functions';
 import basketItems from './basketItems';
 import basketSum from './sumBasket';
 
 const basket = async (): Promise<HTMLElement> => {
-  const cartID = `501c4fbb-c6cb-44fe-8381-d28757f18f4b`;
-  console.log(ApiClientBuilder.currentRoot);
-  const cart = await getCartData(ApiClientBuilder.currentRoot, cartID);
+  const cart = await getActiveCart(ApiClientBuilder.currentRoot);
+  console.log('Cart', ApiClientBuilder.currentRoot);
 
   if (!cart) {
     const items = createElement({
@@ -30,13 +29,14 @@ const basket = async (): Promise<HTMLElement> => {
     });
     return items;
   }
+
   const items = createElement({
     tagName: 'div',
     classNames: ['cart__items', 'items', 'container'],
   });
 
-  const itemsElement = basketItems(cart);
-  items.appendChild(itemsElement);
+  // const itemsElement = basketItems(cart);
+  // items.appendChild(itemsElement);
 
   const line = createElement({
     tagName: 'div',

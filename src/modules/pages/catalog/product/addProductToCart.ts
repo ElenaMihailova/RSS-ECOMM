@@ -4,13 +4,14 @@ import { addCartItem } from '../../../api';
 import ApiClientBuilder from '../../../api/buildRoot';
 import { getFromLS } from '../../../helpers/functions';
 
-const addProductToCart = async (product: ProductProjection): Promise<void> => {
+const addProductToCart = async (product: ProductProjection, quantity: number): Promise<void> => {
   if (!product.taxCategory || !product.masterVariant.prices) {
     return;
   }
 
   const productData: CartProduct = {
     name: product.name['en-US'],
+    productId: product.id,
     centAmount: product.masterVariant.prices[0].value.centAmount,
     slug: product.slug['en-US'],
     taxCategoryID: product.taxCategory?.id,
@@ -19,7 +20,8 @@ const addProductToCart = async (product: ProductProjection): Promise<void> => {
   const cartVersion = Number(getFromLS('cartVersion')) || 1;
   const cartID = getFromLS('cartID') as string;
 
-  const response = await addCartItem(ApiClientBuilder.currentRoot, cartID, cartVersion, productData);
+  const response = await addCartItem(ApiClientBuilder.currentRoot, cartID, cartVersion, productData, quantity);
+
   console.log('new cart', response);
 };
 

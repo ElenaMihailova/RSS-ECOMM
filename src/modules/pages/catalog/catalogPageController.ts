@@ -598,10 +598,12 @@ class CatalogController {
         const target = e.target as HTMLElement;
         const product = (await getProductByProductKey(ApiClientBuilder.currentRoot, productKey)) as ProductProjection;
         const link = product.slug['en-US'];
+        const quantity = 1;
 
         if (target.classList.contains('button-add-to-cart')) {
           if (!getFromLS('cartID')) {
             const cart = await createCart(ApiClientBuilder.currentRoot);
+
             if (cart instanceof Error) {
               return;
             }
@@ -609,7 +611,7 @@ class CatalogController {
             setToLS('cartVersion', cart.version.toString());
           }
 
-          await addProductToCart(product);
+          await addProductToCart(product, quantity);
 
           return;
         }

@@ -72,7 +72,16 @@ class LoginController {
         renderPopup(false, PopupMessages.EmptyLoginFields);
       }
       if (emailInput.value !== '' && passwordInput.value !== '') {
-        Controller.loginAction(emailInput.value, passwordInput.value, this.router);
+        const activeCartSignInMode = 'MergeWithExistingCustomerCart';
+        const updateProductData = true;
+
+        Controller.loginAction(
+          emailInput.value,
+          passwordInput.value,
+          activeCartSignInMode,
+          updateProductData,
+          this.router,
+        );
       }
     });
   }
