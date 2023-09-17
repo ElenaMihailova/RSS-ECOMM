@@ -64,3 +64,15 @@ export const addCartItem = async (
     return err as Error;
   }
 };
+
+export const getCartData = async (root: ByProjectKeyRequestBuilder, cartID: string): Promise<Cart | null> => {
+  try {
+    const res = await root.carts().withId({ ID: cartID }).get().execute();
+    const resData = await res.body;
+    console.log(resData);
+    return resData;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};

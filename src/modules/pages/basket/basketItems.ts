@@ -1,6 +1,7 @@
+import { Cart } from '@commercetools/platform-sdk';
 import { createElement } from '../../helpers/functions';
 
-const basketItems = (): HTMLElement => {
+const basketItems = (cart: Cart): HTMLElement => {
   const container = createElement({
     tagName: 'div',
     classNames: ['items__wrap', 'buying'],
@@ -12,13 +13,7 @@ const basketItems = (): HTMLElement => {
     parent: container,
   });
 
-  const itemsData = [
-    { name: 'Ceylon Ginger Cinnamon chai tea', sum: '€3.90', src: '../image/herbal-tea.svg' },
-    { name: 'Tea 2', sum: '€3.50', src: '../image/item.png' },
-    { name: 'Tea 2', sum: '€3.50', src: '../image/white.png' },
-  ];
-
-  itemsData.forEach((itemData) => {
+  cart.customLineItems.forEach((itemData) => {
     const li = createElement({
       tagName: 'li',
       classNames: ['buying__item'],
@@ -28,7 +23,7 @@ const basketItems = (): HTMLElement => {
     const image = createElement({
       tagName: 'img',
       classNames: ['buying__image'],
-      attributes: [{ alt: '' }, { src: `${itemData.src}` }],
+      attributes: [{ alt: '' }, { src: `${itemData.slug}.svg` }],
       parent: li,
     });
 
@@ -42,7 +37,7 @@ const basketItems = (): HTMLElement => {
       tagName: 'span',
       classNames: ['buying__name'],
       parent: title,
-      text: itemData.name,
+      text: itemData.name.en,
     });
 
     const weight = createElement({
@@ -89,7 +84,7 @@ const basketItems = (): HTMLElement => {
     const sum = createElement({
       tagName: 'p',
       classNames: ['buying__sum'],
-      text: itemData.sum,
+      text: `€${itemData.money.centAmount / 100}`,
       parent: li,
     });
   });

@@ -1,14 +1,12 @@
 import basket from './basket';
 import delivery from '../../templates/Delivery';
 import payment from '../../templates/Payment';
-import basketSum from './sumBasket';
 
-const basketElement = basket();
-const basketSumElement = basketSum();
+const basketElement = await basket();
 
 const itemsContainer = document.createElement('section');
 itemsContainer.classList.add('cart');
-itemsContainer.append(basketElement, basketSumElement);
+itemsContainer.append(basketElement);
 
 const deliveryElement = delivery();
 const paymentElement = payment();
