@@ -36,6 +36,17 @@ export const ProductUrls = [
   'tibetan-wild-berry-infusion',
   'japanese-cherry-blossom-serenity',
   'mystical-lavender-eucalyptus-soothe',
+  'talis-masala-chai-tea',
+  'caramelized-pear-tea',
+  'eisais-choice-sencha-tea',
+  'huntington-rose-tea',
+  'silver-needle-tea',
+  'earl-grey-crme-tea',
+  'jasmine-pearls',
+  'pumpkin-pie-tea',
+  'lemon-herbal-tea',
+  'rosemary-tea',
+  'pacific-coast-mint-tea',
 ];
 
 export const ProductUrl = '{link}';

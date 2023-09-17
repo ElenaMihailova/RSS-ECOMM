@@ -227,6 +227,8 @@ class App {
     if (getFromLS('userID')) {
       removeFromLS('token');
       removeFromLS('refreshToken');
+      removeFromLS('cartID');
+      removeFromLS('cartVersion');
       removeFromLS('userID');
       removeFromLS('version');
       setMenuBtnsView();

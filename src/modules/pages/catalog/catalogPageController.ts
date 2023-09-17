@@ -1,11 +1,12 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { PageUrls } from '../../../assets/data/constants';
 import { QueryArgs } from '../../../types/interfaces';
-import { filterProducts, getCategoryId, getProductByProductKey, getProductProjections } from '../../api';
+import { createCart, filterProducts, getCategoryId, getProductByProductKey, getProductProjections } from '../../api';
 import ApiClientBuilder from '../../api/buildRoot';
 import generateCatalogList from '../../components/catalogList/generateCatalogList';
-import { createElement, getElement, getElementCollection } from '../../helpers/functions';
+import { createElement, getElement, getElementCollection, getFromLS, setToLS } from '../../helpers/functions';
 import Router from '../../router/router';
+import addProductToCart from './product/addProductToCart';
 
 class CatalogController {
   private router: Router;
@@ -593,9 +594,28 @@ class CatalogController {
         return;
       }
 
-      item.addEventListener('click', async () => {
+      item.addEventListener('click', async (e: Event) => {
+        const target = e.target as HTMLElement;
         const product = (await getProductByProductKey(ApiClientBuilder.currentRoot, productKey)) as ProductProjection;
         const link = product.slug['en-US'];
+        const quantity = 1;
+
+        if (target.classList.contains('button-add-to-cart')) {
+          if (!getFromLS('cartID')) {
+            const cart = await createCart(ApiClientBuilder.currentRoot);
+
+            if (cart instanceof Error) {
+              return;
+            }
+            setToLS('cartID', cart.id);
+            setToLS('cartVersion', cart.version.toString());
+          }
+
+          await addProductToCart(product, quantity);
+
+          return;
+        }
+
         this.router.navigateFromButton(`${PageUrls.CatalogPageUrl}/${link}`);
       });
     });
