@@ -333,7 +333,6 @@ class RegistrationController {
 
       if (!getFromLS('cartID')) {
         const cart = await createCart(ApiClientBuilder.currentRoot);
-        console.log(cart);
 
         if (cart instanceof Error) {
           return;

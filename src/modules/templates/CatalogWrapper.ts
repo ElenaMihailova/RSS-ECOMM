@@ -325,12 +325,10 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     };
 
     ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithAnonymousFlow(options);
-    console.log(ApiClientBuilder.currentRoot);
 
     productData = await getProductProjections(ApiClientBuilder.currentRoot);
 
     const tokenInfo = tokenCache.get();
-    console.log(tokenInfo);
 
     if (tokenInfo.token) {
       setToLS('token', tokenInfo.token);

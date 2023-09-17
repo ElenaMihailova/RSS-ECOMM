@@ -42,7 +42,7 @@ class Controller {
     );
 
     const cart = await getActiveCart(ApiClientBuilder.currentRoot);
-    console.log(`active cart: ${cart}`);
+
     if (getFromLS('cartVersion') && getFromLS('cartID')) {
       removeFromLS('cartVersion');
       removeFromLS('cartID');

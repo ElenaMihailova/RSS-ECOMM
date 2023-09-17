@@ -603,7 +603,7 @@ class CatalogController {
         if (target.classList.contains('button-add-to-cart')) {
           if (!getFromLS('cartID')) {
             const cart = await createCart(ApiClientBuilder.currentRoot);
-            console.log(cart);
+
             if (cart instanceof Error) {
               return;
             }
