@@ -71,8 +71,11 @@ export const getActiveCart = async (root: ByProjectKeyRequestBuilder): Promise<C
     const res = await root.me().activeCart().get().execute();
     const resData = await res.body;
     return resData;
-  } catch (err) {
-    console.error(err);
-    return err as Error;
+  } catch (error) {
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      console.log(error.message);
+    }
+    console.error('Error fetching active cart:', error);
+    throw error;
   }
 };

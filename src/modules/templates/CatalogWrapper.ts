@@ -353,6 +353,7 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     };
 
     ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithRefreshFlow(options);
+    console.log(ApiClientBuilder.currentRoot);
 
     productData = await getProductProjections(ApiClientBuilder.currentRoot);
 

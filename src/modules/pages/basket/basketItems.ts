@@ -23,7 +23,7 @@ const basketItems = (cart: Cart): HTMLElement => {
     const image = createElement({
       tagName: 'img',
       classNames: ['buying__image'],
-      attributes: [{ alt: '' }, { src: `${itemData.slug}.svg` }],
+      attributes: [{ alt: `${itemData.name.en}` }, { src: `${itemData.slug}.svg` }],
       parent: li,
     });
 
