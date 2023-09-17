@@ -14,6 +14,7 @@ import {
 } from '../../helpers/functions';
 import Router from '../../router/router';
 import addProductToCart from './product/addProductToCart';
+import pageCount, { disablePaginationBtns, getCurrentPage, getProductsOnPage, resetPage } from './pagination';
 
 class CatalogController {
   private router: Router;
@@ -44,6 +45,7 @@ class CatalogController {
     this.resetBtnHandler();
     this.breadcrumbController();
     this.productItemsHandler();
+    this.runPaginationHandler();
   }
 
   public categoriesHandler(): void {
@@ -204,7 +206,7 @@ class CatalogController {
           }
 
           const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-          this.setProducts(products);
+          this.setNewCatalogList(products);
           return;
         }
         const result = CatalogController.checkedOriginInputs.filter((value) => value !== `"${inputHtml.value}"`);
@@ -234,7 +236,7 @@ class CatalogController {
           }
 
           const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-          this.setProducts(products);
+          this.setNewCatalogList(products);
           return;
         }
 
@@ -259,7 +261,7 @@ class CatalogController {
         }
 
         const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-        this.setProducts(products);
+        this.setNewCatalogList(products);
       });
     });
   }
@@ -296,7 +298,7 @@ class CatalogController {
           }
 
           const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-          this.setProducts(products);
+          this.setNewCatalogList(products);
           return;
         }
         const result = CatalogController.checkedFlavorInputs.filter((value) => value !== `"${inputHtml.value}"`);
@@ -326,7 +328,7 @@ class CatalogController {
           }
 
           const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-          this.setProducts(products);
+          this.setNewCatalogList(products);
           return;
         }
         const queryArgs: QueryArgs = {
@@ -350,7 +352,7 @@ class CatalogController {
         }
 
         const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-        this.setProducts(products);
+        this.setNewCatalogList(products);
       });
     });
   }
@@ -372,7 +374,7 @@ class CatalogController {
       }
 
       const products = await filterProducts(ApiClientBuilder.currentRoot, queryBuild);
-      this.setProducts(products);
+      this.setNewCatalogList(products);
     });
   }
 
@@ -392,7 +394,7 @@ class CatalogController {
       }
 
       const products = await filterProducts(ApiClientBuilder.currentRoot, queryBuild);
-      this.setProducts(products);
+      this.setNewCatalogList(products);
     });
   }
 
@@ -427,7 +429,7 @@ class CatalogController {
       menuHtml.options[0].selected = true;
 
       const products = await getProductProjections(ApiClientBuilder.currentRoot);
-      this.setProducts(products);
+      this.setNewCatalogList(products);
     });
   }
 
@@ -554,7 +556,7 @@ class CatalogController {
     }
 
     const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-    this.setProducts(products);
+    await this.setNewCatalogList(products);
   }
 
   private queryBuilderForSortSearch(queryArgs: QueryArgs): QueryArgs {
@@ -589,6 +591,40 @@ class CatalogController {
         link.classList.remove('active');
       }
     });
+  }
+
+  private async allProductsAction(): Promise<void> {
+    this.removeActiveCondition();
+    const categoryAll = getElement('.category-all__link');
+    categoryAll.classList.add('active');
+    const searchInput: HTMLInputElement = getElement('.search__input');
+    searchInput.value = '';
+    CatalogController.searchWord = '';
+    const categories = getElementCollection('.subcategory__item');
+    categories.forEach((cat) => {
+      const categoryHtml = cat as HTMLAnchorElement;
+      categoryHtml.classList.add('visually-hidden');
+    });
+    CatalogController.activeCategoryId = '';
+
+    const queryArgs: QueryArgs = {};
+
+    if (CatalogController.checkedOriginInputs.length) {
+      queryArgs.filter = [`variants.attributes.Origin.en-US:${CatalogController.checkedOriginInputs.join(',')}`];
+    }
+
+    if (CatalogController.checkedFlavorInputs.length && CatalogController.checkedOriginInputs.length) {
+      queryArgs.filter!.push(`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`);
+    } else if (CatalogController.checkedFlavorInputs.length) {
+      queryArgs.filter = [`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`];
+    }
+
+    if (CatalogController.activeSorting.length) {
+      queryArgs.sort = [CatalogController.activeSorting];
+    }
+
+    const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
+    await this.setNewCatalogList(products);
   }
 
   private async productItemsHandler(): Promise<void> {
@@ -663,45 +699,68 @@ class CatalogController {
     setToLS('cartVersion', cart.version.toString());
   }
 
-  private async allProductsAction(): Promise<void> {
-    this.removeActiveCondition();
-    const categoryAll = getElement('.category-all__link');
-    categoryAll.classList.add('active');
-    const searchInput: HTMLInputElement = getElement('.search__input');
-    searchInput.value = '';
-    CatalogController.searchWord = '';
-    const categories = getElementCollection('.subcategory__item');
-    categories.forEach((cat) => {
-      const categoryHtml = cat as HTMLAnchorElement;
-      categoryHtml.classList.add('visually-hidden');
-    });
-    CatalogController.activeCategoryId = '';
+  private paginationHandlerWrapper: ((e: Event) => Promise<void>) | null = null;
 
-    const queryArgs: QueryArgs = {};
+  private async runPaginationHandler(products?: ProductProjection[]): Promise<void> {
+    const productsData = products || (await getProductProjections(ApiClientBuilder.currentRoot));
+    const paginationContainer = getElement('.pagination');
 
-    if (CatalogController.checkedOriginInputs.length) {
-      queryArgs.filter = [`variants.attributes.Origin.en-US:${CatalogController.checkedOriginInputs.join(',')}`];
+    disablePaginationBtns(pageCount(productsData.length));
+
+    if (this.paginationHandlerWrapper) {
+      paginationContainer.removeEventListener('click', this.paginationHandlerWrapper);
     }
 
-    if (CatalogController.checkedFlavorInputs.length && CatalogController.checkedOriginInputs.length) {
-      queryArgs.filter!.push(`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`);
-    } else if (CatalogController.checkedFlavorInputs.length) {
-      queryArgs.filter = [`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`];
-    }
+    this.paginationHandlerWrapper = (e: Event): Promise<void> => this.paginationHandler(e, productsData);
 
-    if (CatalogController.activeSorting.length) {
-      queryArgs.sort = [CatalogController.activeSorting];
-    }
-
-    const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-    this.setProducts(products);
+    paginationContainer.addEventListener('click', this.paginationHandlerWrapper);
   }
 
-  private async setProducts(products: ProductProjection[]): Promise<void> {
-    const container = getElement('.catalog__container');
+  private async paginationHandler(e: Event, productsData: ProductProjection[]): Promise<void> {
+    const btnPrev = getElement('.prev-button');
+    const btnNext = getElement('.next-button');
+    const pageNumElement: HTMLDivElement = getElement('.pagination__page-number');
+
+    const target = e.target as HTMLElement;
+
+    const currentPageNum = getCurrentPage();
+
+    let newPageNum: number;
+
+    switch (target) {
+      case btnPrev:
+        newPageNum = Number(currentPageNum) - 1;
+        break;
+      case btnNext:
+        newPageNum = Number(currentPageNum) + 1;
+        break;
+      default:
+        return;
+    }
+
+    pageNumElement.innerHTML = newPageNum.toString();
+
+    setToLS('currentPage', newPageNum.toString());
+
+    disablePaginationBtns(pageCount(productsData.length));
+
+    await this.setProducts(productsData);
+  }
+
+  private async setNewCatalogList(products: ProductProjection[]): Promise<void> {
+    resetPage();
+    await this.runPaginationHandler(products);
+    await this.setProducts(products);
+  }
+
+  public async setProducts(products: ProductProjection[]): Promise<void> {
+    const productsOnPage = getProductsOnPage(products);
+
+    const container = getElement('.catalog-container__products');
+
     container.innerHTML = '';
 
-    const catalogList = await generateCatalogList(products);
+    const catalogList = await generateCatalogList(productsOnPage);
 
     container.appendChild(catalogList);
     this.productItemsHandler();

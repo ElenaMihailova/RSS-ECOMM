@@ -1,10 +1,12 @@
 import { AnonymousAuthMiddlewareOptions, RefreshAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
+import { ProductProjection } from '@commercetools/platform-sdk';
 import { Flavors, Origins, SortMethods, SortOptions } from '../../assets/data/constants';
 import { getProductProjections } from '../api/apiCatalog';
 import ApiClientBuilder, { scopes } from '../api/buildRoot';
 import MyTokenCache from '../api/myTokenCache';
 import generateCatalogList from '../components/catalogList/generateCatalogList';
 import { createElement, getFromLS, setToLS } from '../helpers/functions';
+import { getCurrentPage, getProductsOnPage } from '../pages/catalog/pagination';
 
 const catalogWrapper = async (): Promise<HTMLElement> => {
   const container = createElement({
@@ -303,8 +305,14 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
 
   const catalogContainer = createElement({
     tagName: 'div',
-    classNames: ['catalog__container'],
+    classNames: ['catalog__container', 'catalog-container'],
     parent: container,
+  });
+
+  const productsContainer = createElement({
+    tagName: 'div',
+    classNames: ['catalog-container__products'],
+    parent: catalogContainer,
   });
 
   let productData = null;
@@ -363,9 +371,44 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     }
   }
 
-  const catalogList = await generateCatalogList(productData);
+  const productsOnPage: ProductProjection[] = getProductsOnPage(productData);
 
-  catalogContainer.appendChild(catalogList);
+  const catalogList = await generateCatalogList(productsOnPage);
+
+  productsContainer.appendChild(catalogList);
+
+  const paginationContainer = createElement({
+    tagName: 'div',
+    classNames: ['catalog-container__pagination', 'pagination'],
+    parent: catalogContainer,
+  });
+
+  const prevBtn = createElement({
+    tagName: 'button',
+    classNames: ['pagination__button', 'prev-button'],
+    text: '<',
+    parent: paginationContainer,
+  });
+
+  const currentPage = getCurrentPage();
+
+  if (currentPage === '1') {
+    prevBtn.setAttribute('disabled', 'true');
+  }
+
+  createElement({
+    tagName: 'div',
+    classNames: ['pagination__page-number'],
+    text: getCurrentPage(),
+    parent: paginationContainer,
+  });
+
+  createElement({
+    tagName: 'button',
+    classNames: ['pagination__button', 'next-button'],
+    text: '>',
+    parent: paginationContainer,
+  });
 
   return container;
 };
