@@ -6,6 +6,7 @@ import { setToLS } from '../helpers/functions';
 export const createCart = async (root: ByProjectKeyRequestBuilder): Promise<Cart | Error> => {
   try {
     const res = await root
+      .me()
       .carts()
       .post({
         body: {
@@ -26,7 +27,7 @@ export const addCartItem = async (
   cartID: string,
   cartVersion: number,
   product: CartProduct,
-  quantity = 1,
+  quantity: number,
 ): Promise<Cart | Error> => {
   try {
     const res = await root
@@ -61,6 +62,17 @@ export const addCartItem = async (
     return resData;
   } catch (err) {
     console.error();
+    return err as Error;
+  }
+};
+
+export const getActiveCart = async (root: ByProjectKeyRequestBuilder): Promise<Cart | Error> => {
+  try {
+    const res = await root.me().activeCart().get().execute();
+    const resData = await res.body;
+    return resData;
+  } catch (err) {
+    console.error(err);
     return err as Error;
   }
 };

@@ -8,7 +8,7 @@ import Router from '../../../router/router';
 import './productPage.scss';
 import { getProduct } from './getProduct';
 import { ProductData } from '../../../../types/interfaces';
-import { createCart, getProductByProductUrl } from '../../../api';
+import { createCart, getActiveCart, getProductByProductUrl } from '../../../api';
 import ApiClientBuilder from '../../../api/buildRoot';
 import addProductToCart from './addProductToCart';
 
@@ -19,11 +19,14 @@ class ProductView extends PageView {
 
   private product: ProductProjection | object;
 
+  private quantity: number;
+
   constructor(router: Router, link: string) {
     super();
     this.router = router;
     this.link = link;
     this.product = {};
+    this.quantity = 1;
   }
 
   public render(): HTMLElement {
@@ -285,6 +288,7 @@ class ProductView extends PageView {
       }
 
       amount.textContent = newAmount.toString();
+      this.quantity = Number(amount.textContent);
     });
 
     plusBtn.addEventListener('click', (e) => {
@@ -298,6 +302,7 @@ class ProductView extends PageView {
 
       newAmount = currentAmount + 1;
       amount.textContent = newAmount.toString();
+      this.quantity = Number(amount.textContent);
     });
   }
 
@@ -317,7 +322,7 @@ class ProductView extends PageView {
         setToLS('cartVersion', cart.version.toString());
       }
 
-      await addProductToCart(this.product as ProductProjection);
+      await addProductToCart(this.product as ProductProjection, this.quantity);
     });
   }
 }

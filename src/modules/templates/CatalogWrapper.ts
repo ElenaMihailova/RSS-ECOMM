@@ -368,7 +368,6 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
   const catalogList = await generateCatalogList(productData);
 
   catalogContainer.appendChild(catalogList);
-
   return container;
 };
 

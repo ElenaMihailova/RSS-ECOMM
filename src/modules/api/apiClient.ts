@@ -2,9 +2,9 @@ import {
   AnonymousCartSignInMode,
   Customer,
   CustomerChangePassword,
+  CustomerSignin,
   CustomerUpdate,
   MyCustomerDraft,
-  MyCustomerSignin,
 } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import Toastify from 'toastify-js';
@@ -115,17 +115,16 @@ export const loginUser = async (
   password: string,
   activeCartSignInMode: AnonymousCartSignInMode,
   updateProductData: boolean,
-): Promise<MyCustomerSignin | object> => {
+): Promise<CustomerSignin | object> => {
   let resData = {};
   await root
-    .me()
     .login()
     .post({
       body: {
         email,
         password,
-        activeCartSignInMode,
-        updateProductData,
+        anonymousCartSignInMode: 'MergeWithExistingCustomerCart',
+        updateProductData: true,
       },
     })
     .execute()

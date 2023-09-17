@@ -1,10 +1,10 @@
 import { AnonymousCartSignInMode, CustomerSignInResult } from '@commercetools/platform-sdk';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { PageUrls } from '../../assets/data/constants';
-import { getUpdatedVersion, loginUser } from '../api';
+import { getActiveCart, getUpdatedVersion, loginUser } from '../api';
 import ApiClientBuilder from '../api/buildRoot';
 import MyTokenCache from '../api/myTokenCache';
-import { removeFromLS, setMenuBtnsView, setToLS } from '../helpers/functions';
+import { getFromLS, removeFromLS, setMenuBtnsView, setToLS } from '../helpers/functions';
 import Router from '../router/router';
 
 class Controller {
@@ -41,8 +41,21 @@ class Controller {
       updateProductData,
     );
 
+    const cart = await getActiveCart(ApiClientBuilder.currentRoot);
+    console.log(`active cart: ${cart}`);
+    if (getFromLS('cartVersion') && getFromLS('cartID')) {
+      removeFromLS('cartVersion');
+      removeFromLS('cartID');
+    }
+
+    if (!(cart instanceof Error)) {
+      setToLS('cartID', cart.id);
+      setToLS('cartVersion', cart.version.toString());
+    }
+
     if (Object.keys(login).length) {
       removeFromLS('token');
+      removeFromLS('refreshToken');
 
       const loginData = login as CustomerSignInResult;
       setToLS('userID', loginData.customer.id);
