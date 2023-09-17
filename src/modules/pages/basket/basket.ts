@@ -6,11 +6,14 @@ import { createElement } from '../../helpers/functions';
 import basketItems from './basketItems';
 import basketSum from './sumBasket';
 
+function isError(value: unknown): value is Error {
+  return value instanceof Error;
+}
+
 const basket = async (): Promise<HTMLElement> => {
   const cart = await getActiveCart(ApiClientBuilder.currentRoot);
-  console.log('Cart', ApiClientBuilder.currentRoot);
 
-  if (!cart) {
+  if (!cart || isError(cart)) {
     const items = createElement({
       tagName: 'div',
       classNames: ['cart__items', 'items', 'items--empty', 'container'],
@@ -27,6 +30,15 @@ const basket = async (): Promise<HTMLElement> => {
       text: 'Choose the tea that will warm your day!',
       parent: items,
     });
+
+    const link = createElement({
+      tagName: 'a',
+      text: 'Tea collections',
+      classNames: ['button'],
+      attributes: [{ href: 'catalog' }],
+      parent: items,
+    });
+
     return items;
   }
 
@@ -35,8 +47,8 @@ const basket = async (): Promise<HTMLElement> => {
     classNames: ['cart__items', 'items', 'container'],
   });
 
-  // const itemsElement = basketItems(cart);
-  // items.appendChild(itemsElement);
+  const itemsElement = basketItems(cart);
+  items.appendChild(itemsElement);
 
   const line = createElement({
     tagName: 'div',
@@ -69,6 +81,13 @@ const basket = async (): Promise<HTMLElement> => {
     classNames: ['sum__link', 'button'],
     text: 'Back to shopping',
     attributes: [{ href: 'catalog' }],
+    parent: items,
+  });
+
+  const buttonClear = createElement({
+    tagName: 'button',
+    classNames: ['sum__clear', 'button'],
+    text: 'Clear Cart',
     parent: items,
   });
 
