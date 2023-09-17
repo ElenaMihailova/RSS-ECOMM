@@ -1,8 +1,12 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
 import generateProductCard from './generateProductCard';
 import { createElement } from '../../helpers/functions';
+import { getActiveCart } from '../../api';
+import ApiClientBuilder from '../../api/buildRoot';
 
-export default function generateCatalogList(productData: ProductProjection[]): HTMLElement {
+export default async function generateCatalogList(productData: ProductProjection[]): Promise<HTMLElement> {
+  const activeCart = await getActiveCart(ApiClientBuilder.currentRoot);
+
   const catalogList = createElement({
     tagName: 'ol',
     classNames: ['catalog__list', 'catalog__list--catalog'],
@@ -34,6 +38,18 @@ export default function generateCatalogList(productData: ProductProjection[]): H
 
       const { key = '' } = product;
 
+      let inCart = false;
+      let quantity = 1;
+
+      if (activeCart && !(activeCart instanceof Error)) {
+        activeCart.customLineItems.forEach((item) => {
+          if (item.name.en === product.name['en-US']) {
+            inCart = true;
+            quantity = item.quantity;
+          }
+        });
+      }
+
       const productCard = generateProductCard({
         link: product.slug['en-US'],
         title: product.name['en-US'],
@@ -42,6 +58,8 @@ export default function generateCatalogList(productData: ProductProjection[]): H
         description,
         key,
         discount,
+        inCart,
+        quantity,
       });
 
       li.appendChild(productCard);

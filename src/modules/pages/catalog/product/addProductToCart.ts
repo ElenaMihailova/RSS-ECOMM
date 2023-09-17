@@ -4,7 +4,7 @@ import { addCartItem } from '../../../api';
 import ApiClientBuilder from '../../../api/buildRoot';
 import { getFromLS } from '../../../helpers/functions';
 
-const addProductToCart = async (product: ProductProjection): Promise<void> => {
+const addProductToCart = async (product: ProductProjection, quantity: number): Promise<void> => {
   if (!product.taxCategory || !product.masterVariant.prices) {
     return;
   }
@@ -19,8 +19,7 @@ const addProductToCart = async (product: ProductProjection): Promise<void> => {
   const cartVersion = Number(getFromLS('cartVersion')) || 1;
   const cartID = getFromLS('cartID') as string;
 
-  const response = await addCartItem(ApiClientBuilder.currentRoot, cartID, cartVersion, productData);
-  console.log('new cart', response);
+  await addCartItem(ApiClientBuilder.currentRoot, cartID, cartVersion, productData, quantity);
 };
 
 export default addProductToCart;

@@ -249,3 +249,26 @@ export const setMenuBtnsView = (): void => {
     tooltip.textContent = 'LOG IN';
   }
 };
+
+export const disableQuantityButtons = async (productKey: string): Promise<void> => {
+  const minusBtn: HTMLButtonElement = getElement(`[product-key=${productKey}] .minus-button`);
+  const plusBtn: HTMLButtonElement = getElement(`[product-key=${productKey}] .plus-button`);
+  const quantity: HTMLButtonElement = getElement(`[product-key=${productKey}] .quantity-container__quantity`);
+
+  minusBtn.disabled = true;
+  plusBtn.disabled = true;
+  quantity.classList.add('disabled-text');
+};
+
+export const setCartButtonLoading = async (button: HTMLButtonElement): Promise<void> => {
+  const buttonElement = button;
+  buttonElement.classList.add('button--loading');
+
+  await setTimeout(() => {
+    buttonElement.classList.remove('button--loading');
+    buttonElement.disabled = true;
+
+    const productKey = buttonElement.closest('.card__link')?.getAttribute('product-key') as string;
+    disableQuantityButtons(productKey);
+  }, 2000);
+};
