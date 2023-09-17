@@ -141,23 +141,3 @@ export const loginUser = async (
 
   return resData;
 };
-
-export const createCart = async (root: ByProjectKeyRequestBuilder): Promise<object> => {
-  let resData = {};
-  await root
-    .carts()
-    .post({
-      body: {
-        currency: 'EUR',
-      },
-    })
-    .execute()
-    .then((r) => {
-      resData = r.body;
-    })
-    .catch((e) => {
-      console.error(e);
-    });
-
-  return resData;
-};

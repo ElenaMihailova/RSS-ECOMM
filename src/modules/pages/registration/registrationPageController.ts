@@ -1,13 +1,12 @@
 import { AnonymousAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { AddressCategories, CheckboxNames, FieldNames, InputUserError, PopupMessages } from '../../../types/enums';
 import { BaseAddress, CustomerData, FormAddressData } from '../../../types/interfaces';
-import { createCustomer, getProductProjections } from '../../api';
+import { createCustomer } from '../../api';
 import {
   getCountryCode,
   getElement,
   getElementCollection,
   getFromLS,
-  removeFromLS,
   renderPopup,
   setToLS,
   togglePasswordView,
