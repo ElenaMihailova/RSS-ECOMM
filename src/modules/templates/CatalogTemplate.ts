@@ -1,19 +1,24 @@
 import IntroCatalog from './IntroCatalog';
 import catalogWrapper from './CatalogWrapper';
 import { createElement } from '../helpers/functions';
+import { CatalogContent } from '../../types/types';
 
-const contentContainer = createElement({
-  tagName: 'div',
-  classNames: ['contentContainer'],
-});
+async function createCatalogContent(): Promise<CatalogContent> {
+  const contentContainer = createElement({
+    tagName: 'div',
+    classNames: ['contentContainer'],
+  });
 
-contentContainer.appendChild(IntroCatalog);
-const catalogWrapperElement = await catalogWrapper();
-contentContainer.appendChild(catalogWrapperElement);
+  contentContainer.appendChild(IntroCatalog);
+  const catalogWrapperElement = await catalogWrapper();
+  contentContainer.appendChild(catalogWrapperElement);
 
-const catalogContent = {
-  title: 'Catalog',
-  content: contentContainer,
-};
+  const catalogContent = {
+    title: 'Catalog',
+    content: contentContainer,
+  };
 
-export default catalogContent;
+  return catalogContent;
+}
+
+export default createCatalogContent;

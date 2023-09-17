@@ -2,9 +2,9 @@ import { CustomerSignInResult } from '@commercetools/platform-sdk';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { PageUrls } from '../../assets/data/constants';
 import { getUpdatedVersion, loginUser } from '../api';
-import { createApiRootWithPasswordFlow } from '../api/buildRoot';
+import ApiClientBuilder from '../api/buildRoot';
 import MyTokenCache from '../api/myTokenCache';
-import { setMenuBtnsView, setToLS } from '../helpers/functions';
+import { removeFromLS, setMenuBtnsView, setToLS } from '../helpers/functions';
 import Router from '../router/router';
 
 class Controller {
@@ -26,16 +26,25 @@ class Controller {
       fetch,
     };
 
-    const apiRoot = createApiRootWithPasswordFlow(options);
-    const login = await loginUser(apiRoot, email, password);
+    ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithPasswordFlow(options);
+    const login = await loginUser(ApiClientBuilder.currentRoot, email, password);
 
     if (Object.keys(login).length) {
+      removeFromLS('token');
+
       const loginData = login as CustomerSignInResult;
       setToLS('userID', loginData.customer.id);
+
       const tokenInfo = tokenCache.get();
       setToLS('token', tokenInfo.token);
-      const version = await getUpdatedVersion(loginData.customer.id);
+
+      if (tokenInfo.refreshToken) {
+        setToLS('refreshToken', tokenInfo.refreshToken);
+      }
+
+      const version = await getUpdatedVersion(ApiClientBuilder.currentRoot, loginData.customer.id);
       setToLS('version', JSON.stringify(version));
+
       router.navigateFromButton(PageUrls.IndexPageUrl);
 
       setMenuBtnsView();

@@ -1,5 +1,5 @@
 import { Cart } from '@commercetools/platform-sdk';
-import { apiProjectRoot } from './buildRoot';
+import apiProjectRoot from './buildRoot';
 
 const getCartById = async (cartId: string): Promise<Cart> => {
   let resData: Cart | null = null;

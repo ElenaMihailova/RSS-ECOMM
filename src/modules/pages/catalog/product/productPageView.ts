@@ -2,12 +2,12 @@ import { Fancybox, Carousel } from '@fancyapps/ui';
 import '@fancyapps/ui/dist/fancybox/fancybox.css';
 import '@fancyapps/ui/dist/carousel/carousel.css';
 import { Attribute } from '@commercetools/platform-sdk';
-import PageView from '../../core/pageView';
-import { createElement, getElement } from '../../helpers/functions';
-import Router from '../../router/router';
+import PageView from '../../../core/pageView';
+import { createElement, createSvgElement, getElement } from '../../../helpers/functions';
+import Router from '../../../router/router';
 import './productPage.scss';
 import { getProduct } from './getProduct';
-import { ProductData } from '../../../types/interfaces';
+import { ProductData } from '../../../../types/interfaces';
 
 class ProductView extends PageView {
   private router: Router;
@@ -30,9 +30,13 @@ class ProductView extends PageView {
       parent: this.container,
     });
 
-    getProduct(this.link).then((product) => {
-      this.renderProductCard(productPageContainer, product);
-    });
+    getProduct(this.link)
+      .then((product) => {
+        this.renderProductCard(productPageContainer, product);
+      })
+      .then(() => {
+        this.runHandlers();
+      });
 
     return this.container;
   }
@@ -139,11 +143,44 @@ class ProductView extends PageView {
       parent: priceContainer,
     });
 
+    const addToCartContainer = createElement({
+      tagName: 'div',
+      classNames: ['product-description__cart'],
+      parent: descriptionContainer,
+    });
+
+    const amountContainer = createElement({
+      tagName: 'div',
+      classNames: ['product-description__amount'],
+      parent: addToCartContainer,
+    });
+
+    createElement({
+      tagName: 'div',
+      classNames: ['product-description__minus-button'],
+      text: '-',
+      parent: amountContainer,
+    });
+
+    createElement({
+      tagName: 'div',
+      classNames: ['product-description__amount-number'],
+      text: '1',
+      parent: amountContainer,
+    });
+
+    createElement({
+      tagName: 'div',
+      classNames: ['product-description__plus-button'],
+      text: '+',
+      parent: amountContainer,
+    });
+
     const button = createElement({
       tagName: 'button',
       classNames: ['product-description__button', 'button', 'button--black'],
-      text: 'ADD TO BAG',
-      parent: descriptionContainer,
+      text: 'ADD TO CART',
+      parent: addToCartContainer,
     });
 
     button.disabled = true;
@@ -225,6 +262,41 @@ class ProductView extends PageView {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const carousel = new Carousel(container as HTMLElement, options);
+  }
+
+  public async runHandlers(): Promise<void> {
+    const minusBtn = getElement('.product-description__minus-button');
+    const plusBtn = getElement('.product-description__plus-button');
+    const amount = getElement('.product-description__amount-number');
+
+    minusBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      let currentAmount = 0;
+      let newAmount = 1;
+
+      if (amount.textContent) {
+        currentAmount = +amount.textContent;
+      }
+
+      if (currentAmount > 1) {
+        newAmount = currentAmount - 1;
+      }
+
+      amount.textContent = newAmount.toString();
+    });
+
+    plusBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      let currentAmount = 0;
+      let newAmount = 0;
+
+      if (amount.textContent) {
+        currentAmount = +amount.textContent;
+      }
+
+      newAmount = currentAmount + 1;
+      amount.textContent = newAmount.toString();
+    });
   }
 }
 

@@ -2,6 +2,7 @@ import { ProductProjection } from '@commercetools/platform-sdk';
 import { PageUrls } from '../../../assets/data/constants';
 import { QueryArgs } from '../../../types/interfaces';
 import { filterProducts, getCategoryId, getProductByProductKey, getProductProjections } from '../../api';
+import ApiClientBuilder from '../../api/buildRoot';
 import generateCatalogList from '../../components/catalogList/generateCatalogList';
 import { createElement, getElement, getElementCollection } from '../../helpers/functions';
 import Router from '../../router/router';
@@ -194,7 +195,7 @@ class CatalogController {
             queryArgs['text.en-us'] = CatalogController.searchWord;
           }
 
-          const products = await filterProducts(queryArgs);
+          const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
           this.setProducts(products);
           return;
         }
@@ -224,7 +225,7 @@ class CatalogController {
             queryArgs['text.en-us'] = CatalogController.searchWord;
           }
 
-          const products = await filterProducts(queryArgs);
+          const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
           this.setProducts(products);
           return;
         }
@@ -249,7 +250,7 @@ class CatalogController {
           queryArgs['text.en-us'] = CatalogController.searchWord;
         }
 
-        const products = await filterProducts(queryArgs);
+        const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
         this.setProducts(products);
       });
     });
@@ -286,7 +287,7 @@ class CatalogController {
             queryArgs['text.en-us'] = CatalogController.searchWord;
           }
 
-          const products = await filterProducts(queryArgs);
+          const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
           this.setProducts(products);
           return;
         }
@@ -316,7 +317,7 @@ class CatalogController {
             queryArgs['text.en-us'] = CatalogController.searchWord;
           }
 
-          const products = await filterProducts(queryArgs);
+          const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
           this.setProducts(products);
           return;
         }
@@ -340,7 +341,7 @@ class CatalogController {
           queryArgs['text.en-us'] = CatalogController.searchWord;
         }
 
-        const products = await filterProducts(queryArgs);
+        const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
         this.setProducts(products);
       });
     });
@@ -362,7 +363,7 @@ class CatalogController {
         queryBuild['text.en-us'] = CatalogController.searchWord;
       }
 
-      const products = await filterProducts(queryBuild);
+      const products = await filterProducts(ApiClientBuilder.currentRoot, queryBuild);
       this.setProducts(products);
     });
   }
@@ -382,7 +383,7 @@ class CatalogController {
         queryBuild.sort = [CatalogController.activeSorting];
       }
 
-      const products = await filterProducts(queryBuild);
+      const products = await filterProducts(ApiClientBuilder.currentRoot, queryBuild);
       this.setProducts(products);
     });
   }
@@ -417,7 +418,7 @@ class CatalogController {
       const menuHtml = menu as HTMLSelectElement;
       menuHtml.options[0].selected = true;
 
-      const products = await getProductProjections();
+      const products = await getProductProjections(ApiClientBuilder.currentRoot);
       this.setProducts(products);
     });
   }
@@ -519,7 +520,7 @@ class CatalogController {
   }
 
   private async filterByCategory(name: string): Promise<void> {
-    const categoryId = await getCategoryId(name);
+    const categoryId = await getCategoryId(ApiClientBuilder.currentRoot, name);
     CatalogController.searchWord = '';
     CatalogController.activeCategoryId = categoryId;
     const searchInput: HTMLInputElement = getElement('.search__input');
@@ -544,7 +545,7 @@ class CatalogController {
       queryArgs['text.en-us'] = CatalogController.searchWord;
     }
 
-    const products = await filterProducts(queryArgs);
+    const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
     this.setProducts(products);
   }
 
@@ -593,7 +594,7 @@ class CatalogController {
       }
 
       item.addEventListener('click', async () => {
-        const product = (await getProductByProductKey(productKey)) as ProductProjection;
+        const product = (await getProductByProductKey(ApiClientBuilder.currentRoot, productKey)) as ProductProjection;
         const link = product.slug['en-US'];
         this.router.navigateFromButton(`${PageUrls.CatalogPageUrl}/${link}`);
       });
@@ -630,7 +631,7 @@ class CatalogController {
       queryArgs.sort = [CatalogController.activeSorting];
     }
 
-    const products = await filterProducts(queryArgs);
+    const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
     this.setProducts(products);
   }
 
