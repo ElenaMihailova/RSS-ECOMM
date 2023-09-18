@@ -1,0 +1,28 @@
+.about-us__wrapper {
+  max-width: 768px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.about-us__person {
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  gap: 20px;
+}
+
+.about-us__photo {
+  display: block;
+  min-width: 250px;
+  height: 250px;
+}
+
+.about-us__info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
