@@ -42,8 +42,8 @@ export default async function generateCatalogList(productData: ProductProjection
       let quantity = 1;
 
       if (activeCart && !(activeCart instanceof Error)) {
-        activeCart.customLineItems.forEach((item) => {
-          if (item.name.en === product.name['en-US']) {
+        activeCart.lineItems.forEach((item) => {
+          if (item.name['en-US'] === product.name['en-US']) {
             inCart = true;
             quantity = item.quantity;
           }

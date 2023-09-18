@@ -1,6 +1,5 @@
 import { Cart } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import { CartProduct } from '../../types/interfaces';
 import { setToLS } from '../helpers/functions';
 
 export const createCart = async (root: ByProjectKeyRequestBuilder): Promise<Cart | Error> => {
@@ -26,11 +25,12 @@ export const addCartItem = async (
   root: ByProjectKeyRequestBuilder,
   cartID: string,
   cartVersion: number,
-  product: CartProduct,
-  quantity = 1,
+  productId: string,
+  quantity: number,
 ): Promise<Cart | Error> => {
   try {
     const res = await root
+      .me()
       .carts()
       .withId({ ID: cartID })
       .post({
@@ -38,20 +38,9 @@ export const addCartItem = async (
           version: cartVersion,
           actions: [
             {
-              action: 'addCustomLineItem',
-              name: {
-                en: product.name,
-              },
+              action: 'addLineItem',
+              productId,
               quantity,
-              money: {
-                currencyCode: 'EUR',
-                centAmount: product.centAmount,
-              },
-              slug: product.slug,
-              taxCategory: {
-                typeId: 'tax-category',
-                id: product.taxCategoryID,
-              },
             },
           ],
         },

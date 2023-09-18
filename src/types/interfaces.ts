@@ -129,10 +129,3 @@ export interface ProductData {
   description: string;
   details?: Attribute[];
 }
-
-export interface CartProduct {
-  name: string;
-  centAmount: number;
-  slug: string;
-  taxCategoryID: string;
-}

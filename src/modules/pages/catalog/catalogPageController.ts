@@ -653,7 +653,7 @@ class CatalogController {
           await setCartButtonLoading(addToCartButton);
 
           if (!getFromLS('cartID')) {
-            this.createNewCart();
+            await this.createNewCart();
           }
 
           await addProductToCart(product, Number(quantityELement.textContent));
