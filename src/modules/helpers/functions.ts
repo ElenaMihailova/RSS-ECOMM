@@ -1,4 +1,5 @@
 import Toastify from 'toastify-js';
+import { Cart } from '@commercetools/platform-sdk';
 import { AttrSet } from '../../types/types';
 import { Countries, CountryCodes } from '../../types/enums';
 import Router from '../router/router';
@@ -248,4 +249,16 @@ export const setMenuBtnsView = (): void => {
     profileContainer?.classList.add('visually-hidden');
     tooltip.textContent = 'LOG IN';
   }
+};
+
+export const updateCartCommonQuantity = (cart: Cart): void => {
+  const commonQuantity = cart.lineItems.reduce((accumulator, currentItem) => accumulator + currentItem.quantity, 0);
+
+  console.log(commonQuantity);
+
+  const cartQuantityDesktop: HTMLSpanElement = getElement('.cart-quantity--desktop');
+  cartQuantityDesktop.innerHTML = commonQuantity.toString();
+
+  const cartQuantityMobile: HTMLSpanElement = getElement('.cart-quantity--mobile');
+  cartQuantityMobile.innerHTML = commonQuantity.toString();
 };

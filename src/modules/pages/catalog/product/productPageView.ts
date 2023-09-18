@@ -1,9 +1,16 @@
 import { Fancybox, Carousel } from '@fancyapps/ui';
 import '@fancyapps/ui/dist/fancybox/fancybox.css';
 import '@fancyapps/ui/dist/carousel/carousel.css';
-import { Attribute, LineItem, ProductProjection } from '@commercetools/platform-sdk';
+import { Attribute, ProductProjection } from '@commercetools/platform-sdk';
 import PageView from '../../../core/pageView';
-import { createElement, getElement, getFromLS, setToLS } from '../../../helpers/functions';
+import {
+  createElement,
+  getElement,
+  getFromLS,
+  renderPopup,
+  setToLS,
+  updateCartCommonQuantity,
+} from '../../../helpers/functions';
 import Router from '../../../router/router';
 import './productPage.scss';
 import { getProduct } from './getProduct';
@@ -11,6 +18,7 @@ import { ProductData } from '../../../../types/interfaces';
 import { createCart, getActiveCart, getProductByProductUrl, removeItemFromCart } from '../../../api';
 import ApiClientBuilder from '../../../api/buildRoot';
 import addProductToCart from './addProductToCart';
+import { PopupMessages } from '../../../../types/enums';
 
 class ProductView extends PageView {
   private router: Router;
@@ -374,7 +382,7 @@ class ProductView extends PageView {
     });
 
     removeBtn.addEventListener('click', async () => {
-      await removeItemFromCart(ApiClientBuilder.currentRoot, cartID, cartVersion, id, quantity);
+      const response = await removeItemFromCart(ApiClientBuilder.currentRoot, cartID, cartVersion, id, quantity);
 
       // eslint-disable-next-line no-param-reassign
       btn.textContent = 'ADD TO CART';
@@ -382,6 +390,14 @@ class ProductView extends PageView {
       btn.classList.remove('inactive');
 
       removeBtn.remove();
+
+      if (response instanceof Error) {
+        renderPopup(false, response.message);
+        return;
+      }
+
+      renderPopup(true, PopupMessages.SuccesfullyRemovedFromCart);
+      updateCartCommonQuantity(response);
     });
   }
 }
