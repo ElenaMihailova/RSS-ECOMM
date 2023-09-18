@@ -312,7 +312,6 @@ class ProductView extends PageView {
     addBtn.classList.remove('inactive');
 
     const activeCart = await getActiveCart(ApiClientBuilder.currentRoot);
-    console.log(activeCart);
 
     const product = (await getProductByProductUrl(ApiClientBuilder.currentRoot, this.link)) as ProductProjection;
     const productName = product.name['en-US'];
@@ -322,8 +321,7 @@ class ProductView extends PageView {
 
       if (productToRemove.length) {
         const lineItemId = productToRemove[0].id;
-        const productQuantity = productToRemove[0].quantity;
-        this.removeFromCartHandler(lineItemId, productQuantity, addBtn, addToCartContainer);
+        this.removeFromCartHandler(lineItemId, addBtn, addToCartContainer);
       }
     }
 
@@ -348,19 +346,11 @@ class ProductView extends PageView {
 
       const addedItem = newActiveCart.lineItems.filter((item) => item.name['en-US'] === product.name['en-US']);
 
-      this.removeFromCartHandler(addedItem[0].id, this.quantity, addBtn, addToCartContainer);
+      this.removeFromCartHandler(addedItem[0].id, addBtn, addToCartContainer);
     });
   }
 
-  private async removeFromCartHandler(
-    id: string,
-    quantity: number,
-    btn: HTMLButtonElement,
-    container: HTMLDivElement,
-  ): Promise<void> {
-    const cartID = getFromLS('cartID') as string;
-    const cartVersion = Number(getFromLS('cartVersion')) || 1;
-
+  private async removeFromCartHandler(id: string, btn: HTMLButtonElement, container: HTMLDivElement): Promise<void> {
     // eslint-disable-next-line no-param-reassign
     btn.textContent = 'ADDED';
     btn.setAttribute('disabled', 'disabled');
@@ -374,14 +364,24 @@ class ProductView extends PageView {
     });
 
     removeBtn.addEventListener('click', async () => {
-      await removeItemFromCart(ApiClientBuilder.currentRoot, cartID, cartVersion, id, quantity);
+      const cartID = getFromLS('cartID') as string;
+      const cartVersion = Number(getFromLS('cartVersion')) || 1;
+      const response = await removeItemFromCart(ApiClientBuilder.currentRoot, cartID, cartVersion, id, 1);
 
-      // eslint-disable-next-line no-param-reassign
-      btn.textContent = 'ADD TO CART';
-      btn.removeAttribute('disabled');
-      btn.classList.remove('inactive');
+      if ('lineItems' in response) {
+        const itemsLeft = response.lineItems.filter((item) => item.id === id);
 
-      removeBtn.remove();
+        if (itemsLeft.length) {
+          return;
+        }
+
+        // eslint-disable-next-line no-param-reassign
+        btn.textContent = 'ADD TO CART';
+        btn.removeAttribute('disabled');
+        btn.classList.remove('inactive');
+
+        removeBtn.remove();
+      }
     });
   }
 }
