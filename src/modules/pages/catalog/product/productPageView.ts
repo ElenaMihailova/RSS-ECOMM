@@ -374,7 +374,7 @@ class ProductView extends PageView {
     });
 
     removeBtn.addEventListener('click', async () => {
-      const response = await removeItemFromCart(ApiClientBuilder.currentRoot, cartID, cartVersion, id, quantity);
+      await removeItemFromCart(ApiClientBuilder.currentRoot, cartID, cartVersion, id, quantity);
 
       // eslint-disable-next-line no-param-reassign
       btn.textContent = 'ADD TO CART';
@@ -382,7 +382,6 @@ class ProductView extends PageView {
       btn.classList.remove('inactive');
 
       removeBtn.remove();
-      console.log(response);
     });
   }
 }

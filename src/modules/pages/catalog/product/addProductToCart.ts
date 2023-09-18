@@ -20,15 +20,7 @@ const addProductToCart = async (product: ProductProjection, quantity: number): P
   const cartVersion = Number(getFromLS('cartVersion')) || 1;
   const cartID = getFromLS('cartID') as string;
 
-  const response = await addCartItem(
-    ApiClientBuilder.currentRoot,
-    cartID,
-    cartVersion,
-    productData.productId,
-    quantity,
-  );
-
-  console.log('new cart', response);
+  await addCartItem(ApiClientBuilder.currentRoot, cartID, cartVersion, productData.productId, quantity);
 };
 
 export default addProductToCart;
