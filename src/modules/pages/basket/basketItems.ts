@@ -70,7 +70,7 @@ const basketItems = (cart: Cart): HTMLElement => {
     const number = createElement({
       tagName: 'input',
       classNames: ['quantity'],
-      attributes: [{ type: 'text' }, { value: '0' }],
+      attributes: [{ type: 'text' }, { value: `${itemData.quantity}` }],
       parent: quantity,
     });
 
@@ -79,6 +79,24 @@ const basketItems = (cart: Cart): HTMLElement => {
       classNames: ['plus'],
       attributes: [{ type: 'button' }, { value: '+' }],
       parent: quantity,
+    });
+
+    minus.addEventListener('click', function () {
+      const currentValue = parseInt(number.value, 10);
+      if (currentValue > 0) {
+        number.value = (currentValue - 1).toString();
+      }
+    });
+
+    plus.addEventListener('click', function () {
+      const currentValue = parseInt(number.value, 10);
+      number.value = (currentValue + 1).toString();
+    });
+
+    number.addEventListener('input', function () {
+      if (Number.isNaN(Number(number.value)) || parseInt(number.value, 10) < 0) {
+        number.value = '0';
+      }
     });
 
     const sum = createElement({

@@ -2,7 +2,7 @@ import { ProductProjection } from '@commercetools/platform-sdk';
 import { CartProduct } from '../../../../types/interfaces';
 import { addCartItem } from '../../../api';
 import ApiClientBuilder from '../../../api/buildRoot';
-import { getFromLS } from '../../../helpers/functions';
+import { getFromLS, updateCartCommonQuantity } from '../../../helpers/functions';
 
 const addProductToCart = async (product: ProductProjection, quantity: number): Promise<void> => {
   if (!product.taxCategory || !product.masterVariant.prices) {
@@ -20,9 +20,17 @@ const addProductToCart = async (product: ProductProjection, quantity: number): P
   const cartVersion = Number(getFromLS('cartVersion')) || 1;
   const cartID = getFromLS('cartID') as string;
 
-  const response = await addCartItem(ApiClientBuilder.currentRoot, cartID, cartVersion, productData, quantity);
+  const updatedCart = await addCartItem(
+    ApiClientBuilder.currentRoot,
+    cartID,
+    cartVersion,
+    productData.productId,
+    quantity,
+  );
 
-  console.log('new cart', response);
+  if (!(updatedCart instanceof Error)) {
+    updateCartCommonQuantity(updatedCart);
+  }
 };
 
 export default addProductToCart;

@@ -27,11 +27,12 @@ export const addCartItem = async (
   root: ByProjectKeyRequestBuilder,
   cartID: string,
   cartVersion: number,
-  product: CartProduct,
+  productId: string,
   quantity: number,
 ): Promise<Cart | Error> => {
   try {
     const res = await root
+      .me()
       .carts()
       .withId({ ID: cartID })
       .post({
@@ -39,20 +40,9 @@ export const addCartItem = async (
           version: cartVersion,
           actions: [
             {
-              action: 'addCustomLineItem',
-              name: {
-                en: product.name,
-              },
+              action: 'addLineItem',
+              productId,
               quantity,
-              money: {
-                currencyCode: 'EUR',
-                centAmount: product.centAmount,
-              },
-              slug: product.slug,
-              taxCategory: {
-                typeId: 'tax-category',
-                id: product.taxCategoryID,
-              },
             },
           ],
         },
@@ -121,4 +111,41 @@ export const removeAllItemsFromCart = async (
         stopOnFocus: true,
       }).showToast();
     });
+};
+
+export const removeItemFromCart = async (
+  root: ByProjectKeyRequestBuilder,
+  cartID: string,
+  cartVersion: number,
+  lineItemId: string,
+  quantity: number,
+): Promise<Cart | Error> => {
+  try {
+    const res = await root
+      .me()
+      .carts()
+      .withId({ ID: cartID })
+      .post({
+        body: {
+          version: cartVersion,
+          actions: [
+            {
+              action: 'removeLineItem',
+              lineItemId,
+              quantity,
+            },
+          ],
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    if ('version' in resData) {
+      removeFromLS('cartVersion');
+      setToLS('cartVersion', JSON.stringify(resData.version));
+    }
+    return resData;
+  } catch (err) {
+    console.error(err);
+    return err as Error;
+  }
 };

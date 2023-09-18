@@ -94,8 +94,6 @@ const basket = async (): Promise<HTMLElement> => {
     return emptyBasket();
   }
 
-  console.log(cart);
-
   items.appendChild(basketItems(cart as Cart));
   items.appendChild(createElement({ tagName: 'div', classNames: ['sum__line'] }));
   const wrapItem = createElement({

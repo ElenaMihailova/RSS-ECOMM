@@ -107,6 +107,7 @@ export enum PopupMessages {
   NewPasswordsNoMatch = "New password fields don't match",
   PasswordChanged = 'Your password has been successfully updated',
   ProfileCorrectData = 'Please enter the correct data!',
+  SuccesfullyRemovedFromCart = 'Product has been removed from cart',
 }
 
 export enum FieldNames {

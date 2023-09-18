@@ -1,7 +1,10 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
+import { AnonymousAuthMiddlewareOptions, RefreshAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { getCategoryName, getProductByProductUrl } from '../../../api';
 import { ProductData } from '../../../../types/interfaces';
-import ApiClientBuilder from '../../../api/buildRoot';
+import ApiClientBuilder, { scopes } from '../../../api/buildRoot';
+import { getFromLS, setToLS } from '../../../helpers/functions';
+import MyTokenCache from '../../../api/myTokenCache';
 
 export const getProductCategoryName = async (id: string): Promise<string> => {
   const categoryName = await getCategoryName(ApiClientBuilder.currentRoot, id);
@@ -9,7 +12,61 @@ export const getProductCategoryName = async (id: string): Promise<string> => {
 };
 
 export const getProduct = async (link: string): Promise<ProductData> => {
-  const response = await getProductByProductUrl(ApiClientBuilder.currentRoot, link);
+  let response = null;
+
+  if (!getFromLS('refreshToken')) {
+    const tokenCache = new MyTokenCache();
+
+    const options: AnonymousAuthMiddlewareOptions = {
+      host: process.env.CTP_AUTH_URL as string,
+      projectKey: process.env.CTP_PROJECT_KEY as string,
+      credentials: {
+        clientId: process.env.CTP_CLIENT_ID as string,
+        clientSecret: process.env.CTP_CLIENT_SECRET as string,
+      },
+      tokenCache,
+      scopes,
+      fetch,
+    };
+
+    ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithAnonymousFlow(options);
+
+    response = await getProductByProductUrl(ApiClientBuilder.currentRoot, link);
+
+    const tokenInfo = tokenCache.get();
+
+    if (tokenInfo.token) {
+      setToLS('token', tokenInfo.token);
+    }
+
+    if (tokenInfo.refreshToken) {
+      setToLS('refreshToken', tokenInfo.refreshToken);
+    }
+  } else {
+    const tokenCache = new MyTokenCache();
+
+    const options: RefreshAuthMiddlewareOptions = {
+      host: process.env.CTP_AUTH_URL as string,
+      projectKey: process.env.CTP_PROJECT_KEY as string,
+      credentials: {
+        clientId: process.env.CTP_CLIENT_ID as string,
+        clientSecret: process.env.CTP_CLIENT_SECRET as string,
+      },
+      refreshToken: getFromLS('refreshToken') as string,
+      tokenCache,
+      fetch,
+    };
+
+    ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithRefreshFlow(options);
+
+    response = await getProductByProductUrl(ApiClientBuilder.currentRoot, link);
+
+    const tokenInfo = tokenCache.get();
+
+    if (tokenInfo.token) {
+      setToLS('token', tokenInfo.token);
+    }
+  }
 
   const product = response as ProductProjection;
 
