@@ -307,7 +307,7 @@ class App {
     if (this.main) {
       this.main.clearContent();
 
-      if (!getFromLS('passwordToken')) {
+      if (!getFromLS('userID')) {
         this.router.navigateFromButton(PageUrls.LoginPageUrl);
         return;
       }
