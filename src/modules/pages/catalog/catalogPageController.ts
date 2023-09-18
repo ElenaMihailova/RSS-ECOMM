@@ -6,7 +6,8 @@ import ApiClientBuilder from '../../api/buildRoot';
 import generateCatalogList from '../../components/catalogList/generateCatalogList';
 import { createElement, getElement, getElementCollection, getFromLS, setToLS } from '../../helpers/functions';
 import Router from '../../router/router';
-import addProductToCart from './product/addProductToCart';
+import pageCount, { disablePaginationBtns, getCurrentPage, getProductsOnPage, resetPage } from './pagination';
+import { addProductWithLoading } from './product/addProductToCart';
 
 class CatalogController {
   private router: Router;
@@ -37,6 +38,7 @@ class CatalogController {
     this.resetBtnHandler();
     this.breadcrumbController();
     this.productItemsHandler();
+    this.runPaginationHandler();
   }
 
   public categoriesHandler(): void {
@@ -197,7 +199,7 @@ class CatalogController {
           }
 
           const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-          this.setProducts(products);
+          this.setNewCatalogList(products);
           return;
         }
         const result = CatalogController.checkedOriginInputs.filter((value) => value !== `"${inputHtml.value}"`);
@@ -227,7 +229,7 @@ class CatalogController {
           }
 
           const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-          this.setProducts(products);
+          this.setNewCatalogList(products);
           return;
         }
 
@@ -252,7 +254,7 @@ class CatalogController {
         }
 
         const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-        this.setProducts(products);
+        this.setNewCatalogList(products);
       });
     });
   }
@@ -289,7 +291,7 @@ class CatalogController {
           }
 
           const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-          this.setProducts(products);
+          this.setNewCatalogList(products);
           return;
         }
         const result = CatalogController.checkedFlavorInputs.filter((value) => value !== `"${inputHtml.value}"`);
@@ -319,7 +321,7 @@ class CatalogController {
           }
 
           const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-          this.setProducts(products);
+          this.setNewCatalogList(products);
           return;
         }
         const queryArgs: QueryArgs = {
@@ -343,7 +345,7 @@ class CatalogController {
         }
 
         const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-        this.setProducts(products);
+        this.setNewCatalogList(products);
       });
     });
   }
@@ -365,7 +367,7 @@ class CatalogController {
       }
 
       const products = await filterProducts(ApiClientBuilder.currentRoot, queryBuild);
-      this.setProducts(products);
+      this.setNewCatalogList(products);
     });
   }
 
@@ -385,7 +387,7 @@ class CatalogController {
       }
 
       const products = await filterProducts(ApiClientBuilder.currentRoot, queryBuild);
-      this.setProducts(products);
+      this.setNewCatalogList(products);
     });
   }
 
@@ -420,7 +422,7 @@ class CatalogController {
       menuHtml.options[0].selected = true;
 
       const products = await getProductProjections(ApiClientBuilder.currentRoot);
-      this.setProducts(products);
+      this.setNewCatalogList(products);
     });
   }
 
@@ -547,7 +549,7 @@ class CatalogController {
     }
 
     const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-    this.setProducts(products);
+    await this.setNewCatalogList(products);
   }
 
   private queryBuilderForSortSearch(queryArgs: QueryArgs): QueryArgs {
@@ -584,43 +586,6 @@ class CatalogController {
     });
   }
 
-  private productItemsHandler(): void {
-    const productItems = getElementCollection('.card__link');
-
-    productItems.forEach((item) => {
-      const productItem = item as HTMLDivElement;
-      const productKey = productItem.getAttribute('product-key');
-      if (!productKey) {
-        return;
-      }
-
-      item.addEventListener('click', async (e: Event) => {
-        const target = e.target as HTMLElement;
-        const product = (await getProductByProductKey(ApiClientBuilder.currentRoot, productKey)) as ProductProjection;
-        const link = product.slug['en-US'];
-        const quantity = 1;
-
-        if (target.classList.contains('button-add-to-cart')) {
-          if (!getFromLS('cartID')) {
-            const cart = await createCart(ApiClientBuilder.currentRoot);
-
-            if (cart instanceof Error) {
-              return;
-            }
-            setToLS('cartID', cart.id);
-            setToLS('cartVersion', cart.version.toString());
-          }
-
-          await addProductToCart(product, quantity);
-
-          return;
-        }
-
-        this.router.navigateFromButton(`${PageUrls.CatalogPageUrl}/${link}`);
-      });
-    });
-  }
-
   private async allProductsAction(): Promise<void> {
     this.removeActiveCondition();
     const categoryAll = getElement('.category-all__link');
@@ -652,14 +617,142 @@ class CatalogController {
     }
 
     const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-    this.setProducts(products);
+    await this.setNewCatalogList(products);
   }
 
-  private async setProducts(products: ProductProjection[]): Promise<void> {
-    const container = getElement('.catalog__container');
+  private async productItemsHandler(): Promise<void> {
+    const productItems = getElementCollection('.card__link');
+
+    for await (const item of productItems) {
+      const productItem = item as HTMLDivElement;
+      const productKey = productItem.getAttribute('product-key');
+      if (!productKey) {
+        return;
+      }
+
+      const quantityELement: HTMLElement = getElement(`[product-key=${productKey}] .quantity-container__quantity`);
+
+      item.addEventListener('click', async (e: Event) => {
+        const target = e.target as HTMLElement;
+        const product = (await getProductByProductKey(ApiClientBuilder.currentRoot, productKey)) as ProductProjection;
+        const link = product.slug['en-US'];
+
+        if (!quantityELement.textContent) {
+          return;
+        }
+
+        if (target.closest('.add-to-cart-button')) {
+          const addToCartButton = target.closest('.add-to-cart-button') as HTMLButtonElement;
+
+          if (!getFromLS('cartID')) {
+            await this.createNewCart();
+          }
+
+          await addProductWithLoading(addToCartButton, product, Number(quantityELement.textContent));
+
+          return;
+        }
+
+        if (target.closest('.quantity-container')) {
+          const minusBtn: HTMLButtonElement = getElement(`[product-key=${productKey}] .minus-button`);
+          const plusBtn: HTMLButtonElement = getElement(`[product-key=${productKey}] .plus-button`);
+
+          let quantity = 1;
+
+          switch (target) {
+            case minusBtn:
+              quantity = Number(quantityELement.textContent) - 1;
+              break;
+            case plusBtn:
+              quantity = Number(quantityELement.textContent) + 1;
+              break;
+            default:
+              return;
+          }
+
+          quantityELement.textContent = quantity.toString();
+
+          minusBtn.disabled = quantity <= 1;
+
+          return;
+        }
+
+        this.router.navigateFromButton(`${PageUrls.CatalogPageUrl}/${link}`);
+      });
+    }
+  }
+
+  private async createNewCart(): Promise<void> {
+    const cart = await createCart(ApiClientBuilder.currentRoot);
+    if (cart instanceof Error) {
+      return;
+    }
+    setToLS('cartID', cart.id);
+    setToLS('cartVersion', cart.version.toString());
+  }
+
+  private paginationHandlerWrapper: ((e: Event) => Promise<void>) | null = null;
+
+  private async runPaginationHandler(products?: ProductProjection[]): Promise<void> {
+    const productsData = products || (await getProductProjections(ApiClientBuilder.currentRoot));
+    const paginationContainer = getElement('.pagination');
+
+    disablePaginationBtns(pageCount(productsData.length));
+
+    if (this.paginationHandlerWrapper) {
+      paginationContainer.removeEventListener('click', this.paginationHandlerWrapper);
+    }
+
+    this.paginationHandlerWrapper = (e: Event): Promise<void> => this.paginationHandler(e, productsData);
+
+    paginationContainer.addEventListener('click', this.paginationHandlerWrapper);
+  }
+
+  private async paginationHandler(e: Event, productsData: ProductProjection[]): Promise<void> {
+    const btnPrev = getElement('.prev-button');
+    const btnNext = getElement('.next-button');
+    const pageNumElement: HTMLDivElement = getElement('.pagination__page-number');
+
+    const target = e.target as HTMLElement;
+
+    const currentPageNum = getCurrentPage();
+
+    let newPageNum: number;
+
+    switch (target) {
+      case btnPrev:
+        newPageNum = Number(currentPageNum) - 1;
+        break;
+      case btnNext:
+        newPageNum = Number(currentPageNum) + 1;
+        break;
+      default:
+        return;
+    }
+
+    pageNumElement.innerHTML = newPageNum.toString();
+
+    setToLS('currentPage', newPageNum.toString());
+
+    disablePaginationBtns(pageCount(productsData.length));
+
+    await this.setProducts(productsData);
+  }
+
+  private async setNewCatalogList(products: ProductProjection[]): Promise<void> {
+    resetPage();
+    await this.runPaginationHandler(products);
+    await this.setProducts(products);
+  }
+
+  public async setProducts(products: ProductProjection[]): Promise<void> {
+    const productsOnPage = getProductsOnPage(products);
+
+    const container = getElement('.catalog-container__products');
+
     container.innerHTML = '';
 
-    const catalogList = await generateCatalogList(products);
+    const catalogList = await generateCatalogList(productsOnPage);
 
     container.appendChild(catalogList);
     this.productItemsHandler();

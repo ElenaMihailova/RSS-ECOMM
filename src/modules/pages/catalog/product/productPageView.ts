@@ -17,7 +17,7 @@ import { getProduct } from './getProduct';
 import { ProductData } from '../../../../types/interfaces';
 import { createCart, getActiveCart, getProductByProductUrl, removeItemFromCart } from '../../../api';
 import ApiClientBuilder from '../../../api/buildRoot';
-import addProductToCart from './addProductToCart';
+import { addProductToCart } from './addProductToCart';
 import { PopupMessages } from '../../../../types/enums';
 
 class ProductView extends PageView {
