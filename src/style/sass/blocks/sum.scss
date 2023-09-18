@@ -20,7 +20,10 @@
 
 .sum__wrap {
   display: flex;
+  width: 100%;
   justify-content: space-between;
+  max-width: 420px;
+  margin: 0 auto;
 }
 
 .sum__button {
@@ -50,4 +53,8 @@
 .sum__link {
   align-self: center;
   margin-bottom: 32px;
+}
+
+.sum__clear {
+  align-self: center;
 }

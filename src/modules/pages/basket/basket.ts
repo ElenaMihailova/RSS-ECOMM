@@ -1,7 +1,7 @@
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { AnonymousAuthMiddlewareOptions, RefreshAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { Cart } from '@commercetools/platform-sdk';
-import { getActiveCart, getProductProjections } from '../../api';
+import { getActiveCart, getProductProjections, removeAllItemsFromCart } from '../../api';
 import ApiClientBuilder, { scopes } from '../../api/buildRoot';
 import { createElement, getFromLS, setToLS } from '../../helpers/functions';
 import basketItems from './basketItems';
@@ -118,7 +118,17 @@ const basket = async (): Promise<HTMLElement> => {
     attributes: [{ href: 'catalog' }],
     parent: items,
   });
-  createElement({ tagName: 'button', classNames: ['sum__clear', 'button'], text: 'Clear Cart', parent: items });
+  const clearCartBtn = createElement({
+    tagName: 'button',
+    classNames: ['sum__clear', 'button'],
+    id: 'clearCartBtn',
+    text: 'Clear Cart',
+    parent: items,
+  });
+
+  // clearCartBtn.addEventListener('click', function () {
+  //   removeAllItemsFromCart(cart.root, cart.cartID, cart.cartVersion);
+  // });
 
   items.appendChild(basketSum());
 

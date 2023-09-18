@@ -1,7 +1,8 @@
 import { Cart } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
+import Toastify from 'toastify-js';
 import { CartProduct } from '../../types/interfaces';
-import { setToLS } from '../helpers/functions';
+import { removeFromLS, setToLS } from '../helpers/functions';
 
 export const createCart = async (root: ByProjectKeyRequestBuilder): Promise<Cart | Error> => {
   try {
@@ -78,4 +79,46 @@ export const getActiveCart = async (root: ByProjectKeyRequestBuilder): Promise<C
     console.error('Error fetching active cart:', error);
     throw error;
   }
+};
+
+export const removeAllItemsFromCart = async (
+  root: ByProjectKeyRequestBuilder,
+  cartID: string,
+  cartVersion: number,
+): Promise<void> => {
+  await root
+    .me()
+    .carts()
+    .withId({ ID: cartID })
+    .delete({
+      queryArgs: {
+        version: cartVersion,
+      },
+    })
+    .execute()
+    .then(() => {
+      removeFromLS('cartVersion');
+      Toastify({
+        text: 'Cart has been emptied',
+        className: 'toastify toastify-success',
+        duration: 4000,
+        newWindow: true,
+        close: true,
+        gravity: 'bottom',
+        position: 'center',
+        stopOnFocus: true,
+      }).showToast();
+    })
+    .catch((e) => {
+      Toastify({
+        text: e.message,
+        className: 'toastify toastify-error',
+        duration: 4000,
+        newWindow: true,
+        close: true,
+        gravity: 'bottom',
+        position: 'center',
+        stopOnFocus: true,
+      }).showToast();
+    });
 };

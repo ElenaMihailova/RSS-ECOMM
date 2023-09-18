@@ -14,8 +14,9 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
   href?: string;
   router?: Router;
   src?: string;
+  id?: string;
 }): HTMLElementTagNameMap[T] => {
-  const { tagName, classNames, attributes, text, parent, parentPrepend, html, href, router, src } = elData;
+  const { tagName, classNames, attributes, text, parent, parentPrepend, html, href, router, src, id } = elData;
 
   const element: HTMLElementTagNameMap[T] = document.createElement(tagName);
 
@@ -57,6 +58,10 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
       e.preventDefault();
       router.navigateToLink(href);
     });
+  }
+
+  if (id) {
+    element.setAttribute('id', id);
   }
 
   return element;
