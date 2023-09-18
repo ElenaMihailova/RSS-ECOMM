@@ -75,30 +75,6 @@ export const getCategoryId = async (apiProjectRoot: ByProjectKeyRequestBuilder, 
   return resData;
 };
 
-export const getProductsByCategory = async (
-  apiProjectRoot: ByProjectKeyRequestBuilder,
-  id: string,
-): Promise<ProductProjection[]> => {
-  let resData: ProductProjection[] = [];
-  await apiProjectRoot
-    .productProjections()
-    .search()
-    .get({
-      queryArgs: {
-        filter: [`categories.id:"${id}"`],
-      },
-    })
-    .execute()
-    .then((r) => {
-      resData = r.body.results;
-    })
-    .catch((e) => {
-      console.error(e.message);
-    });
-
-  return resData;
-};
-
 export const filterProducts = async (
   apiProjectRoot: ByProjectKeyRequestBuilder,
   queryArgs: QueryArgs,
