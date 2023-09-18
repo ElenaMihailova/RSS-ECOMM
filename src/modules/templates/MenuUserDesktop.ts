@@ -87,7 +87,7 @@ const createMenuUser = (): HTMLElement => {
     if (a.classList.contains('cart--desktop')) {
       createElement({
         tagName: 'span',
-        classNames: ['cart-quantity--desktop'],
+        classNames: ['cart-quantity--desktop', 'visually-hidden'],
         text: '0',
         parent: a,
       });

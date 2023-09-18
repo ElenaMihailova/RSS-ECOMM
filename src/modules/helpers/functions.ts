@@ -252,13 +252,21 @@ export const setMenuBtnsView = (): void => {
 };
 
 export const updateCartCommonQuantity = (cart: Cart): void => {
+  const cartQuantityDesktop: HTMLSpanElement = getElement('.cart-quantity--desktop');
+  const cartQuantityMobile: HTMLSpanElement = getElement('.cart-quantity--mobile');
+
   const commonQuantity = cart.lineItems.reduce((accumulator, currentItem) => accumulator + currentItem.quantity, 0);
 
-  console.log(commonQuantity);
+  if (!commonQuantity) {
+    cartQuantityDesktop.classList.add('visually-hidden');
+    return;
+  }
 
-  const cartQuantityDesktop: HTMLSpanElement = getElement('.cart-quantity--desktop');
+  if (cartQuantityDesktop.classList.contains('visually-hidden')) {
+    cartQuantityDesktop.classList.remove('visually-hidden');
+  }
+
   cartQuantityDesktop.innerHTML = commonQuantity.toString();
 
-  const cartQuantityMobile: HTMLSpanElement = getElement('.cart-quantity--mobile');
   cartQuantityMobile.innerHTML = commonQuantity.toString();
 };
