@@ -1,0 +1,77 @@
+.buying__list {
+  max-width: 700px;
+  margin: 0 auto;
+}
+.buying__item {
+  display: grid;
+  color: $color-primary;
+  font-family: $font-monserrat;
+  grid-template-columns: 1fr 2fr 1fr;
+  row-gap: 15px;
+  grid-template-areas:
+    'img title quantity'
+    'img button sum';
+  margin-bottom: 32px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.buying__image {
+  width: 71px;
+  height: 71px;
+  grid-area: img;
+}
+
+.buying__list {
+  list-style: none;
+  padding: 0;
+}
+
+.buying__title {
+  grid-area: title;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.buying__button {
+  grid-area: button;
+  font-weight: 500;
+}
+
+.buying__quantity {
+  display: flex;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 28px;
+  justify-self: flex-end;
+
+  input {
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    border: none;
+    display: inline-block;
+    text-align: center;
+    padding: 0;
+    cursor: pointer;
+
+    &:hover {
+      color: $color-secondary;
+    }
+  }
+}
+
+.buying__sum {
+  font-family: $font-monserrat;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.15px;
+  justify-self: flex-end;
+}
+
+.quantity {
+  font-size: 16px;
+}
