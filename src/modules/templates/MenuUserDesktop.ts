@@ -84,6 +84,15 @@ const createMenuUser = (): HTMLElement => {
       });
     }
 
+    if (a.classList.contains('cart--desktop')) {
+      createElement({
+        tagName: 'span',
+        classNames: ['cart-quantity--desktop', 'visually-hidden'],
+        text: '0',
+        parent: a,
+      });
+    }
+
     const div = createElement({
       tagName: 'div',
       classNames: item.text === 'Log in' ? ['tooltip', 'tooltip--login'] : ['tooltip'],

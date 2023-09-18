@@ -1,6 +1,6 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
 import { AnonymousAuthMiddlewareOptions, RefreshAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
-import { getCategoryName, getProductByProductUrl, getProductProjections } from '../../../api';
+import { getCategoryName, getProductByProductUrl } from '../../../api';
 import { ProductData } from '../../../../types/interfaces';
 import ApiClientBuilder, { scopes } from '../../../api/buildRoot';
 import { getFromLS, setToLS } from '../../../helpers/functions';

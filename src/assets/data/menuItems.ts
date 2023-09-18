@@ -30,7 +30,7 @@ const menuItems = [
     href: '',
     classNames: ['cart', 'cart--mobile'],
     svgHref: '../image/sprite.svg#cart',
-    text: 'YOUR CART<span>(3) items have been added</span>',
+    text: 'YOUR CART<span>(<span class="cart-quantity--mobile">0</span>) items have been added</span>',
   },
 ];
 
