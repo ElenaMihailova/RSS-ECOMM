@@ -1,3 +1,5 @@
+import { Cart } from '@commercetools/platform-sdk';
+import { RefreshAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { PageUrls, ProductUrl } from '../../assets/data/constants';
 import { RouteAction } from '../../types/types';
 import Router from '../router/router';
@@ -7,7 +9,15 @@ import RegistrationView from '../pages/registration/registrationPageView';
 import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
 import LoginController from '../pages/login/loginPageController';
-import { getElement, getElementCollection, getFromLS, removeFromLS, setMenuBtnsView } from '../helpers/functions';
+import {
+  getElement,
+  getElementCollection,
+  getFromLS,
+  removeFromLS,
+  setMenuBtnsView,
+  setToLS,
+  updateCartCommonQuantity,
+} from '../helpers/functions';
 import { FooterLinks, NavLink } from '../components/layout/nav.types';
 import createLayout from '../components/layout/createLayout';
 import { headerLinks, footerLinks } from '../../assets/data/navigationData';
@@ -23,6 +33,9 @@ import createCatalogContent from '../templates/CatalogTemplate';
 import BasketView from '../pages/basket/basketPageView';
 import basketContent from '../pages/basket/basketContent';
 import AboutUsView from '../pages/about/aboutUsPageView';
+import ApiClientBuilder from '../api/buildRoot';
+import { getActiveCart } from '../api';
+import MyTokenCache from '../api/myTokenCache';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -71,6 +84,40 @@ class App {
     const layout = createLayout(this.headerData, this.footerData, this.router);
 
     App.container.append(layout.header, layout.footer);
+
+    if (getFromLS('cartID')) {
+      const tokenCache = new MyTokenCache();
+
+      const options: RefreshAuthMiddlewareOptions = {
+        host: process.env.CTP_AUTH_URL as string,
+        projectKey: process.env.CTP_PROJECT_KEY as string,
+        credentials: {
+          clientId: process.env.CTP_CLIENT_ID as string,
+          clientSecret: process.env.CTP_CLIENT_SECRET as string,
+        },
+        refreshToken: getFromLS('refreshToken') as string,
+        tokenCache,
+        fetch,
+      };
+
+      ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithRefreshFlow(options);
+
+      const response = getActiveCart(ApiClientBuilder.currentRoot);
+
+      response.then((cart: Cart | Error) => {
+        if (cart instanceof Error) {
+          return;
+        }
+
+        updateCartCommonQuantity(cart);
+      });
+
+      const tokenInfo = tokenCache.get();
+
+      if (tokenInfo.token) {
+        setToLS('token', tokenInfo.token);
+      }
+    }
 
     setMenuBtnsView();
 
@@ -227,6 +274,8 @@ class App {
     if (getFromLS('userID')) {
       removeFromLS('token');
       removeFromLS('refreshToken');
+      removeFromLS('cartID');
+      removeFromLS('cartVersion');
       removeFromLS('userID');
       removeFromLS('version');
       setMenuBtnsView();

@@ -1,4 +1,5 @@
 import Toastify from 'toastify-js';
+import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import { AttrSet } from '../../types/types';
 import { Countries, CountryCodes } from '../../types/enums';
 import Router from '../router/router';
@@ -260,15 +261,21 @@ export const disableQuantityButtons = async (productKey: string): Promise<void> 
   quantity.classList.add('disabled-text');
 };
 
-export const setCartButtonLoading = async (button: HTMLButtonElement): Promise<void> => {
-  const buttonElement = button;
-  buttonElement.classList.add('button--loading');
+export const updateCartCommonQuantity = (cart: Cart): void => {
+  const cartQuantityDesktop: HTMLSpanElement = getElement('.cart-quantity--desktop');
+  const cartQuantityMobile: HTMLSpanElement = getElement('.cart-quantity--mobile');
 
-  await setTimeout(() => {
-    buttonElement.classList.remove('button--loading');
-    buttonElement.disabled = true;
+  const commonQuantity = cart.lineItems.reduce((accumulator, currentItem) => accumulator + currentItem.quantity, 0);
 
-    const productKey = buttonElement.closest('.card__link')?.getAttribute('product-key') as string;
-    disableQuantityButtons(productKey);
-  }, 2000);
+  if (!commonQuantity) {
+    cartQuantityDesktop.classList.add('visually-hidden');
+    return;
+  }
+
+  if (cartQuantityDesktop.classList.contains('visually-hidden')) {
+    cartQuantityDesktop.classList.remove('visually-hidden');
+  }
+
+  cartQuantityDesktop.innerHTML = commonQuantity.toString();
+  cartQuantityMobile.innerHTML = commonQuantity.toString();
 };

@@ -4,17 +4,10 @@ import { QueryArgs } from '../../../types/interfaces';
 import { createCart, filterProducts, getCategoryId, getProductByProductKey, getProductProjections } from '../../api';
 import ApiClientBuilder from '../../api/buildRoot';
 import generateCatalogList from '../../components/catalogList/generateCatalogList';
-import {
-  createElement,
-  getElement,
-  getElementCollection,
-  getFromLS,
-  setCartButtonLoading,
-  setToLS,
-} from '../../helpers/functions';
+import { createElement, getElement, getElementCollection, getFromLS, setToLS } from '../../helpers/functions';
 import Router from '../../router/router';
-import addProductToCart from './product/addProductToCart';
 import pageCount, { disablePaginationBtns, getCurrentPage, getProductsOnPage, resetPage } from './pagination';
+import { addProductWithLoading } from './product/addProductToCart';
 
 class CatalogController {
   private router: Router;
@@ -650,13 +643,12 @@ class CatalogController {
 
         if (target.closest('.add-to-cart-button')) {
           const addToCartButton = target.closest('.add-to-cart-button') as HTMLButtonElement;
-          await setCartButtonLoading(addToCartButton);
 
           if (!getFromLS('cartID')) {
             await this.createNewCart();
           }
 
-          await addProductToCart(product, Number(quantityELement.textContent));
+          await addProductWithLoading(addToCartButton, product, Number(quantityELement.textContent));
 
           return;
         }

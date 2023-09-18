@@ -1,26 +1,37 @@
 import { Fancybox, Carousel } from '@fancyapps/ui';
 import '@fancyapps/ui/dist/fancybox/fancybox.css';
 import '@fancyapps/ui/dist/carousel/carousel.css';
-import { Attribute } from '@commercetools/platform-sdk';
+import { Attribute, ProductProjection } from '@commercetools/platform-sdk';
 import PageView from '../../../core/pageView';
-import { createElement, createSvgElement, getElement } from '../../../helpers/functions';
+import {
+  createElement,
+  getElement,
+  getFromLS,
+  renderPopup,
+  setToLS,
+  updateCartCommonQuantity,
+} from '../../../helpers/functions';
 import Router from '../../../router/router';
 import './productPage.scss';
 import { getProduct } from './getProduct';
 import { ProductData } from '../../../../types/interfaces';
+import { createCart, getActiveCart, getProductByProductUrl, removeItemFromCart } from '../../../api';
+import ApiClientBuilder from '../../../api/buildRoot';
+import { addProductToCart } from './addProductToCart';
+import { PopupMessages } from '../../../../types/enums';
 
 class ProductView extends PageView {
   private router: Router;
 
   private link: string;
 
-  private product: ProductData | null;
+  private quantity: number;
 
   constructor(router: Router, link: string) {
     super();
     this.router = router;
     this.link = link;
-    this.product = null;
+    this.quantity = 1;
   }
 
   public render(): HTMLElement {
@@ -35,7 +46,8 @@ class ProductView extends PageView {
         this.renderProductCard(productPageContainer, product);
       })
       .then(() => {
-        this.runHandlers();
+        this.amountHandler();
+        this.addToCartHandler();
       });
 
     return this.container;
@@ -176,14 +188,12 @@ class ProductView extends PageView {
       parent: amountContainer,
     });
 
-    const button = createElement({
+    createElement({
       tagName: 'button',
-      classNames: ['product-description__button', 'button', 'button--black'],
+      classNames: ['product-description__add-button', 'button', 'button--black'],
       text: 'ADD TO CART',
       parent: addToCartContainer,
     });
-
-    button.disabled = true;
 
     Fancybox.bind('[data-fancybox]', {
       contentClick: 'close',
@@ -264,7 +274,7 @@ class ProductView extends PageView {
     const carousel = new Carousel(container as HTMLElement, options);
   }
 
-  public async runHandlers(): Promise<void> {
+  private async amountHandler(): Promise<void> {
     const minusBtn = getElement('.product-description__minus-button');
     const plusBtn = getElement('.product-description__plus-button');
     const amount = getElement('.product-description__amount-number');
@@ -283,6 +293,7 @@ class ProductView extends PageView {
       }
 
       amount.textContent = newAmount.toString();
+      this.quantity = Number(amount.textContent);
     });
 
     plusBtn.addEventListener('click', (e) => {
@@ -296,6 +307,97 @@ class ProductView extends PageView {
 
       newAmount = currentAmount + 1;
       amount.textContent = newAmount.toString();
+      this.quantity = Number(amount.textContent);
+    });
+  }
+
+  public async addToCartHandler(): Promise<void> {
+    const addBtn: HTMLButtonElement = getElement('.product-description__add-button');
+    const addToCartContainer: HTMLDivElement = getElement('.product-description__cart');
+
+    addBtn.textContent = 'ADD TO CART';
+    addBtn.removeAttribute('disabled');
+    addBtn.classList.remove('inactive');
+
+    const activeCart = await getActiveCart(ApiClientBuilder.currentRoot);
+
+    const product = (await getProductByProductUrl(ApiClientBuilder.currentRoot, this.link)) as ProductProjection;
+    const productName = product.name['en-US'];
+
+    if (!(activeCart instanceof Error)) {
+      const productToRemove = activeCart.lineItems.filter((item) => item.name['en-US'] === productName);
+
+      if (productToRemove.length) {
+        const lineItemId = productToRemove[0].id;
+        this.removeFromCartHandler(lineItemId, addBtn, addToCartContainer);
+      }
+    }
+
+    addBtn.addEventListener('click', async (e: Event): Promise<void> => {
+      e.preventDefault();
+      if (!getFromLS('cartID')) {
+        const cart = await createCart(ApiClientBuilder.currentRoot);
+        if (cart instanceof Error) {
+          return;
+        }
+        setToLS('cartID', cart.id);
+        setToLS('cartVersion', cart.version.toString());
+      }
+
+      await addProductToCart(product, this.quantity);
+
+      const newActiveCart = await getActiveCart(ApiClientBuilder.currentRoot);
+
+      if (newActiveCart instanceof Error) {
+        return;
+      }
+
+      const addedItem = newActiveCart.lineItems.filter((item) => item.name['en-US'] === product.name['en-US']);
+
+      this.removeFromCartHandler(addedItem[0].id, addBtn, addToCartContainer);
+    });
+  }
+
+  private async removeFromCartHandler(id: string, btn: HTMLButtonElement, container: HTMLDivElement): Promise<void> {
+    // eslint-disable-next-line no-param-reassign
+    btn.textContent = 'ADDED';
+    btn.setAttribute('disabled', 'disabled');
+    btn.classList.add('inactive');
+
+    const removeBtn = createElement({
+      tagName: 'button',
+      classNames: ['product-description__remove-button', 'button', 'button--black'],
+      text: 'REMOVE',
+      parent: container,
+    });
+
+    removeBtn.addEventListener('click', async () => {
+      const cartID = getFromLS('cartID') as string;
+      const cartVersion = Number(getFromLS('cartVersion')) || 1;
+      const response = await removeItemFromCart(ApiClientBuilder.currentRoot, cartID, cartVersion, id, 1);
+
+      if ('lineItems' in response) {
+        const itemsLeft = response.lineItems.filter((item) => item.id === id);
+
+        if (itemsLeft.length) {
+          return;
+        }
+
+        // eslint-disable-next-line no-param-reassign
+        btn.textContent = 'ADD TO CART';
+        btn.removeAttribute('disabled');
+        btn.classList.remove('inactive');
+
+        removeBtn.remove();
+
+        if (response instanceof Error) {
+          renderPopup(false, response.message);
+          return;
+        }
+
+        renderPopup(true, PopupMessages.SuccesfullyRemovedFromCart);
+        updateCartCommonQuantity(response);
+      }
     });
   }
 }
