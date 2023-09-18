@@ -36,6 +36,7 @@ import ApiClientBuilder from '../api/buildRoot';
 import { getActiveCart } from '../api';
 import MyTokenCache from '../api/myTokenCache';
 import getBasketContent from '../pages/basket/basketContent';
+import BasketController from '../pages/basket/basketController';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -60,9 +61,12 @@ class App {
 
   private profilePage: ProfileView | null;
 
+  private basketController: BasketController | null;
+
   constructor() {
     this.main = null;
     this.profilePage = null;
+    this.basketController = null;
     const routes = this.createRoutes();
     this.router = new Router(routes);
     this.createView();
@@ -232,6 +236,7 @@ class App {
             this.main.clearContent();
             const content = await getBasketContent();
             this.main.setContent(new BasketView(content).render());
+            this.basketController = new BasketController(this.router);
           }
         },
       },

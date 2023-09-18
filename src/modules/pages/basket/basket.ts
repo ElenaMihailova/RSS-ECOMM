@@ -8,7 +8,7 @@ import basketItems from './basketItems';
 import basketSum from './sumBasket';
 import MyTokenCache from '../../api/myTokenCache';
 
-const emptyBasket = (): HTMLElement => {
+export const emptyBasket = (): HTMLElement => {
   const items = createElement({
     tagName: 'div',
     classNames: ['cart__items', 'items', 'items--empty', 'container'],
@@ -116,13 +116,13 @@ const basket = async (): Promise<HTMLElement> => {
     attributes: [{ href: 'catalog' }],
     parent: items,
   });
-  // const clearCartBtn = createElement({
-  //   tagName: 'button',
-  //   classNames: ['sum__clear', 'button'],
-  //   id: 'clearCartBtn',
-  //   text: 'Clear Cart',
-  //   parent: items,
-  // });
+  const clearCartBtn = createElement({
+    tagName: 'button',
+    classNames: ['sum__clear', 'button'],
+    id: 'clearCartBtn',
+    text: 'Clear Cart',
+    parent: items,
+  });
 
   items.appendChild(basketSum());
 

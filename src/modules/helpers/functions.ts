@@ -256,11 +256,13 @@ export const setMenuBtnsView = (): void => {
   }
 };
 
-export const updateCartCommonQuantity = (cart: Cart): void => {
+export const updateCartCommonQuantity = (cart?: Cart): void => {
   const cartQuantityDesktop: HTMLSpanElement = getElement('.cart-quantity--desktop');
   const cartQuantityMobile: HTMLSpanElement = getElement('.cart-quantity--mobile');
 
-  const commonQuantity = cart.lineItems.reduce((accumulator, currentItem) => accumulator + currentItem.quantity, 0);
+  const commonQuantity = cart
+    ? cart.lineItems.reduce((accumulator, currentItem) => accumulator + currentItem.quantity, 0)
+    : 0;
 
   if (!commonQuantity) {
     cartQuantityDesktop.classList.add('visually-hidden');
