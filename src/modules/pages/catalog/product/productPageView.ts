@@ -1,7 +1,7 @@
 import { Fancybox, Carousel } from '@fancyapps/ui';
 import '@fancyapps/ui/dist/fancybox/fancybox.css';
 import '@fancyapps/ui/dist/carousel/carousel.css';
-import { Attribute, ProductProjection } from '@commercetools/platform-sdk';
+import { Attribute, LineItem, ProductProjection } from '@commercetools/platform-sdk';
 import PageView from '../../../core/pageView';
 import { createElement, getElement, getFromLS, setToLS } from '../../../helpers/functions';
 import Router from '../../../router/router';
@@ -39,7 +39,7 @@ class ProductView extends PageView {
       })
       .then(() => {
         this.amountHandler();
-        this.addToBagHandler();
+        this.addToCartHandler();
       });
 
     return this.container;
@@ -266,7 +266,7 @@ class ProductView extends PageView {
     const carousel = new Carousel(container as HTMLElement, options);
   }
 
-  public async amountHandler(): Promise<void> {
+  private async amountHandler(): Promise<void> {
     const minusBtn = getElement('.product-description__minus-button');
     const plusBtn = getElement('.product-description__plus-button');
     const amount = getElement('.product-description__amount-number');
@@ -303,7 +303,7 @@ class ProductView extends PageView {
     });
   }
 
-  public async addToBagHandler(): Promise<void> {
+  public async addToCartHandler(): Promise<void> {
     const addBtn: HTMLButtonElement = getElement('.product-description__add-button');
     const addToCartContainer: HTMLDivElement = getElement('.product-description__cart');
 
@@ -319,40 +319,11 @@ class ProductView extends PageView {
 
     if (!(activeCart instanceof Error)) {
       const productToRemove = activeCart.lineItems.filter((item) => item.name['en-US'] === productName);
-      console.log(productToRemove);
 
       if (productToRemove.length) {
         const lineItemId = productToRemove[0].id;
-        console.log(lineItemId);
         const productQuantity = productToRemove[0].quantity;
-        console.log(productQuantity);
-        const cartID = getFromLS('cartID') as string;
-        console.log(cartID);
-        const cartVersion = Number(getFromLS('cartVersion')) || 1;
-        console.log(cartVersion);
-
-        addBtn.textContent = 'ADDED';
-        addBtn.setAttribute('disabled', 'disabled');
-        addBtn.classList.add('inactive');
-
-        const removeBtn = createElement({
-          tagName: 'button',
-          classNames: ['product-description__remove-button', 'button', 'button--black'],
-          text: 'REMOVE',
-          parent: addToCartContainer,
-        });
-
-        removeBtn.addEventListener('click', async () => {
-          const response = await removeItemFromCart(
-            ApiClientBuilder.currentRoot,
-            cartID,
-            cartVersion,
-            lineItemId,
-            productQuantity,
-          );
-
-          console.log(response);
-        });
+        this.removeFromCartHandler(lineItemId, productQuantity, addBtn, addToCartContainer);
       }
     }
 
@@ -369,16 +340,49 @@ class ProductView extends PageView {
 
       await addProductToCart(product, this.quantity);
 
-      addBtn.textContent = 'ADDED';
-      addBtn.setAttribute('disabled', 'disabled');
-      addBtn.classList.add('inactive');
+      const newActiveCart = await getActiveCart(ApiClientBuilder.currentRoot);
 
-      createElement({
-        tagName: 'button',
-        classNames: ['product-description__remove-button', 'button', 'button--black'],
-        text: 'REMOVE',
-        parent: addToCartContainer,
-      });
+      if (newActiveCart instanceof Error) {
+        return;
+      }
+
+      const addedItem = newActiveCart.lineItems.filter((item) => item.name['en-US'] === product.name['en-US']);
+
+      this.removeFromCartHandler(addedItem[0].id, this.quantity, addBtn, addToCartContainer);
+    });
+  }
+
+  private async removeFromCartHandler(
+    id: string,
+    quantity: number,
+    btn: HTMLButtonElement,
+    container: HTMLDivElement,
+  ): Promise<void> {
+    const cartID = getFromLS('cartID') as string;
+    const cartVersion = Number(getFromLS('cartVersion')) || 1;
+
+    // eslint-disable-next-line no-param-reassign
+    btn.textContent = 'ADDED';
+    btn.setAttribute('disabled', 'disabled');
+    btn.classList.add('inactive');
+
+    const removeBtn = createElement({
+      tagName: 'button',
+      classNames: ['product-description__remove-button', 'button', 'button--black'],
+      text: 'REMOVE',
+      parent: container,
+    });
+
+    removeBtn.addEventListener('click', async () => {
+      const response = await removeItemFromCart(ApiClientBuilder.currentRoot, cartID, cartVersion, id, quantity);
+
+      // eslint-disable-next-line no-param-reassign
+      btn.textContent = 'ADD TO CART';
+      btn.removeAttribute('disabled');
+      btn.classList.remove('inactive');
+
+      removeBtn.remove();
+      console.log(response);
     });
   }
 }
