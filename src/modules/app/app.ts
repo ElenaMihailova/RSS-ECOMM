@@ -31,11 +31,11 @@ import CatalogController from '../pages/catalog/catalogPageController';
 import ProductView from '../pages/catalog/product/productPageView';
 import createCatalogContent from '../templates/CatalogTemplate';
 import BasketView from '../pages/basket/basketPageView';
-import basketContent from '../pages/basket/basketContent';
 import AboutUsView from '../pages/about/aboutUsPageView';
 import ApiClientBuilder from '../api/buildRoot';
 import { getActiveCart } from '../api';
 import MyTokenCache from '../api/myTokenCache';
+import getBasketContent from '../pages/basket/basketContent';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -227,10 +227,11 @@ class App {
       },
       {
         path: `${PageUrls.BasketPageUrl}`,
-        callback: (): void => {
+        callback: async (): Promise<void> => {
           if (this.main) {
             this.main.clearContent();
-            this.main.setContent(new BasketView(basketContent).render());
+            const content = await getBasketContent();
+            this.main.setContent(new BasketView(content).render());
           }
         },
       },

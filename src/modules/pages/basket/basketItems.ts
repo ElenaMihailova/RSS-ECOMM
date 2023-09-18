@@ -36,20 +36,21 @@ const basketItems = (cart: Cart): HTMLElement => {
     parent: container,
   });
 
-  cart.customLineItems.forEach((itemData) => {
+  cart.lineItems.forEach((itemData) => {
     const li = createElement({
       tagName: 'li',
       classNames: ['buying__item'],
       parent: ul,
     });
 
-    const image = createElement({
-      tagName: 'img',
-      classNames: ['buying__image'],
-      // attributes: [{ alt: `${itemData.name.en}` }, { src: `${itemData.slug}` }],
-      attributes: [{ alt: `${itemData.name.en}` }, { src: '../image/herbal.png' }],
-      parent: li,
-    });
+    if (itemData.variant.images) {
+      createElement({
+        tagName: 'img',
+        classNames: ['buying__image'],
+        attributes: [{ alt: `${itemData.name.en}` }, { src: `${itemData.variant.images[0].url}` }],
+        parent: li,
+      });
+    }
 
     const title = createElement({
       tagName: 'h3',
@@ -61,7 +62,7 @@ const basketItems = (cart: Cart): HTMLElement => {
       tagName: 'span',
       classNames: ['buying__name'],
       parent: title,
-      text: itemData.name.en,
+      text: `${itemData.name['en-US']}`,
     });
 
     const weight = createElement({

@@ -105,7 +105,7 @@ const basket = async (): Promise<HTMLElement> => {
   createElement({
     tagName: 'p',
     classNames: ['sum__subtotal', 'titleMonserrat--medium'],
-    html: 'totalPrice',
+    html: 'Subtotal',
     parent: wrapItem,
   });
   createElement({ tagName: 'p', classNames: ['sum__amount'], html: `€3.90`, parent: wrapItem });
@@ -116,13 +116,13 @@ const basket = async (): Promise<HTMLElement> => {
     attributes: [{ href: 'catalog' }],
     parent: items,
   });
-  const clearCartBtn = createElement({
-    tagName: 'button',
-    classNames: ['sum__clear', 'button'],
-    id: 'clearCartBtn',
-    text: 'Clear Cart',
-    parent: items,
-  });
+  // const clearCartBtn = createElement({
+  //   tagName: 'button',
+  //   classNames: ['sum__clear', 'button'],
+  //   id: 'clearCartBtn',
+  //   text: 'Clear Cart',
+  //   parent: items,
+  // });
 
   items.appendChild(basketSum());
 

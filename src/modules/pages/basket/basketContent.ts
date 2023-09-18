@@ -1,24 +1,26 @@
 import basket from './basket';
 import delivery from '../../templates/Delivery';
 import payment from '../../templates/Payment';
-import { getActiveCart } from '../../api';
-import ApiClientBuilder from '../../api/buildRoot';
+import { MainData } from '../../../types/interfaces';
 
-const basketElement = await basket();
+const getBasketContent = async (): Promise<MainData> => {
+  const basketElement = await basket();
+  const itemsContainer = document.createElement('section');
+  itemsContainer.classList.add('cart');
+  itemsContainer.append(basketElement);
 
-const itemsContainer = document.createElement('section');
-itemsContainer.classList.add('cart');
-itemsContainer.append(basketElement);
+  const deliveryElement = delivery();
+  const paymentElement = payment();
 
-const deliveryElement = delivery();
-const paymentElement = payment();
+  const basketContentContainer = document.createElement('div');
+  basketContentContainer.append(itemsContainer, paymentElement, deliveryElement);
 
-const basketContentContainer = document.createElement('div');
-basketContentContainer.append(itemsContainer, paymentElement, deliveryElement);
+  const basketContent = {
+    title: 'Basket',
+    content: basketContentContainer,
+  };
 
-const basketContent = {
-  title: 'Basket',
-  content: basketContentContainer,
+  return basketContent;
 };
 
-export default basketContent;
+export default getBasketContent;
