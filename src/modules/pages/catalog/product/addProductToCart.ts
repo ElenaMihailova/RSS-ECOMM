@@ -1,36 +1,33 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
-import { CartProduct } from '../../../../types/interfaces';
 import { addCartItem } from '../../../api';
 import ApiClientBuilder from '../../../api/buildRoot';
-import { getFromLS, updateCartCommonQuantity } from '../../../helpers/functions';
+import { disableQuantityButtons, getFromLS, updateCartCommonQuantity } from '../../../helpers/functions';
 
-const addProductToCart = async (product: ProductProjection, quantity: number): Promise<void> => {
-  if (!product.taxCategory || !product.masterVariant.prices) {
-    return;
-  }
-
-  const productData: CartProduct = {
-    name: product.name['en-US'],
-    productId: product.id,
-    centAmount: product.masterVariant.prices[0].value.centAmount,
-    slug: product.slug['en-US'],
-    taxCategoryID: product.taxCategory?.id,
-  };
-
+export const addProductToCart = async (product: ProductProjection, quantity: number): Promise<void> => {
   const cartVersion = Number(getFromLS('cartVersion')) || 1;
   const cartID = getFromLS('cartID') as string;
 
-  const updatedCart = await addCartItem(
-    ApiClientBuilder.currentRoot,
-    cartID,
-    cartVersion,
-    productData.productId,
-    quantity,
-  );
+  const updatedCart = await addCartItem(ApiClientBuilder.currentRoot, cartID, cartVersion, product.id, quantity);
 
   if (!(updatedCart instanceof Error)) {
     updateCartCommonQuantity(updatedCart);
   }
 };
 
-export default addProductToCart;
+export const addProductWithLoading = async (
+  button: HTMLButtonElement,
+  product: ProductProjection,
+  quantity: number,
+): Promise<void> => {
+  const buttonElement = button;
+  buttonElement.classList.add('button--loading');
+
+  await setTimeout(async () => {
+    buttonElement.classList.remove('button--loading');
+    buttonElement.disabled = true;
+
+    const productKey = buttonElement.closest('.card__link')?.getAttribute('product-key') as string;
+    disableQuantityButtons(productKey);
+    await addProductToCart(product, quantity);
+  }, 2000);
+};

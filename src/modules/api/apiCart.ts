@@ -1,7 +1,6 @@
 import { Cart } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import Toastify from 'toastify-js';
-// import { CartProduct } from '../../types/interfaces';
 import { removeFromLS, setToLS } from '../helpers/functions';
 
 export const createCart = async (root: ByProjectKeyRequestBuilder): Promise<Cart | Error> => {

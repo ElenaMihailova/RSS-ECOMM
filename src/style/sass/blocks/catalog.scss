@@ -243,3 +243,28 @@
     grid-area: items;
   }
 }
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-family: Prosto One;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.pagination__button {
+  background: none;
+  cursor: pointer;
+  font-size: 20px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  transition: 0.2s;
+}
+
+.pagination__button:hover {
+  color: $color-outline;
+}

@@ -1,5 +1,5 @@
 import Toastify from 'toastify-js';
-import { Cart } from '@commercetools/platform-sdk';
+import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import { AttrSet } from '../../types/types';
 import { Countries, CountryCodes } from '../../types/enums';
 import Router from '../router/router';
@@ -254,6 +254,16 @@ export const setMenuBtnsView = (): void => {
     profileContainer?.classList.add('visually-hidden');
     tooltip.textContent = 'LOG IN';
   }
+};
+
+export const disableQuantityButtons = async (productKey: string): Promise<void> => {
+  const minusBtn: HTMLButtonElement = getElement(`[product-key=${productKey}] .minus-button`);
+  const plusBtn: HTMLButtonElement = getElement(`[product-key=${productKey}] .plus-button`);
+  const quantity: HTMLButtonElement = getElement(`[product-key=${productKey}] .quantity-container__quantity`);
+
+  minusBtn.disabled = true;
+  plusBtn.disabled = true;
+  quantity.classList.add('disabled-text');
 };
 
 export const updateCartCommonQuantity = (cart?: Cart): void => {
