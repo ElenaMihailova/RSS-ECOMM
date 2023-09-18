@@ -1,7 +1,7 @@
 import { Cart } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import { CartProduct } from '../../types/interfaces';
-import { setToLS } from '../helpers/functions';
+import Toastify from 'toastify-js';
+import { removeFromLS, setToLS } from '../helpers/functions';
 
 export const createCart = async (root: ByProjectKeyRequestBuilder): Promise<Cart | Error> => {
   try {
@@ -26,11 +26,12 @@ export const addCartItem = async (
   root: ByProjectKeyRequestBuilder,
   cartID: string,
   cartVersion: number,
-  product: CartProduct,
+  productId: string,
   quantity: number,
 ): Promise<Cart | Error> => {
   try {
     const res = await root
+      .me()
       .carts()
       .withId({ ID: cartID })
       .post({
@@ -38,20 +39,9 @@ export const addCartItem = async (
           version: cartVersion,
           actions: [
             {
-              action: 'addCustomLineItem',
-              name: {
-                en: product.name,
-              },
+              action: 'addLineItem',
+              productId,
               quantity,
-              money: {
-                currencyCode: 'EUR',
-                centAmount: product.centAmount,
-              },
-              slug: product.slug,
-              taxCategory: {
-                typeId: 'tax-category',
-                id: product.taxCategoryID,
-              },
             },
           ],
         },
@@ -75,4 +65,62 @@ export const getActiveCart = async (root: ByProjectKeyRequestBuilder): Promise<C
     console.error(err);
     return err as Error;
   }
+};
+
+export const removeItemFromCart = async (
+  root: ByProjectKeyRequestBuilder,
+  cartID: string,
+  cartVersion: number,
+  lineItemId: string,
+  quantity: number,
+): Promise<Cart | object> => {
+  let resData: object | Cart = {};
+  await root
+    .me()
+    .carts()
+    .withId({ ID: cartID })
+    .post({
+      body: {
+        version: cartVersion,
+        actions: [
+          {
+            action: 'removeLineItem',
+            lineItemId,
+            quantity,
+          },
+        ],
+      },
+    })
+    .execute()
+    .then((r) => {
+      resData = r.body;
+      if ('version' in resData) {
+        removeFromLS('cartVersion');
+        setToLS('cartVersion', JSON.stringify(resData.version));
+      }
+      Toastify({
+        text: 'Product has been removed from cart',
+        className: 'toastify toastify-success',
+        duration: 4000,
+        newWindow: true,
+        close: true,
+        gravity: 'bottom',
+        position: 'center',
+        stopOnFocus: true,
+      }).showToast();
+    })
+    .catch((e) => {
+      Toastify({
+        text: e.message,
+        className: 'toastify toastify-success',
+        duration: 4000,
+        newWindow: true,
+        close: true,
+        gravity: 'bottom',
+        position: 'center',
+        stopOnFocus: true,
+      }).showToast();
+    });
+
+  return resData;
 };
