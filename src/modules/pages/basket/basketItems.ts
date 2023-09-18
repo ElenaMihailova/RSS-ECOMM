@@ -1,6 +1,29 @@
 import { Cart } from '@commercetools/platform-sdk';
 import { createElement } from '../../helpers/functions';
 
+const counterHandler = (minus: HTMLInputElement, num: HTMLInputElement, plus: HTMLInputElement): void => {
+  const number = num;
+
+  minus.addEventListener('click', () => {
+    const currentValue = parseInt(number.value, 10);
+    if (currentValue > 0) {
+      number.value = (currentValue - 1).toString();
+    }
+  });
+
+  plus.addEventListener('click', () => {
+    const currentValue = parseInt(number.value, 10);
+    number.value = (currentValue + 1).toString();
+  });
+
+  number.addEventListener('input', () => {
+    const val = parseInt(number.value, 10);
+    if (Number.isNaN(val) || val < 0) {
+      number.value = '0';
+    }
+  });
+};
+
 const basketItems = (cart: Cart): HTMLElement => {
   const container = createElement({
     tagName: 'div',
@@ -23,7 +46,8 @@ const basketItems = (cart: Cart): HTMLElement => {
     const image = createElement({
       tagName: 'img',
       classNames: ['buying__image'],
-      attributes: [{ alt: `${itemData.name.en}` }, { src: `${itemData.slug}.svg` }],
+      // attributes: [{ alt: `${itemData.name.en}` }, { src: `${itemData.slug}` }],
+      attributes: [{ alt: `${itemData.name.en}` }, { src: '../image/herbal.png' }],
       parent: li,
     });
 
@@ -81,28 +105,12 @@ const basketItems = (cart: Cart): HTMLElement => {
       parent: quantity,
     });
 
-    minus.addEventListener('click', function () {
-      const currentValue = parseInt(number.value, 10);
-      if (currentValue > 0) {
-        number.value = (currentValue - 1).toString();
-      }
-    });
-
-    plus.addEventListener('click', function () {
-      const currentValue = parseInt(number.value, 10);
-      number.value = (currentValue + 1).toString();
-    });
-
-    number.addEventListener('input', function () {
-      if (Number.isNaN(Number(number.value)) || parseInt(number.value, 10) < 0) {
-        number.value = '0';
-      }
-    });
+    counterHandler(minus, number, plus);
 
     const sum = createElement({
       tagName: 'p',
       classNames: ['buying__sum'],
-      text: `€${itemData.money.centAmount / 100}`,
+      text: `€${itemData.totalPrice.centAmount / 100}`,
       parent: li,
     });
   });
