@@ -1,5 +1,5 @@
 import PageView from '../../core/pageView';
-import { createElement } from '../../helpers/functions';
+import { createElement, createSvgElement } from '../../helpers/functions';
 import './aboutUsPage.scss';
 
 class AboutUsView extends PageView {
@@ -35,6 +35,7 @@ class AboutUsView extends PageView {
     createElement({
       tagName: 'div',
       classNames: ['about-us__logo'],
+      html: createSvgElement('rss-link', 'rss-logo'),
       parent: pageWrapper,
     });
 
