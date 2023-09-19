@@ -320,19 +320,21 @@ class ProductView extends PageView {
     addBtn.removeAttribute('disabled');
     addBtn.classList.remove('inactive');
 
-    const activeCart = await getActiveCart(ApiClientBuilder.currentRoot);
-
     const product = (await getProductByProductUrl(ApiClientBuilder.currentRoot, this.link)) as ProductProjection;
     const productName = product.name['en-US'];
 
-    if (!(activeCart instanceof Error)) {
-      const productToRemove = activeCart.lineItems.filter((item) => item.name['en-US'] === productName);
+    if (getFromLS('cartID')) {
+      const activeCart = await getActiveCart(ApiClientBuilder.currentRoot);
 
-      if (productToRemove.length) {
-        const lineItemId = productToRemove[0].id;
-        const productQuantity = productToRemove[0].quantity;
-        amount.textContent = productQuantity.toString();
-        this.removeFromCartHandler(lineItemId, addBtn, addToCartContainer);
+      if (!(activeCart instanceof Error)) {
+        const productToRemove = activeCart.lineItems.filter((item) => item.name['en-US'] === productName);
+
+        if (productToRemove.length) {
+          const lineItemId = productToRemove[0].id;
+          const productQuantity = productToRemove[0].quantity;
+          amount.textContent = productQuantity.toString();
+          this.removeFromCartHandler(lineItemId, addBtn, addToCartContainer);
+        }
       }
     }
 
