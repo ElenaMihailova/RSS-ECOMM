@@ -76,6 +76,7 @@ const basketItems = (cart: Cart): HTMLElement => {
       tagName: 'button',
       classNames: ['buying__button', 'button', 'button--text'],
       text: 'Remove',
+      attributes: [{ 'data-line-item-id': `${itemData.variant.id}` }],
       parent: li,
     });
 
