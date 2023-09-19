@@ -1,4 +1,4 @@
-import { getElement, getFromLS, renderPopup, updateCartCommonQuantity } from '../../helpers/functions';
+import { getElement, getFromLS, renderPopup } from '../../helpers/functions';
 import Router from '../../router/router';
 import clearBasket from './clearBasket';
 import { removeItemFromCart, getActiveCart } from '../../api';
@@ -61,7 +61,6 @@ class BasketController {
           }
 
           renderPopup(true, PopupMessages.SuccesfullyRemovedFromCart);
-          updateCartCommonQuantity(response);
         }
       });
     });
