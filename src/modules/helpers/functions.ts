@@ -288,19 +288,19 @@ export const updateCartCommonQuantity = (cart?: Cart): void => {
   cartQuantityMobile.innerHTML = commonQuantity.toString();
 };
 
-// export const renderModal = (): HTMLElement => {
-//   const modal = createElement({
-//     tagName: 'div',
-//     classNames: ['maintenance-modal'],
-//     parent: document.body,
-//   });
+export const renderModal = (): HTMLElement => {
+  const modal = createElement({
+    tagName: 'div',
+    classNames: ['maintenance-modal'],
+    parent: document.body,
+  });
 
-//   createElement({
-//     tagName: 'div',
-//     classNames: ['modal-content'],
-//     text: 'В последний момент внезапно возникла проблема с токенами, большая просьба дать день на ремонт (:',
-//     parent: modal,
-//   });
+  createElement({
+    tagName: 'div',
+    classNames: ['modal-content'],
+    text: 'В последний момент внезапно возникла проблема с токенами, большая просьба дать день на ремонт (:',
+    parent: modal,
+  });
 
-//   return modal;
-// };
+  return modal;
+};

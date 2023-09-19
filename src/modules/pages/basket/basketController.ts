@@ -1,7 +1,7 @@
 import { getElement, getFromLS, renderPopup, updateCartCommonQuantity } from '../../helpers/functions';
 import Router from '../../router/router';
 import clearBasket from './clearBasket';
-import { removeItemFromCart } from '../../api';
+import { removeItemFromCart, getActiveCart } from '../../api';
 import ApiClientBuilder from '../../api/buildRoot';
 import { PopupMessages } from '../../../types/enums';
 
@@ -31,7 +31,7 @@ class BasketController {
   private clearItemHandler(): void {
     const clearItemButtons: NodeListOf<HTMLButtonElement> = document.querySelectorAll('.buying__button');
 
-    clearItemButtons.forEach((clearItemBtn) => {
+    clearItemButtons.forEach((clearItemBtn, index) => {
       clearItemBtn.addEventListener('click', async () => {
         const lineItemId = clearItemBtn.getAttribute('data-line-item-id');
         if (!lineItemId) {
@@ -40,7 +40,13 @@ class BasketController {
         }
         const cartID = getFromLS('cartID') as string;
         const cartVersion = Number(getFromLS('cartVersion')) || 1;
-        const response = await removeItemFromCart(ApiClientBuilder.currentRoot, cartID, cartVersion, lineItemId, 1);
+        const activeCart = await getActiveCart(ApiClientBuilder.currentRoot);
+        if (activeCart instanceof Error) {
+          return;
+        }
+        const { id } = activeCart.lineItems[index];
+
+        const response = await removeItemFromCart(ApiClientBuilder.currentRoot, cartID, cartVersion, id, 1);
 
         if ('lineItems' in response) {
           const itemsLeft = response.lineItems.filter((item) => item.id === lineItemId);
