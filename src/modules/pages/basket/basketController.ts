@@ -1,7 +1,9 @@
-import { PageUrls } from '../../../assets/data/constants';
-import { getElement, getFromLS } from '../../helpers/functions';
+import { getElement, getFromLS, renderPopup } from '../../helpers/functions';
 import Router from '../../router/router';
 import clearBasket from './clearBasket';
+import { removeItemFromCart, getActiveCart } from '../../api';
+import ApiClientBuilder from '../../api/buildRoot';
+import { PopupMessages } from '../../../types/enums';
 
 class BasketController {
   private router: Router;
@@ -14,7 +16,7 @@ class BasketController {
   public runHandlers(): void {
     if (getFromLS('cartID')) {
       this.clearCartBtnHandler();
-      this.backToShoppingHandler();
+      this.clearItemHandler();
     }
   }
 
@@ -26,11 +28,41 @@ class BasketController {
     });
   }
 
-  private backToShoppingHandler(): void {
-    const btn = getElement('.sum__link');
+  private clearItemHandler(): void {
+    const clearItemButtons: NodeListOf<HTMLButtonElement> = document.querySelectorAll('.buying__button');
 
-    btn.addEventListener('click', () => {
-      this.router.navigateFromButton(PageUrls.CatalogPageUrl);
+    clearItemButtons.forEach((clearItemBtn, index) => {
+      clearItemBtn.addEventListener('click', async () => {
+        const lineItemId = clearItemBtn.getAttribute('data-line-item-id');
+        if (!lineItemId) {
+          console.error('Line Item ID not found for button', clearItemBtn);
+          return;
+        }
+        const cartID = getFromLS('cartID') as string;
+        const cartVersion = Number(getFromLS('cartVersion')) || 1;
+        const activeCart = await getActiveCart(ApiClientBuilder.currentRoot);
+        if (activeCart instanceof Error) {
+          return;
+        }
+        const { id } = activeCart.lineItems[index];
+
+        const response = await removeItemFromCart(ApiClientBuilder.currentRoot, cartID, cartVersion, id, 1);
+
+        if ('lineItems' in response) {
+          const itemsLeft = response.lineItems.filter((item) => item.id === lineItemId);
+
+          if (itemsLeft.length) {
+            return;
+          }
+
+          if (response instanceof Error) {
+            renderPopup(false, response.message);
+            return;
+          }
+
+          renderPopup(true, PopupMessages.SuccesfullyRemovedFromCart);
+        }
+      });
     });
   }
 }

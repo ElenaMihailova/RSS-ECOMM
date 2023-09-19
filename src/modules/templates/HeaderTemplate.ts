@@ -41,7 +41,7 @@ const headerTemplate = (mobilMenu: HTMLElement, desktopMenu: HTMLElement): HTMLE
 
   createElement({
     tagName: 'span',
-    text: 'FrontTea',
+    text: 'FronTea',
     parent: logoLink,
   });
 
