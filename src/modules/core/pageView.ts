@@ -28,7 +28,7 @@ abstract class PageView {
     createElement({
       tagName: 'div',
       classNames: ['input-icon', `${iconData.containerClassName}`],
-      html: createSvgElement(iconData.className, iconData.id),
+      html: createSvgElement(iconData.className, iconData.id, '24', '24'),
       attributes: iconData.attributes,
       parent: parentElement,
     });

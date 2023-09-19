@@ -32,6 +32,7 @@ import ProductView from '../pages/catalog/product/productPageView';
 import createCatalogContent from '../templates/CatalogTemplate';
 import BasketView from '../pages/basket/basketPageView';
 import AboutUsView from '../pages/about/aboutUsPageView';
+import AboutController from '../pages/about/aboutUsPageController';
 import ApiClientBuilder from '../api/buildRoot';
 import { getActiveCart } from '../api';
 import MyTokenCache from '../api/myTokenCache';
@@ -61,6 +62,8 @@ class App {
 
   private profilePage: ProfileView | null;
 
+  private aboutController: AboutController | null;
+
   private basketController: BasketController | null;
 
   constructor() {
@@ -74,6 +77,7 @@ class App {
     this.registrationController = null;
     this.catalogController = null;
     this.profileController = null;
+    this.aboutController = null;
     this.indexBtnHandler();
     this.navCatalogLinksHandler();
     this.navAboutUsLinksHandler();
@@ -181,6 +185,7 @@ class App {
             this.main.clearContent();
             const aboutUsView = new AboutUsView();
             this.main.setViewContent(aboutUsView);
+            this.aboutController = new AboutController(this.router);
           }
         },
       },
