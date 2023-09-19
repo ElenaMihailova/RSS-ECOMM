@@ -314,22 +314,27 @@ class ProductView extends PageView {
   public async addToCartHandler(): Promise<void> {
     const addBtn: HTMLButtonElement = getElement('.product-description__add-button');
     const addToCartContainer: HTMLDivElement = getElement('.product-description__cart');
+    const amount = getElement('.product-description__amount-number');
 
     addBtn.textContent = 'ADD TO CART';
     addBtn.removeAttribute('disabled');
     addBtn.classList.remove('inactive');
 
-    const activeCart = await getActiveCart(ApiClientBuilder.currentRoot);
-
     const product = (await getProductByProductUrl(ApiClientBuilder.currentRoot, this.link)) as ProductProjection;
     const productName = product.name['en-US'];
 
-    if (!(activeCart instanceof Error)) {
-      const productToRemove = activeCart.lineItems.filter((item) => item.name['en-US'] === productName);
+    if (getFromLS('cartID')) {
+      const activeCart = await getActiveCart(ApiClientBuilder.currentRoot);
 
-      if (productToRemove.length) {
-        const lineItemId = productToRemove[0].id;
-        this.removeFromCartHandler(lineItemId, addBtn, addToCartContainer);
+      if (!(activeCart instanceof Error)) {
+        const productToRemove = activeCart.lineItems.filter((item) => item.name['en-US'] === productName);
+
+        if (productToRemove.length) {
+          const lineItemId = productToRemove[0].id;
+          const productQuantity = productToRemove[0].quantity;
+          amount.textContent = productQuantity.toString();
+          this.removeFromCartHandler(lineItemId, addBtn, addToCartContainer);
+        }
       }
     }
 
@@ -364,6 +369,18 @@ class ProductView extends PageView {
     btn.setAttribute('disabled', 'disabled');
     btn.classList.add('inactive');
 
+    const amountContainer = getElement('.product-description__amount');
+    const minusBtn: HTMLButtonElement = getElement('.product-description__minus-button');
+    const plusBtn: HTMLButtonElement = getElement('.product-description__plus-button');
+    const amount = getElement('.product-description__amount-number');
+
+    amountContainer.classList.add('inactive-amount');
+    amount.classList.add('cursor-default');
+    minusBtn.classList.add('cursor-default');
+    plusBtn.classList.add('cursor-default');
+    minusBtn.disabled = true;
+    plusBtn.disabled = true;
+
     const removeBtn = createElement({
       tagName: 'button',
       classNames: ['product-description__remove-button', 'button', 'button--black'],
@@ -376,10 +393,17 @@ class ProductView extends PageView {
       const cartVersion = Number(getFromLS('cartVersion')) || 1;
       const response = await removeItemFromCart(ApiClientBuilder.currentRoot, cartID, cartVersion, id, 1);
 
+      if (!(response instanceof Error)) {
+        renderPopup(true, PopupMessages.SuccesfullyRemovedFromCart);
+        updateCartCommonQuantity(response);
+      }
+
       if ('lineItems' in response) {
         const itemsLeft = response.lineItems.filter((item) => item.id === id);
 
         if (itemsLeft.length) {
+          const quantityLeft = itemsLeft[0].quantity;
+          amount.textContent = quantityLeft.toString();
           return;
         }
 
@@ -387,16 +411,17 @@ class ProductView extends PageView {
         btn.textContent = 'ADD TO CART';
         btn.removeAttribute('disabled');
         btn.classList.remove('inactive');
-
+        amountContainer.classList.remove('inactive-amount');
+        amount.classList.remove('cursor-default');
+        minusBtn.classList.remove('cursor-default');
+        plusBtn.classList.remove('cursor-default');
+        minusBtn.disabled = false;
+        plusBtn.disabled = false;
         removeBtn.remove();
 
         if (response instanceof Error) {
           renderPopup(false, response.message);
-          return;
         }
-
-        renderPopup(true, PopupMessages.SuccesfullyRemovedFromCart);
-        updateCartCommonQuantity(response);
       }
     });
   }

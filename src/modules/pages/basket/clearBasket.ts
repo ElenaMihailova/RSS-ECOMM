@@ -1,4 +1,4 @@
-import { getActiveCart, removeAllItemsFromCart, removeItemFromCart } from '../../api';
+import { getActiveCart, removeAllItemsFromCart } from '../../api';
 import ApiClientBuilder from '../../api/buildRoot';
 import { getElement, renderPopup, updateCartCommonQuantity } from '../../helpers/functions';
 import { emptyBasket } from './basket';

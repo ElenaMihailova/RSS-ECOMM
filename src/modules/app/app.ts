@@ -10,6 +10,7 @@ import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
 import LoginController from '../pages/login/loginPageController';
 import {
+  clearCartQuantity,
   getElement,
   getElementCollection,
   getFromLS,
@@ -32,6 +33,7 @@ import ProductView from '../pages/catalog/product/productPageView';
 import createCatalogContent from '../templates/CatalogTemplate';
 import BasketView from '../pages/basket/basketPageView';
 import AboutUsView from '../pages/about/aboutUsPageView';
+import AboutController from '../pages/about/aboutUsPageController';
 import ApiClientBuilder from '../api/buildRoot';
 import { getActiveCart } from '../api';
 import MyTokenCache from '../api/myTokenCache';
@@ -61,6 +63,8 @@ class App {
 
   private profilePage: ProfileView | null;
 
+  private aboutController: AboutController | null;
+
   private basketController: BasketController | null;
 
   constructor() {
@@ -74,6 +78,7 @@ class App {
     this.registrationController = null;
     this.catalogController = null;
     this.profileController = null;
+    this.aboutController = null;
     this.indexBtnHandler();
     this.navCatalogLinksHandler();
     this.navAboutUsLinksHandler();
@@ -181,6 +186,7 @@ class App {
             this.main.clearContent();
             const aboutUsView = new AboutUsView();
             this.main.setViewContent(aboutUsView);
+            this.aboutController = new AboutController(this.router);
           }
         },
       },
@@ -285,6 +291,7 @@ class App {
       removeFromLS('userID');
       removeFromLS('version');
       setMenuBtnsView();
+      clearCartQuantity();
       this.logoutRedirect();
     } else {
       this.router.navigateFromButton(PageUrls.LoginPageUrl);
@@ -372,6 +379,7 @@ class App {
 
   private async logoutRedirect(): Promise<void> {
     switch (window.location.pathname.slice(1)) {
+      case PageUrls.BasketPageUrl:
       case PageUrls.CatalogPageUrl:
       case PageUrls.ProfilePageUrl:
       case `${PageUrls.ProfilePageUrl}/${PageUrls.AddressesPageUrl}`:
