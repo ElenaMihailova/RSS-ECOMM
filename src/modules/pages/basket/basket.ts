@@ -113,10 +113,9 @@ const basket = async (): Promise<HTMLElement> => {
     tagName: 'a',
     classNames: ['sum__link', 'button'],
     text: 'Back to shopping',
-    attributes: [{ href: 'catalog' }],
     parent: items,
   });
-  const clearCartBtn = createElement({
+  createElement({
     tagName: 'button',
     classNames: ['sum__clear', 'button'],
     id: 'clearCartBtn',

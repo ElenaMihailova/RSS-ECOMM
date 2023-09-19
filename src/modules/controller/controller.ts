@@ -4,7 +4,7 @@ import { PageUrls } from '../../assets/data/constants';
 import { getActiveCart, getUpdatedVersion, loginUser } from '../api';
 import ApiClientBuilder from '../api/buildRoot';
 import MyTokenCache from '../api/myTokenCache';
-import { getFromLS, removeFromLS, setMenuBtnsView, setToLS } from '../helpers/functions';
+import { getFromLS, removeFromLS, setMenuBtnsView, setToLS, updateCartCommonQuantity } from '../helpers/functions';
 import Router from '../router/router';
 
 class Controller {
@@ -51,6 +51,7 @@ class Controller {
     if (!(cart instanceof Error)) {
       setToLS('cartID', cart.id);
       setToLS('cartVersion', cart.version.toString());
+      updateCartCommonQuantity(cart);
     }
 
     if (Object.keys(login).length) {
