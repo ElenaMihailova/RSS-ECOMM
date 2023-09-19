@@ -51,7 +51,7 @@ class LoginView extends PageView {
     createElement({
       tagName: 'div',
       classNames: ['login__email-icon'],
-      html: createSvgElement('mail-icon', 'login-email-icon'),
+      html: createSvgElement('mail-icon', 'login-email-icon', '24', '24'),
       parent: loginEmailInputContainer,
     });
 
@@ -71,7 +71,7 @@ class LoginView extends PageView {
     createElement({
       tagName: 'div',
       classNames: ['login__password-icon'],
-      html: createSvgElement('password-icon', 'login-password-icon'),
+      html: createSvgElement('password-icon', 'login-password-icon', '24', '24'),
       parent: loginPasswordInputContainer,
     });
 
