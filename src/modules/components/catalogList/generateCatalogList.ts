@@ -1,11 +1,20 @@
-import { ProductProjection } from '@commercetools/platform-sdk';
+import { Cart, ProductProjection } from '@commercetools/platform-sdk';
 import generateProductCard from './generateProductCard';
-import { createElement } from '../../helpers/functions';
+import { createElement, getFromLS } from '../../helpers/functions';
 import { getActiveCart } from '../../api';
 import ApiClientBuilder from '../../api/buildRoot';
 
 export default async function generateCatalogList(productData: ProductProjection[]): Promise<HTMLElement> {
-  const activeCart = await getActiveCart(ApiClientBuilder.currentRoot);
+  let activeCart: Cart | null;
+
+  if (getFromLS('cartID')) {
+    const cartResponce = await getActiveCart(ApiClientBuilder.currentRoot);
+    if (!(cartResponce instanceof Error)) {
+      activeCart = cartResponce;
+    }
+  } else {
+    activeCart = null;
+  }
 
   const catalogList = createElement({
     tagName: 'ol',
