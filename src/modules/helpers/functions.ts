@@ -288,6 +288,14 @@ export const updateCartCommonQuantity = (cart?: Cart): void => {
   cartQuantityMobile.innerHTML = commonQuantity.toString();
 };
 
+export const clearCartQuantity = (): void => {
+  const cartQuantityDesktop: HTMLSpanElement = getElement('.cart-quantity--desktop');
+  const cartQuantityMobile: HTMLSpanElement = getElement('.cart-quantity--mobile');
+
+  cartQuantityDesktop.classList.add('visually-hidden');
+  cartQuantityMobile.classList.add('visually-hidden');
+};
+
 export const renderModal = (): HTMLElement => {
   const modal = createElement({
     tagName: 'div',

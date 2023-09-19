@@ -10,6 +10,7 @@ import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
 import LoginController from '../pages/login/loginPageController';
 import {
+  clearCartQuantity,
   getElement,
   getElementCollection,
   getFromLS,
@@ -290,6 +291,7 @@ class App {
       removeFromLS('userID');
       removeFromLS('version');
       setMenuBtnsView();
+      clearCartQuantity();
       this.logoutRedirect();
     } else {
       this.router.navigateFromButton(PageUrls.LoginPageUrl);
@@ -377,6 +379,7 @@ class App {
 
   private async logoutRedirect(): Promise<void> {
     switch (window.location.pathname.slice(1)) {
+      case PageUrls.BasketPageUrl:
       case PageUrls.CatalogPageUrl:
       case PageUrls.ProfilePageUrl:
       case `${PageUrls.ProfilePageUrl}/${PageUrls.AddressesPageUrl}`:
