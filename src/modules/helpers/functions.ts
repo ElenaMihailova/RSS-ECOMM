@@ -1,5 +1,5 @@
 import Toastify from 'toastify-js';
-import { Cart, ProductProjection } from '@commercetools/platform-sdk';
+import { Cart } from '@commercetools/platform-sdk';
 import { AttrSet } from '../../types/types';
 import { Countries, CountryCodes } from '../../types/enums';
 import Router from '../router/router';

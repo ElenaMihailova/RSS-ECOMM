@@ -4,10 +4,26 @@ import { QueryArgs } from '../../../types/interfaces';
 import { createCart, filterProducts, getCategoryId, getProductByProductKey, getProductProjections } from '../../api';
 import ApiClientBuilder from '../../api/buildRoot';
 import generateCatalogList from '../../components/catalogList/generateCatalogList';
-import { createElement, getElement, getElementCollection, getFromLS, setToLS } from '../../helpers/functions';
+import { getElement, getElementCollection, getFromLS, setToLS } from '../../helpers/functions';
 import Router from '../../router/router';
-import pageCount, { disablePaginationBtns, getCurrentPage, getProductsOnPage, resetPage } from './pagination';
+import {
+  disablePaginationBtns,
+  getCurrentPage,
+  getOffset,
+  getPagesNum,
+  getProductsOnPage,
+  resetPage,
+  setCurrentPage,
+} from './paginationHelpers';
 import { addProductWithLoading } from './product/addProductToCart';
+import {
+  createBreadcrumbLink,
+  getBreadcrumbClassLink,
+  removeActiveBreadcrumbLinks,
+  removeBreadcrumbLinks,
+  setActiveBreadcrumbLink,
+} from './breadcrumbHelpers';
+import { displayProductsSubcategory, clearSearchInput, hideProductsSubcategories } from './catalogHelpers';
 
 class CatalogController {
   private router: Router;
@@ -53,41 +69,37 @@ class CatalogController {
     categoryAll.addEventListener('click', async (e: Event) => {
       e.preventDefault();
       this.allProductsAction();
+
       const bcList: HTMLElement = getElement('.breadcrumbs__list');
+
       if (bcList.childElementCount > 3) {
-        const items = bcList.children;
-        for (let i = items.length - 1; i >= 0; i -= 1) {
-          if (i <= 2) {
-            break;
-          }
-          bcList.removeChild(items[i]);
-        }
+        removeBreadcrumbLinks(bcList, 2);
       }
     });
 
     categoryClassic.addEventListener('click', async (e: Event) => {
       e.preventDefault();
-      this.removeActiveCondition();
+      removeActiveBreadcrumbLinks();
       categoryClassic.classList.add('active');
-      this.openCategory(categoryClassicList);
+      displayProductsSubcategory(categoryClassicList);
       this.filterByCategory('Classic Teas');
       this.categoryBCHandler('Classic Teas');
     });
 
     categoryBreakfast.addEventListener('click', async (e: Event) => {
       e.preventDefault();
-      this.removeActiveCondition();
+      removeActiveBreadcrumbLinks();
       categoryBreakfast.classList.add('active');
-      this.openCategory(categoryBreakfastList);
+      displayProductsSubcategory(categoryBreakfastList);
       this.filterByCategory('Breakfast Teas');
       this.categoryBCHandler('Breakfast Teas');
     });
 
     categoryFall.addEventListener('click', async (e: Event) => {
       e.preventDefault();
-      this.removeActiveCondition();
+      removeActiveBreadcrumbLinks();
       categoryFall.classList.add('active');
-      this.openCategory(categoryFallList);
+      displayProductsSubcategory(categoryFallList);
       this.filterByCategory('Fall Teas');
       this.categoryBCHandler('Fall Teas');
     });
@@ -102,7 +114,7 @@ class CatalogController {
 
     categoryBlack.addEventListener('click', async (e: Event) => {
       e.preventDefault();
-      this.removeActiveCondition();
+      removeActiveBreadcrumbLinks();
       categoryBlack.classList.add('active');
       this.filterByCategory('Black teas');
       this.subcategoryBCHandler('Black teas');
@@ -110,7 +122,7 @@ class CatalogController {
 
     categoryChai.addEventListener('click', async (e: Event) => {
       e.preventDefault();
-      this.removeActiveCondition();
+      removeActiveBreadcrumbLinks();
       categoryChai.classList.add('active');
       this.filterByCategory('Chai');
       this.subcategoryBCHandler('Chai');
@@ -118,7 +130,7 @@ class CatalogController {
 
     categoryGreen.addEventListener('click', async (e: Event) => {
       e.preventDefault();
-      this.removeActiveCondition();
+      removeActiveBreadcrumbLinks();
       categoryGreen.classList.add('active');
       this.filterByCategory('Green Teas');
       this.subcategoryBCHandler('Green Teas');
@@ -126,7 +138,7 @@ class CatalogController {
 
     categoryWhite.addEventListener('click', async (e: Event) => {
       e.preventDefault();
-      this.removeActiveCondition();
+      removeActiveBreadcrumbLinks();
       categoryWhite.classList.add('active');
       this.filterByCategory('White Teas');
       this.subcategoryBCHandler('White Teas');
@@ -134,7 +146,7 @@ class CatalogController {
 
     categoryHerbal.addEventListener('click', async (e: Event) => {
       e.preventDefault();
-      this.removeActiveCondition();
+      removeActiveBreadcrumbLinks();
       categoryHerbal.classList.add('active');
       this.filterByCategory('Herbal Teas');
       this.subcategoryBCHandler('Herbal Teas');
@@ -152,17 +164,13 @@ class CatalogController {
 
     catalogLink.addEventListener('click', (e: Event) => {
       e.preventDefault();
-      this.removeActiveCondition();
+      removeActiveBreadcrumbLinks();
       this.allProductsAction();
+
       const bcList: HTMLElement = getElement('.breadcrumbs__list');
+
       if (bcList.childElementCount > 3) {
-        const items = bcList.children;
-        for (let i = items.length - 1; i >= 0; i -= 1) {
-          if (i <= 2) {
-            break;
-          }
-          bcList.removeChild(items[i]);
-        }
+        removeBreadcrumbLinks(bcList, 2);
       }
     });
   }
@@ -176,33 +184,14 @@ class CatalogController {
 
         if (inputHtml.checked) {
           CatalogController.checkedOriginInputs.push(`"${inputHtml.value}"`);
-          const queryArgs: QueryArgs = {
-            filter: [`variants.attributes.Origin.en-US:${CatalogController.checkedOriginInputs.join(',')}`],
-          };
 
-          if (CatalogController.activeCategoryId.length) {
-            queryArgs.filter!.push(`categories.id:"${CatalogController.activeCategoryId}"`);
-          }
+          const queryArgs = this.getOriginQueryArgs();
+          await this.setNewProducts(queryArgs);
 
-          if (CatalogController.checkedFlavorInputs.length) {
-            queryArgs.filter!.push(
-              `variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`,
-            );
-          }
-
-          if (CatalogController.activeSorting.length) {
-            queryArgs.sort = [CatalogController.activeSorting];
-          }
-
-          if (CatalogController.searchWord.length) {
-            queryArgs['text.en-us'] = CatalogController.searchWord;
-          }
-
-          const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-          this.setNewCatalogList(products);
           return;
         }
         const result = CatalogController.checkedOriginInputs.filter((value) => value !== `"${inputHtml.value}"`);
+
         CatalogController.checkedOriginInputs = result;
 
         if (!CatalogController.checkedOriginInputs.length) {
@@ -213,7 +202,7 @@ class CatalogController {
           }
 
           if (CatalogController.checkedFlavorInputs.length && CatalogController.activeCategoryId.length) {
-            queryArgs.filter!.push(
+            queryArgs.filter?.push(
               `variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`,
             );
           } else if (CatalogController.checkedFlavorInputs.length) {
@@ -228,33 +217,12 @@ class CatalogController {
             queryArgs['text.en-us'] = CatalogController.searchWord;
           }
 
-          const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-          this.setNewCatalogList(products);
+          await this.setNewProducts(queryArgs);
           return;
         }
 
-        const queryArgs: QueryArgs = {
-          filter: [`variants.attributes.Origin.en-US:${CatalogController.checkedOriginInputs.join(',')}`],
-        };
-
-        if (CatalogController.activeCategoryId.length) {
-          queryArgs.filter!.push(`categories.id:"${CatalogController.activeCategoryId}"`);
-        }
-
-        if (CatalogController.checkedFlavorInputs.length) {
-          queryArgs.filter!.push(`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`);
-        }
-
-        if (CatalogController.activeSorting.length) {
-          queryArgs.sort = [CatalogController.activeSorting];
-        }
-
-        if (CatalogController.searchWord.length) {
-          queryArgs['text.en-us'] = CatalogController.searchWord;
-        }
-
-        const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-        this.setNewCatalogList(products);
+        const queryArgs: QueryArgs = this.getOriginQueryArgs();
+        await this.setNewProducts(queryArgs);
       });
     });
   }
@@ -268,30 +236,10 @@ class CatalogController {
 
         if (inputHtml.checked) {
           CatalogController.checkedFlavorInputs.push(`"${inputHtml.value}"`);
-          const queryArgs: QueryArgs = {
-            filter: [`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`],
-          };
 
-          if (CatalogController.activeCategoryId.length) {
-            queryArgs.filter!.push(`categories.id:"${CatalogController.activeCategoryId}"`);
-          }
+          const queryArgs = this.getFlavorQueryArgs();
+          await this.setNewProducts(queryArgs);
 
-          if (CatalogController.checkedOriginInputs.length) {
-            queryArgs.filter!.push(
-              `variants.attributes.Origin.en-US:${CatalogController.checkedOriginInputs.join(',')}`,
-            );
-          }
-
-          if (CatalogController.activeSorting.length) {
-            queryArgs.sort = [CatalogController.activeSorting];
-          }
-
-          if (CatalogController.searchWord.length) {
-            queryArgs['text.en-us'] = CatalogController.searchWord;
-          }
-
-          const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-          this.setNewCatalogList(products);
           return;
         }
         const result = CatalogController.checkedFlavorInputs.filter((value) => value !== `"${inputHtml.value}"`);
@@ -305,7 +253,7 @@ class CatalogController {
           }
 
           if (CatalogController.checkedOriginInputs.length && CatalogController.activeCategoryId.length) {
-            queryArgs.filter!.push(
+            queryArgs.filter?.push(
               `variants.attributes.Origin.en-US:${CatalogController.checkedOriginInputs.join(',')}`,
             );
           } else if (CatalogController.checkedOriginInputs.length) {
@@ -320,34 +268,62 @@ class CatalogController {
             queryArgs['text.en-us'] = CatalogController.searchWord;
           }
 
-          const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-          this.setNewCatalogList(products);
+          await this.setNewProducts(queryArgs);
           return;
         }
-        const queryArgs: QueryArgs = {
-          filter: [`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`],
-        };
+        const queryArgs: QueryArgs = this.getFlavorQueryArgs();
 
-        if (CatalogController.activeCategoryId.length) {
-          queryArgs.filter!.push(`categories.id:"${CatalogController.activeCategoryId}"`);
-        }
-
-        if (CatalogController.checkedOriginInputs.length) {
-          queryArgs.filter!.push(`variants.attributes.Origin.en-US:${CatalogController.checkedOriginInputs.join(',')}`);
-        }
-
-        if (CatalogController.activeSorting.length) {
-          queryArgs.sort = [CatalogController.activeSorting];
-        }
-
-        if (CatalogController.searchWord.length) {
-          queryArgs['text.en-us'] = CatalogController.searchWord;
-        }
-
-        const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-        this.setNewCatalogList(products);
+        await this.setNewProducts(queryArgs);
       });
     });
+  }
+
+  public getFlavorQueryArgs(): QueryArgs {
+    const queryArgs: QueryArgs = {
+      filter: [`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`],
+    };
+
+    if (CatalogController.activeCategoryId.length) {
+      queryArgs.filter?.push(`categories.id:"${CatalogController.activeCategoryId}"`);
+    }
+
+    if (CatalogController.checkedOriginInputs.length) {
+      queryArgs.filter?.push(`variants.attributes.Origin.en-US:${CatalogController.checkedOriginInputs.join(',')}`);
+    }
+
+    if (CatalogController.activeSorting.length) {
+      queryArgs.sort = [CatalogController.activeSorting];
+    }
+
+    if (CatalogController.searchWord.length) {
+      queryArgs['text.en-us'] = CatalogController.searchWord;
+    }
+
+    return queryArgs;
+  }
+
+  public getOriginQueryArgs(): QueryArgs {
+    const queryArgs: QueryArgs = {
+      filter: [`variants.attributes.Origin.en-US:${CatalogController.checkedOriginInputs.join(',')}`],
+    };
+
+    if (CatalogController.activeCategoryId.length) {
+      queryArgs.filter?.push(`categories.id:"${CatalogController.activeCategoryId}"`);
+    }
+
+    if (CatalogController.checkedFlavorInputs.length) {
+      queryArgs.filter?.push(`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`);
+    }
+
+    if (CatalogController.activeSorting.length) {
+      queryArgs.sort = [CatalogController.activeSorting];
+    }
+
+    if (CatalogController.searchWord.length) {
+      queryArgs['text.en-us'] = CatalogController.searchWord;
+    }
+
+    return queryArgs;
   }
 
   public sortHandler(): void {
@@ -366,14 +342,14 @@ class CatalogController {
         queryBuild['text.en-us'] = CatalogController.searchWord;
       }
 
-      const products = await filterProducts(ApiClientBuilder.currentRoot, queryBuild);
-      this.setNewCatalogList(products);
+      await this.setNewProducts(queryBuild);
     });
   }
 
   public searchHandler(): void {
     const searchInput: HTMLInputElement = getElement('.search__input');
     const searchButton = getElement('.search__button');
+
     searchButton.addEventListener('click', async () => {
       CatalogController.searchWord = searchInput.value;
       const queryArgs: QueryArgs = {
@@ -386,8 +362,7 @@ class CatalogController {
         queryBuild.sort = [CatalogController.activeSorting];
       }
 
-      const products = await filterProducts(ApiClientBuilder.currentRoot, queryBuild);
-      this.setNewCatalogList(products);
+      await this.setNewProducts(queryBuild);
     });
   }
 
@@ -396,20 +371,21 @@ class CatalogController {
 
     resetBtn.addEventListener('click', async (e: Event) => {
       e.preventDefault();
+
       CatalogController.activeCategoryId = '';
       CatalogController.activeSorting = '';
       CatalogController.checkedFlavorInputs = [];
       CatalogController.checkedOriginInputs = [];
       CatalogController.searchWord = '';
-      this.removeActiveCondition();
+
+      removeActiveBreadcrumbLinks();
 
       const subacategories = getElementCollection('.subcategory__item');
       subacategories.forEach((subcategory) => {
         subcategory.classList.add('visually-hidden');
       });
 
-      const searchInput: HTMLInputElement = getElement('.search__input');
-      searchInput.value = '';
+      clearSearchInput();
 
       const filters = getElementCollection('.filter__input');
       filters.forEach((filter) => {
@@ -421,47 +397,42 @@ class CatalogController {
       const menuHtml = menu as HTMLSelectElement;
       menuHtml.options[0].selected = true;
 
-      const products = await getProductProjections(ApiClientBuilder.currentRoot);
-      this.setNewCatalogList(products);
+      await this.setNewProducts();
     });
   }
 
   private categoryBCHandler(category: string): void {
-    const classLink = category.split(' ')[0].toLowerCase();
+    const classLink = getBreadcrumbClassLink(category);
+
     const bcList: HTMLElement = getElement('.breadcrumbs__list');
+
     if (bcList.childElementCount === 3) {
       this.createNewLink(bcList, category);
     } else if (bcList.childElementCount > 3) {
-      const items = bcList.children;
-      for (let i = items.length - 1; i >= 0; i -= 1) {
-        if (i <= 2) {
-          break;
-        }
-        bcList.removeChild(items[i]);
-      }
+      removeBreadcrumbLinks(bcList, 2);
       this.createNewLink(bcList, category);
     }
+
     const link = getElement(`.breadcrumbs__${classLink}-link`);
+
     link.addEventListener('click', () => {
       this.filterByCategory(category);
     });
   }
 
   private subcategoryBCHandler(category: string): void {
-    const classLink = category.split(' ')[0].toLowerCase();
+    const classLink = getBreadcrumbClassLink(category);
+
     const bcList: HTMLElement = getElement('.breadcrumbs__list');
+
     if (bcList.childElementCount === 5) {
       this.createNewLink(bcList, category);
     } else if (bcList.childElementCount > 5) {
-      const items = bcList.children;
-      for (let i = items.length - 1; i >= 0; i -= 1) {
-        if (i <= 4) {
-          break;
-        }
-        bcList.removeChild(items[i]);
-      }
+      removeBreadcrumbLinks(bcList, 4);
       this.createNewLink(bcList, category);
+
       const link = getElement(`.breadcrumbs__${classLink}-link`);
+
       link.addEventListener('click', () => {
         this.filterByCategory(category);
       });
@@ -469,75 +440,44 @@ class CatalogController {
   }
 
   private createNewLink(parent: HTMLElement, link: string): void {
-    const classLink = link.split(' ')[0].toLowerCase();
-
-    createElement({
-      tagName: 'span',
-      text: '/',
-      parent,
-    });
-
-    const breadcrumbItem = createElement({
-      tagName: 'li',
-      classNames: ['breadcrumbs__link'],
-      parent,
-    });
-
-    const breadcrumbLink = createElement({
-      tagName: 'a',
-      classNames: ['breadcrumbs__link', `breadcrumbs__${classLink}-link`],
-      text: `${link.toUpperCase()}`,
-      parent: breadcrumbItem,
-    });
+    const classLink = getBreadcrumbClassLink(link);
+    const breadcrumbLink = createBreadcrumbLink(parent, link, classLink);
 
     breadcrumbLink.addEventListener('click', async () => {
-      this.removeActiveCondition();
-
+      removeActiveBreadcrumbLinks();
       this.filterByCategory(link);
+
+      setActiveBreadcrumbLink(classLink);
+
       const bcList: HTMLElement = getElement('.breadcrumbs__list');
-      const category = getElement(`.category-${classLink}__link`);
-      category.classList.add('active');
-      if (link === 'Classic Teas' || link === 'Black Teas' || (link === 'Fall Teas' && bcList.childElementCount > 5)) {
-        const items = bcList.children;
-        for (let i = items.length - 1; i >= 0; i -= 1) {
-          if (i <= 4) {
-            break;
-          }
-          bcList.removeChild(items[i]);
-        }
+      if (
+        link === 'Classic Teas' ||
+        link === 'Breakfast Teas' ||
+        (link === 'Fall Teas' && bcList.childElementCount > 5)
+      ) {
+        removeBreadcrumbLinks(bcList, 4);
       }
     });
   }
 
-  private openCategory(category: Element): void {
-    const categories = getElementCollection('.subcategory__item');
-    categories.forEach((cat) => {
-      const categoryHtml = cat as HTMLAnchorElement;
-      categoryHtml.classList.add('visually-hidden');
-    });
-    if (category.classList.contains('visually-hidden')) {
-      category.classList.remove('visually-hidden');
-    } else {
-      category.classList.add('visually-hidden');
-    }
-  }
-
   private async filterByCategory(name: string): Promise<void> {
     const categoryId = await getCategoryId(ApiClientBuilder.currentRoot, name);
+
     CatalogController.searchWord = '';
     CatalogController.activeCategoryId = categoryId;
-    const searchInput: HTMLInputElement = getElement('.search__input');
-    searchInput.value = '';
+
+    clearSearchInput();
+
     const queryArgs: QueryArgs = {
       filter: [`categories.id:"${CatalogController.activeCategoryId}"`],
     };
 
     if (CatalogController.checkedOriginInputs.length) {
-      queryArgs.filter!.push(`variants.attributes.Origin.en-US:${CatalogController.checkedOriginInputs.join(',')}`);
+      queryArgs.filter?.push(`variants.attributes.Origin.en-US:${CatalogController.checkedOriginInputs.join(',')}`);
     }
 
     if (CatalogController.checkedFlavorInputs.length) {
-      queryArgs.filter!.push(`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`);
+      queryArgs.filter?.push(`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`);
     }
 
     if (CatalogController.activeSorting.length) {
@@ -548,8 +488,7 @@ class CatalogController {
       queryArgs['text.en-us'] = CatalogController.searchWord;
     }
 
-    const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-    await this.setNewCatalogList(products);
+    this.setNewProducts(queryArgs);
   }
 
   private queryBuilderForSortSearch(queryArgs: QueryArgs): QueryArgs {
@@ -560,7 +499,7 @@ class CatalogController {
     }
 
     if (CatalogController.checkedOriginInputs.length && CatalogController.activeCategoryId.length) {
-      queryAdding.filter!.push(`variants.attributes.Origin.en-US:${CatalogController.checkedOriginInputs.join(',')}`);
+      queryAdding.filter?.push(`variants.attributes.Origin.en-US:${CatalogController.checkedOriginInputs.join(',')}`);
     } else if (CatalogController.checkedOriginInputs.length) {
       queryAdding.filter = [`variants.attributes.Origin.en-US:${CatalogController.checkedOriginInputs.join(',')}`];
     }
@@ -569,7 +508,7 @@ class CatalogController {
       CatalogController.checkedFlavorInputs.length &&
       (CatalogController.activeCategoryId.length || CatalogController.checkedOriginInputs.length)
     ) {
-      queryAdding.filter!.push(`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`);
+      queryAdding.filter?.push(`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`);
     } else if (CatalogController.checkedFlavorInputs.length) {
       queryAdding.filter = [`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`];
     }
@@ -577,27 +516,14 @@ class CatalogController {
     return queryAdding;
   }
 
-  private removeActiveCondition(): void {
-    const allLinks = getElementCollection('.category__link');
-    allLinks.forEach((link) => {
-      if (link.classList.contains('active')) {
-        link.classList.remove('active');
-      }
-    });
-  }
-
   private async allProductsAction(): Promise<void> {
-    this.removeActiveCondition();
-    const categoryAll = getElement('.category-all__link');
-    categoryAll.classList.add('active');
-    const searchInput: HTMLInputElement = getElement('.search__input');
-    searchInput.value = '';
+    removeActiveBreadcrumbLinks();
+    setActiveBreadcrumbLink('all');
+
+    clearSearchInput();
     CatalogController.searchWord = '';
-    const categories = getElementCollection('.subcategory__item');
-    categories.forEach((cat) => {
-      const categoryHtml = cat as HTMLAnchorElement;
-      categoryHtml.classList.add('visually-hidden');
-    });
+
+    hideProductsSubcategories();
     CatalogController.activeCategoryId = '';
 
     const queryArgs: QueryArgs = {};
@@ -607,7 +533,7 @@ class CatalogController {
     }
 
     if (CatalogController.checkedFlavorInputs.length && CatalogController.checkedOriginInputs.length) {
-      queryArgs.filter!.push(`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`);
+      queryArgs.filter?.push(`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`);
     } else if (CatalogController.checkedFlavorInputs.length) {
       queryArgs.filter = [`variants.attributes.Flavor.en-US:${CatalogController.checkedFlavorInputs.join(',')}`];
     }
@@ -616,8 +542,7 @@ class CatalogController {
       queryArgs.sort = [CatalogController.activeSorting];
     }
 
-    const products = await filterProducts(ApiClientBuilder.currentRoot, queryArgs);
-    await this.setNewCatalogList(products);
+    this.setNewProducts(queryArgs);
   }
 
   private async productItemsHandler(): Promise<void> {
@@ -684,37 +609,47 @@ class CatalogController {
 
   private async createNewCart(): Promise<void> {
     const cart = await createCart(ApiClientBuilder.currentRoot);
+
     if (cart instanceof Error) {
       return;
     }
+
     setToLS('cartID', cart.id);
     setToLS('cartVersion', cart.version.toString());
   }
 
+  public async setNewProducts(query?: QueryArgs): Promise<void> {
+    resetPage();
+    await this.runPaginationHandler(query);
+    await this.setProducts(query);
+  }
+
   private paginationHandlerWrapper: ((e: Event) => Promise<void>) | null = null;
 
-  private async runPaginationHandler(products?: ProductProjection[]): Promise<void> {
-    const productsData = products || (await getProductProjections(ApiClientBuilder.currentRoot));
+  private async runPaginationHandler(queryArgs?: QueryArgs): Promise<void> {
+    const productsData = queryArgs
+      ? await filterProducts(ApiClientBuilder.currentRoot, queryArgs)
+      : await getProductProjections(ApiClientBuilder.currentRoot);
+
     const paginationContainer = getElement('.pagination');
 
-    disablePaginationBtns(pageCount(productsData.length));
+    disablePaginationBtns(getPagesNum(productsData.length));
 
     if (this.paginationHandlerWrapper) {
       paginationContainer.removeEventListener('click', this.paginationHandlerWrapper);
     }
 
-    this.paginationHandlerWrapper = (e: Event): Promise<void> => this.paginationHandler(e, productsData);
+    this.paginationHandlerWrapper = (e: Event): Promise<void> => this.paginationHandler(e, productsData, queryArgs);
 
     paginationContainer.addEventListener('click', this.paginationHandlerWrapper);
   }
 
-  private async paginationHandler(e: Event, productsData: ProductProjection[]): Promise<void> {
+  private async paginationHandler(e: Event, productsData: ProductProjection[], queryArgs?: QueryArgs): Promise<void> {
     const btnPrev = getElement('.prev-button');
     const btnNext = getElement('.next-button');
     const pageNumElement: HTMLDivElement = getElement('.pagination__page-number');
 
     const target = e.target as HTMLElement;
-
     const currentPageNum = getCurrentPage();
 
     let newPageNum: number;
@@ -732,29 +667,23 @@ class CatalogController {
 
     pageNumElement.innerHTML = newPageNum.toString();
 
-    setToLS('currentPage', newPageNum.toString());
-
-    disablePaginationBtns(pageCount(productsData.length));
-
-    await this.setProducts(productsData);
+    setCurrentPage(newPageNum);
+    disablePaginationBtns(getPagesNum(productsData.length));
+    await this.setProducts(queryArgs);
   }
 
-  private async setNewCatalogList(products: ProductProjection[]): Promise<void> {
-    resetPage();
-    await this.runPaginationHandler(products);
-    await this.setProducts(products);
-  }
+  public async setProducts(queryArgs?: QueryArgs): Promise<void> {
+    const currentPage = getCurrentPage();
+    const offset = getOffset(Number(currentPage));
 
-  public async setProducts(products: ProductProjection[]): Promise<void> {
-    const productsOnPage = getProductsOnPage(products);
+    const productsOnPage = await getProductsOnPage(offset, queryArgs);
 
     const container = getElement('.catalog-container__products');
-
     container.innerHTML = '';
 
     const catalogList = await generateCatalogList(productsOnPage);
-
     container.appendChild(catalogList);
+
     this.productItemsHandler();
   }
 }

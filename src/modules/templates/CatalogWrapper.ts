@@ -1,12 +1,10 @@
 import { AnonymousAuthMiddlewareOptions, RefreshAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
-import { ProductProjection } from '@commercetools/platform-sdk';
 import { Flavors, Origins, SortMethods, SortOptions } from '../../assets/data/constants';
-import { getProductProjections } from '../api';
 import ApiClientBuilder, { scopes } from '../api/buildRoot';
 import MyTokenCache from '../api/myTokenCache';
 import generateCatalogList from '../components/catalogList/generateCatalogList';
 import { createElement, getFromLS, setToLS } from '../helpers/functions';
-import { getCurrentPage, getProductsOnPage } from '../pages/catalog/pagination';
+import { getCurrentPage, getOffset, getProductsOnPage } from '../pages/catalog/paginationHelpers';
 
 const catalogWrapper = async (): Promise<HTMLElement> => {
   const container = createElement({
@@ -315,8 +313,6 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     parent: catalogContainer,
   });
 
-  let productData = null;
-
   if (!getFromLS('refreshToken')) {
     const tokenCache = new MyTokenCache();
 
@@ -333,8 +329,6 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     };
 
     ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithAnonymousFlow(options);
-
-    productData = await getProductProjections(ApiClientBuilder.currentRoot);
 
     const tokenInfo = tokenCache.get();
 
@@ -362,8 +356,6 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
 
     ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithRefreshFlow(options);
 
-    productData = await getProductProjections(ApiClientBuilder.currentRoot);
-
     const tokenInfo = tokenCache.get();
 
     if (tokenInfo.token) {
@@ -371,7 +363,9 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     }
   }
 
-  const productsOnPage: ProductProjection[] = getProductsOnPage(productData);
+  const currentPage = getCurrentPage();
+  const offset = getOffset(Number(currentPage));
+  const productsOnPage = await getProductsOnPage(offset);
 
   const catalogList = await generateCatalogList(productsOnPage);
 
@@ -389,8 +383,6 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     text: '<',
     parent: paginationContainer,
   });
-
-  const currentPage = getCurrentPage();
 
   if (currentPage === '1') {
     prevBtn.setAttribute('disabled', 'true');
