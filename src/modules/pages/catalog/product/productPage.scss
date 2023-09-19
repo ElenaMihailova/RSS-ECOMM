@@ -262,3 +262,11 @@
   line-height: 44px;
   color: $color-secondary;
 }
+
+.inactive-amount {
+  opacity: 0.5;
+}
+
+.cursor-default {
+  cursor: default;
+}
