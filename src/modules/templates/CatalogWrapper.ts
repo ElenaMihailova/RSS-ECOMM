@@ -313,6 +313,10 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     parent: catalogContainer,
   });
 
+  const currentPage = getCurrentPage();
+  const offset = getOffset(Number(currentPage));
+  let productsOnPage = null;
+
   if (!getFromLS('refreshToken')) {
     const tokenCache = new MyTokenCache();
 
@@ -329,6 +333,8 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     };
 
     ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithAnonymousFlow(options);
+
+    productsOnPage = await getProductsOnPage(offset);
 
     const tokenInfo = tokenCache.get();
 
@@ -356,16 +362,14 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
 
     ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithRefreshFlow(options);
 
+    productsOnPage = await getProductsOnPage(offset);
+
     const tokenInfo = tokenCache.get();
 
     if (tokenInfo.token) {
       setToLS('token', tokenInfo.token);
     }
   }
-
-  const currentPage = getCurrentPage();
-  const offset = getOffset(Number(currentPage));
-  const productsOnPage = await getProductsOnPage(offset);
 
   const catalogList = await generateCatalogList(productsOnPage);
 
