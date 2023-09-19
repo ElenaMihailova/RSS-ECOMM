@@ -1,4 +1,5 @@
 import Toastify from 'toastify-js';
+import { Cart } from '@commercetools/platform-sdk';
 import { AttrSet } from '../../types/types';
 import { Countries, CountryCodes } from '../../types/enums';
 import Router from '../router/router';
@@ -14,8 +15,9 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
   href?: string;
   router?: Router;
   src?: string;
+  id?: string;
 }): HTMLElementTagNameMap[T] => {
-  const { tagName, classNames, attributes, text, parent, parentPrepend, html, href, router, src } = elData;
+  const { tagName, classNames, attributes, text, parent, parentPrepend, html, href, router, src, id } = elData;
 
   const element: HTMLElementTagNameMap[T] = document.createElement(tagName);
 
@@ -57,6 +59,10 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
       e.preventDefault();
       router.navigateToLink(href);
     });
+  }
+
+  if (id) {
+    element.setAttribute('id', id);
   }
 
   return element;
@@ -248,4 +254,53 @@ export const setMenuBtnsView = (): void => {
     profileContainer?.classList.add('visually-hidden');
     tooltip.textContent = 'LOG IN';
   }
+};
+
+export const disableQuantityButtons = async (productKey: string): Promise<void> => {
+  const minusBtn: HTMLButtonElement = getElement(`[product-key=${productKey}] .minus-button`);
+  const plusBtn: HTMLButtonElement = getElement(`[product-key=${productKey}] .plus-button`);
+  const quantity: HTMLButtonElement = getElement(`[product-key=${productKey}] .quantity-container__quantity`);
+
+  minusBtn.disabled = true;
+  plusBtn.disabled = true;
+  quantity.classList.add('disabled-text');
+};
+
+export const updateCartCommonQuantity = (cart?: Cart): void => {
+  const cartQuantityDesktop: HTMLSpanElement = getElement('.cart-quantity--desktop');
+  const cartQuantityMobile: HTMLSpanElement = getElement('.cart-quantity--mobile');
+
+  const commonQuantity = cart
+    ? cart.lineItems.reduce((accumulator, currentItem) => accumulator + currentItem.quantity, 0)
+    : 0;
+
+  if (!commonQuantity) {
+    cartQuantityDesktop.classList.add('visually-hidden');
+    return;
+  }
+
+  if (cartQuantityDesktop.classList.contains('visually-hidden')) {
+    cartQuantityDesktop.classList.remove('visually-hidden');
+  }
+
+  cartQuantityDesktop.innerHTML = commonQuantity.toString();
+
+  cartQuantityMobile.innerHTML = commonQuantity.toString();
+};
+
+export const renderModal = (): HTMLElement => {
+  const modal = createElement({
+    tagName: 'div',
+    classNames: ['maintenance-modal'],
+    parent: document.body,
+  });
+
+  createElement({
+    tagName: 'div',
+    classNames: ['modal-content'],
+    text: 'В последний момент внезапно возникла проблема с токенами, большая просьба дать день на ремонт (:',
+    parent: modal,
+  });
+
+  return modal;
 };

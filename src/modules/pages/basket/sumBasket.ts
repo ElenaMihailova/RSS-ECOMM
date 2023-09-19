@@ -26,10 +26,11 @@ const basketSum = (): HTMLElement => {
     parent: wrap,
   });
 
+  const amountValue = 3.9;
   const amount = createElement({
     tagName: 'p',
     classNames: ['sum__amount'],
-    html: `€3.90`,
+    html: `€${amountValue.toFixed(2)}`,
     parent: wrap,
   });
 
@@ -46,10 +47,11 @@ const basketSum = (): HTMLElement => {
     parent: wrap2,
   });
 
+  const amount2Value = amountValue * 0.1;
   const amount2 = createElement({
     tagName: 'p',
     classNames: ['sum__amount'],
-    html: `€3.95`,
+    html: `€${amount2Value.toFixed(2)}`,
     parent: wrap2,
   });
 
@@ -72,10 +74,11 @@ const basketSum = (): HTMLElement => {
     parent: wrap3,
   });
 
+  const amount3Value = amountValue + amount2Value;
   const amount3 = createElement({
     tagName: 'p',
     classNames: ['sum__amount'],
-    html: `€7.85`,
+    html: `€${amount3Value.toFixed(2)}`,
     parent: wrap3,
   });
 

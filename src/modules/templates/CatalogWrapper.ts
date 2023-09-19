@@ -1,10 +1,10 @@
 import { AnonymousAuthMiddlewareOptions, RefreshAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { Flavors, Origins, SortMethods, SortOptions } from '../../assets/data/constants';
-import { getProductProjections } from '../api';
 import ApiClientBuilder, { scopes } from '../api/buildRoot';
 import MyTokenCache from '../api/myTokenCache';
 import generateCatalogList from '../components/catalogList/generateCatalogList';
 import { createElement, getFromLS, setToLS } from '../helpers/functions';
+import { getCurrentPage, getOffset, getProductsOnPage } from '../pages/catalog/paginationHelpers';
 
 const catalogWrapper = async (): Promise<HTMLElement> => {
   const container = createElement({
@@ -303,11 +303,15 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
 
   const catalogContainer = createElement({
     tagName: 'div',
-    classNames: ['catalog__container'],
+    classNames: ['catalog__container', 'catalog-container'],
     parent: container,
   });
 
-  let productData = null;
+  const productsContainer = createElement({
+    tagName: 'div',
+    classNames: ['catalog-container__products'],
+    parent: catalogContainer,
+  });
 
   if (!getFromLS('refreshToken')) {
     const tokenCache = new MyTokenCache();
@@ -325,8 +329,6 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     };
 
     ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithAnonymousFlow(options);
-
-    productData = await getProductProjections(ApiClientBuilder.currentRoot);
 
     const tokenInfo = tokenCache.get();
 
@@ -354,8 +356,6 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
 
     ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithRefreshFlow(options);
 
-    productData = await getProductProjections(ApiClientBuilder.currentRoot);
-
     const tokenInfo = tokenCache.get();
 
     if (tokenInfo.token) {
@@ -363,9 +363,45 @@ const catalogWrapper = async (): Promise<HTMLElement> => {
     }
   }
 
-  const catalogList = await generateCatalogList(productData);
+  const currentPage = getCurrentPage();
+  const offset = getOffset(Number(currentPage));
+  const productsOnPage = await getProductsOnPage(offset);
 
-  catalogContainer.appendChild(catalogList);
+  const catalogList = await generateCatalogList(productsOnPage);
+
+  productsContainer.appendChild(catalogList);
+
+  const paginationContainer = createElement({
+    tagName: 'div',
+    classNames: ['catalog-container__pagination', 'pagination'],
+    parent: catalogContainer,
+  });
+
+  const prevBtn = createElement({
+    tagName: 'button',
+    classNames: ['pagination__button', 'prev-button'],
+    text: '<',
+    parent: paginationContainer,
+  });
+
+  if (currentPage === '1') {
+    prevBtn.setAttribute('disabled', 'true');
+  }
+
+  createElement({
+    tagName: 'div',
+    classNames: ['pagination__page-number'],
+    text: getCurrentPage(),
+    parent: paginationContainer,
+  });
+
+  createElement({
+    tagName: 'button',
+    classNames: ['pagination__button', 'next-button'],
+    text: '>',
+    parent: paginationContainer,
+  });
+
   return container;
 };
 

@@ -61,6 +61,35 @@ export const getActiveCart = async (root: ByProjectKeyRequestBuilder): Promise<C
     const res = await root.me().activeCart().get().execute();
     const resData = await res.body;
     return resData;
+  } catch (error) {
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      console.log(error.message);
+    }
+    console.error('Error fetching active cart:', error);
+    throw error;
+  }
+};
+
+export const removeAllItemsFromCart = async (
+  root: ByProjectKeyRequestBuilder,
+  cartID: string,
+  cartVersion: number,
+): Promise<Cart | Error> => {
+  try {
+    const res = await root
+      .me()
+      .carts()
+      .withId({ ID: cartID })
+      .delete({
+        queryArgs: {
+          version: cartVersion,
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    removeFromLS('cartVersion');
+    removeFromLS('cartID');
+    return resData;
   } catch (err) {
     console.error(err);
     return err as Error;
@@ -73,54 +102,33 @@ export const removeItemFromCart = async (
   cartVersion: number,
   lineItemId: string,
   quantity: number,
-): Promise<Cart | object> => {
-  let resData: object | Cart = {};
-  await root
-    .me()
-    .carts()
-    .withId({ ID: cartID })
-    .post({
-      body: {
-        version: cartVersion,
-        actions: [
-          {
-            action: 'removeLineItem',
-            lineItemId,
-            quantity,
-          },
-        ],
-      },
-    })
-    .execute()
-    .then((r) => {
-      resData = r.body;
-      if ('version' in resData) {
-        removeFromLS('cartVersion');
-        setToLS('cartVersion', JSON.stringify(resData.version));
-      }
-      Toastify({
-        text: 'Product has been removed from cart',
-        className: 'toastify toastify-success',
-        duration: 4000,
-        newWindow: true,
-        close: true,
-        gravity: 'bottom',
-        position: 'center',
-        stopOnFocus: true,
-      }).showToast();
-    })
-    .catch((e) => {
-      Toastify({
-        text: e.message,
-        className: 'toastify toastify-success',
-        duration: 4000,
-        newWindow: true,
-        close: true,
-        gravity: 'bottom',
-        position: 'center',
-        stopOnFocus: true,
-      }).showToast();
-    });
-
-  return resData;
+): Promise<Cart | Error> => {
+  try {
+    const res = await root
+      .me()
+      .carts()
+      .withId({ ID: cartID })
+      .post({
+        body: {
+          version: cartVersion,
+          actions: [
+            {
+              action: 'removeLineItem',
+              lineItemId,
+              quantity,
+            },
+          ],
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    if ('version' in resData) {
+      removeFromLS('cartVersion');
+      setToLS('cartVersion', JSON.stringify(resData.version));
+    }
+    return resData;
+  } catch (err) {
+    console.error(err);
+    return err as Error;
+  }
 };

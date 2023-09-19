@@ -1,8 +1,18 @@
 import { Attribute } from '@commercetools/platform-sdk';
 import PageView from '../../core/pageView';
-import { createElement, getElement } from '../../helpers/functions';
 import Router from '../../router/router';
 import { MainData } from '../../../types/interfaces';
+import { removeItemFromCart } from '../../api/apiCart';
+import {
+  createElement,
+  getElement,
+  getFromLS,
+  renderPopup,
+  setToLS,
+  updateCartCommonQuantity,
+} from '../../helpers/functions';
+import ApiClientBuilder from '../../api/buildRoot';
+import { PopupMessages } from '../../../types/enums';
 
 class BasketView extends PageView {
   private title: string;

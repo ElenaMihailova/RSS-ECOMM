@@ -1,24 +1,26 @@
 import basket from './basket';
 import delivery from '../../templates/Delivery';
 import payment from '../../templates/Payment';
-import basketSum from './sumBasket';
+import { MainData } from '../../../types/interfaces';
 
-const basketElement = basket();
-const basketSumElement = basketSum();
+const getBasketContent = async (): Promise<MainData> => {
+  const basketElement = await basket();
+  const itemsContainer = document.createElement('section');
+  itemsContainer.classList.add('cart');
+  itemsContainer.append(basketElement);
 
-const itemsContainer = document.createElement('section');
-itemsContainer.classList.add('cart');
-itemsContainer.append(basketElement, basketSumElement);
+  const deliveryElement = delivery();
+  const paymentElement = payment();
 
-const deliveryElement = delivery();
-const paymentElement = payment();
+  const basketContentContainer = document.createElement('div');
+  basketContentContainer.append(itemsContainer, paymentElement, deliveryElement);
 
-const basketContentContainer = document.createElement('div');
-basketContentContainer.append(itemsContainer, paymentElement, deliveryElement);
+  const basketContent = {
+    title: 'Basket',
+    content: basketContentContainer,
+  };
 
-const basketContent = {
-  title: 'Basket',
-  content: basketContentContainer,
+  return basketContent;
 };
 
-export default basketContent;
+export default getBasketContent;
