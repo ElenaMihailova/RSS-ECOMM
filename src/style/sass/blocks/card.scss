@@ -72,7 +72,7 @@
   padding: 20px;
 }
 
-.quantity-container{
+.quantity-container {
   display: flex;
   align-items: center;
   height: 40px;
@@ -93,7 +93,7 @@
   justify-content: center;
   cursor: pointer;
   border: none;
-  background:none;
+  background: none;
 }
 
 .quantity-container__quantity {
@@ -129,7 +129,7 @@
 .disabled-text {
   color: rgb(119, 120, 120);
 }
-  
+
 .add-to-cart-button:disabled {
   background-color: $color-outline;
 }
@@ -140,7 +140,8 @@
 }
 
 .button--loading::after {
-  content: "";
+  content: '';
+
   position: absolute;
   width: 16px;
   height: 16px;

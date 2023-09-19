@@ -15,8 +15,9 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
   href?: string;
   router?: Router;
   src?: string;
+  id?: string;
 }): HTMLElementTagNameMap[T] => {
-  const { tagName, classNames, attributes, text, parent, parentPrepend, html, href, router, src } = elData;
+  const { tagName, classNames, attributes, text, parent, parentPrepend, html, href, router, src, id } = elData;
 
   const element: HTMLElementTagNameMap[T] = document.createElement(tagName);
 
@@ -58,6 +59,10 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
       e.preventDefault();
       router.navigateToLink(href);
     });
+  }
+
+  if (id) {
+    element.setAttribute('id', id);
   }
 
   return element;
@@ -261,11 +266,13 @@ export const disableQuantityButtons = async (productKey: string): Promise<void> 
   quantity.classList.add('disabled-text');
 };
 
-export const updateCartCommonQuantity = (cart: Cart): void => {
+export const updateCartCommonQuantity = (cart?: Cart): void => {
   const cartQuantityDesktop: HTMLSpanElement = getElement('.cart-quantity--desktop');
   const cartQuantityMobile: HTMLSpanElement = getElement('.cart-quantity--mobile');
 
-  const commonQuantity = cart.lineItems.reduce((accumulator, currentItem) => accumulator + currentItem.quantity, 0);
+  const commonQuantity = cart
+    ? cart.lineItems.reduce((accumulator, currentItem) => accumulator + currentItem.quantity, 0)
+    : 0;
 
   if (!commonQuantity) {
     cartQuantityDesktop.classList.add('visually-hidden');
@@ -277,5 +284,6 @@ export const updateCartCommonQuantity = (cart: Cart): void => {
   }
 
   cartQuantityDesktop.innerHTML = commonQuantity.toString();
+
   cartQuantityMobile.innerHTML = commonQuantity.toString();
 };
