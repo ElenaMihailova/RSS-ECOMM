@@ -1,3 +1,4 @@
+import { LenaContributions, NastyaContributions, NikitaContributions } from '../../../assets/data/constants';
 import PageView from '../../core/pageView';
 import { createElement, createSvgElement } from '../../helpers/functions';
 import './aboutUsPage.scss';
@@ -35,7 +36,7 @@ class AboutUsView extends PageView {
     createElement({
       tagName: 'div',
       classNames: ['about-us__logo'],
-      html: createSvgElement('rss-link', 'rss-logo'),
+      html: createSvgElement('rss-link', 'rss-logo', '121', '45'),
       parent: pageWrapper,
     });
 
@@ -50,8 +51,9 @@ class AboutUsView extends PageView {
     });
 
     createElement({
-      tagName: 'div',
+      tagName: 'img',
       classNames: ['about-us__photo'],
+      attributes: [{ src: './image/lena.jpeg' }],
       parent: container,
     });
 
@@ -75,7 +77,7 @@ class AboutUsView extends PageView {
     });
 
     createElement({
-      tagName: 'h4',
+      tagName: 'span',
       classNames: ['about-us__role-name'],
       text: 'Team Lead',
       parent: roleBlock,
@@ -102,31 +104,19 @@ class AboutUsView extends PageView {
       parent: contributionBlock,
     });
 
-    createElement({
-      tagName: 'p',
+    const contributionText = createElement({
+      tagName: 'div',
       classNames: ['about-us__contributions'],
-      text: 'App styling, main page, basket page, catalog display, board managing, interaction with API',
       parent: contributionBlock,
     });
 
-    const aboutBlock = createElement({
-      tagName: 'div',
-      classNames: ['about-us__about'],
-      parent: infoBlock,
-    });
-
-    createElement({
-      tagName: 'h4',
-      classNames: ['about-us__about-title'],
-      text: 'About',
-      parent: aboutBlock,
-    });
-
-    createElement({
-      tagName: 'p',
-      classNames: ['about-us__about-text'],
-      text: '',
-      parent: aboutBlock,
+    LenaContributions.forEach((item) => {
+      createElement({
+        tagName: 'span',
+        classNames: ['about-us__contribution-item'],
+        text: item,
+        parent: contributionText,
+      });
     });
 
     return container;
@@ -140,8 +130,9 @@ class AboutUsView extends PageView {
     });
 
     createElement({
-      tagName: 'div',
+      tagName: 'img',
       classNames: ['about-us__photo'],
+      attributes: [{ src: './image/nastya.jpeg' }],
       parent: container,
     });
 
@@ -165,7 +156,7 @@ class AboutUsView extends PageView {
     });
 
     createElement({
-      tagName: 'p',
+      tagName: 'span',
       classNames: ['about-us__role-name'],
       text: 'Developer',
       parent: roleBlock,
@@ -186,37 +177,25 @@ class AboutUsView extends PageView {
     });
 
     createElement({
-      tagName: 'p',
+      tagName: 'h4',
       classNames: ['about-us__contribution-title'],
       text: 'Contribution',
       parent: contributionBlock,
     });
 
-    createElement({
-      tagName: 'p',
+    const contributionText = createElement({
+      tagName: 'div',
       classNames: ['about-us__contributions'],
-      text: 'Project setup, registration page, validation, profile page, product page, catalog page pagination, interaction with API, slider',
       parent: contributionBlock,
     });
 
-    const aboutBlock = createElement({
-      tagName: 'div',
-      classNames: ['about-us__about'],
-      parent: infoBlock,
-    });
-
-    createElement({
-      tagName: 'h4',
-      classNames: ['about-us__about-title'],
-      text: 'About',
-      parent: aboutBlock,
-    });
-
-    createElement({
-      tagName: 'p',
-      classNames: ['about-us__about-text'],
-      text: '',
-      parent: aboutBlock,
+    NastyaContributions.forEach((item) => {
+      createElement({
+        tagName: 'span',
+        classNames: ['about-us__contribution-item'],
+        text: item,
+        parent: contributionText,
+      });
     });
 
     return container;
@@ -230,8 +209,9 @@ class AboutUsView extends PageView {
     });
 
     createElement({
-      tagName: 'div',
+      tagName: 'img',
       classNames: ['about-us__photo'],
+      attributes: [{ src: './image/nikita.jpeg' }],
       parent: container,
     });
 
@@ -255,7 +235,7 @@ class AboutUsView extends PageView {
     });
 
     createElement({
-      tagName: 'p',
+      tagName: 'span',
       classNames: ['about-us__role-name'],
       text: 'Developer',
       parent: roleBlock,
@@ -276,37 +256,25 @@ class AboutUsView extends PageView {
     });
 
     createElement({
-      tagName: 'p',
+      tagName: 'h4',
       classNames: ['about-us__contribution-title'],
       text: 'Contribution',
       parent: contributionBlock,
     });
 
-    createElement({
-      tagName: 'p',
+    const contributionText = createElement({
+      tagName: 'div',
       classNames: ['about-us__contributions'],
-      text: 'Routing, login page, authentication, catalog navigation, products filters, sorting, searching, about us page',
       parent: contributionBlock,
     });
 
-    const aboutBlock = createElement({
-      tagName: 'div',
-      classNames: ['about-us__about'],
-      parent: infoBlock,
-    });
-
-    createElement({
-      tagName: 'h4',
-      classNames: ['about-us__about-title'],
-      text: 'About',
-      parent: aboutBlock,
-    });
-
-    createElement({
-      tagName: 'p',
-      classNames: ['about-us__about-text'],
-      text: '',
-      parent: aboutBlock,
+    NikitaContributions.forEach((item) => {
+      createElement({
+        tagName: 'span',
+        classNames: ['about-us__contribution-item'],
+        text: item,
+        parent: contributionText,
+      });
     });
 
     return container;

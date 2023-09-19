@@ -50,3 +50,39 @@ export const ProductUrls = [
 ];
 
 export const ProductUrl = '{link}';
+
+export const LenaContributions = [
+  'repository setup',
+  'task board managing',
+  'app styling',
+  'header',
+  'main page',
+  'basket page',
+  'catalog display',
+  'interaction with API',
+];
+
+export const NastyaContributions = [
+  'development environment configuration',
+  'development scripts',
+  'registration page',
+  'validation',
+  'product page',
+  'slider',
+  'profile page',
+  'catalog page pagination',
+  'interaction with API',
+];
+
+export const NikitaContributions = [
+  'commerce tools project setup',
+  'routing',
+  'login page',
+  'authentication',
+  'catalog navigation',
+  'products filters',
+  'products sorting',
+  'products searching',
+  'about us page',
+  'interaction with API',
+];

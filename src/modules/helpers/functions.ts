@@ -119,8 +119,8 @@ export const parseLS = (item: string): number[] | null => {
   }
 };
 
-export const createSvgElement = (className: string, id: string): string => {
-  return `<svg class=${className} width='24' height='24' viewBox='0 0 24 24'><use href="../image/sprite.svg#${id}" /></svg>`;
+export const createSvgElement = (className: string, id: string, width: string, height: string): string => {
+  return `<svg class=${className} width='${width}' height='${height}' ><use href="../image/sprite.svg#${id}" /></svg>`;
 };
 
 export const renderPopup = (succes: boolean, message: string): void => {
