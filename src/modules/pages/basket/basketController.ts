@@ -6,6 +6,7 @@ import ApiClientBuilder from '../../api/buildRoot';
 import { clearBasket, removeBasketItem } from './basketActions';
 import { getProductFromCart, renderCartSumAmount, renderDeliveryAmount, renderItemSumAmount } from './basketHelpers';
 import { CartQuantityBtns } from '../../../types/enums';
+import { PageUrls } from '../../../assets/data/constants';
 
 class BasketController {
   private router: Router;
@@ -32,6 +33,7 @@ class BasketController {
       this.clearCartBtnHandler();
       this.clearItemHandler();
       this.quantityBtnsHandler();
+      this.shoppingBtnHandler();
     }
   }
 
@@ -136,6 +138,14 @@ class BasketController {
 
     const resultAmount = action === 'minus' ? currentAmount - 1 : currentAmount + 1;
     amount.textContent = resultAmount.toString();
+  }
+
+  private shoppingBtnHandler(): void {
+    const shoppingBtn: HTMLButtonElement = getElement('.shopping-button');
+
+    shoppingBtn.addEventListener('click', async () => {
+      this.router.navigateFromButton(PageUrls.CatalogPageUrl);
+    });
   }
 }
 
