@@ -74,32 +74,6 @@ export const getActiveCart = async (root: ByProjectKeyRequestBuilder): Promise<C
 
 export const removeCart = async (
   root: ByProjectKeyRequestBuilder,
-  cartId: string,
-  cartVersion: number,
-): Promise<Cart | Error> => {
-  try {
-    const res = await root
-      .me()
-      .carts()
-      .withId({ ID: cartId })
-      .delete({
-        queryArgs: {
-          version: cartVersion,
-        },
-      })
-      .execute();
-    const resData = await res.body;
-    removeFromLS('cartVersion');
-    removeFromLS('cartID');
-    return resData;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-export const removeAllItemsFromCart = async (
-  root: ByProjectKeyRequestBuilder,
   cartID: string,
   cartVersion: number,
 ): Promise<Cart | Error> => {

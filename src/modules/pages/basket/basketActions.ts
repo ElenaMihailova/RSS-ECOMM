@@ -1,6 +1,6 @@
 import { Cart, LineItem } from '@commercetools/platform-sdk';
 import { PopupMessages } from '../../../types/enums';
-import { getActiveCart, removeAllItemsFromCart, removeCart, removeItemFromCart } from '../../api';
+import { getActiveCart, removeCart, removeItemFromCart } from '../../api';
 import ApiClientBuilder from '../../api/buildRoot';
 import { getFromLS, renderPopup, updateCartCommonQuantity } from '../../helpers/functions';
 import { setBasketEmptyState } from './basketHelpers';
@@ -11,7 +11,7 @@ export const clearBasket = async (): Promise<void> => {
     return;
   }
 
-  const responce = await removeAllItemsFromCart(ApiClientBuilder.currentRoot, activeCart.id, activeCart.version);
+  const responce = await removeCart(ApiClientBuilder.currentRoot, activeCart.id, activeCart.version);
 
   if (responce instanceof Error) {
     renderPopup(false, responce.message);
