@@ -65,14 +65,14 @@ export const getActiveCart = async (root: ByProjectKeyRequestBuilder): Promise<C
     return resData;
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'message' in error) {
-      console.log(error.message);
+      console.error(error.message);
     }
     console.error('Error fetching active cart:', error);
     throw error;
   }
 };
 
-export const removeAllItemsFromCart = async (
+export const removeCart = async (
   root: ByProjectKeyRequestBuilder,
   cartID: string,
   cartVersion: number,

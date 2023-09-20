@@ -13,7 +13,7 @@ const basketItems = (cart: Cart): HTMLElement => {
     parent: container,
   });
 
-  cart.lineItems.forEach((itemData, index) => {
+  cart.lineItems.forEach((itemData) => {
     const li = createElement({
       tagName: 'li',
       classNames: ['buying__item'],

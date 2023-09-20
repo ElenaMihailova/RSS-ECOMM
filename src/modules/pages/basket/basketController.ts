@@ -1,9 +1,9 @@
-import { getElement, getFromLS, renderPopup, updateCartCommonQuantity } from '../../helpers/functions';
+import { LineItem } from '@commercetools/platform-sdk';
+import { getElement, getFromLS, updateCartCommonQuantity } from '../../helpers/functions';
 import Router from '../../router/router';
-import clearBasket from './clearBasket';
 import { removeItemFromCart, getActiveCart, addCartItem } from '../../api';
 import ApiClientBuilder from '../../api/buildRoot';
-import { PopupMessages } from '../../../types/enums';
+import { clearBasket, removeBasketItem } from './basketActions';
 
 class BasketController {
   private router: Router;
@@ -32,37 +32,25 @@ class BasketController {
   private clearItemHandler(): void {
     const clearItemButtons: NodeListOf<HTMLButtonElement> = document.querySelectorAll('.buying__button');
 
-    clearItemButtons.forEach((clearItemBtn, index) => {
-      clearItemBtn.addEventListener('click', async () => {
-        const lineItemId = clearItemBtn.getAttribute('data-line-item-id');
-        if (!lineItemId) {
-          console.error('Line Item ID not found for button', clearItemBtn);
-          return;
-        }
-        const cartID = getFromLS('cartID') as string;
-        const cartVersion = Number(getFromLS('cartVersion')) || 1;
+    clearItemButtons.forEach((clearItemBtn) => {
+      clearItemBtn.addEventListener('click', async (): Promise<void> => {
         const activeCart = await getActiveCart(ApiClientBuilder.currentRoot);
         if (activeCart instanceof Error) {
           return;
         }
-        const { id } = activeCart.lineItems[index];
 
-        const response = await removeItemFromCart(ApiClientBuilder.currentRoot, cartID, cartVersion, id, 1);
-
-        if ('lineItems' in response) {
-          const itemsLeft = response.lineItems.filter((item) => item.id === lineItemId);
-
-          if (itemsLeft.length) {
-            return;
-          }
-
-          if (response instanceof Error) {
-            renderPopup(false, response.message);
-            return;
-          }
-
-          renderPopup(true, PopupMessages.SuccesfullyRemovedFromCart);
+        const item: HTMLLIElement | null = clearItemBtn.closest('.buying__item');
+        if (!item) {
+          return;
         }
+
+        const product: LineItem | undefined = activeCart.lineItems.find((lineItem) => lineItem.id === item.id);
+
+        if (!product) {
+          return;
+        }
+
+        await removeBasketItem(item, product);
       });
     });
   }
@@ -75,7 +63,7 @@ class BasketController {
       btn.addEventListener('click', async (e) => {
         e.preventDefault();
         const parent = btn.closest('.buying__item');
-        const amount = parent!.querySelector('.quantity') as HTMLDivElement;
+        const amount = parent?.querySelector('.quantity') as HTMLDivElement;
         const id = btn.closest('.buying__item')?.id;
         const cartID = getFromLS('cartID') as string;
         const cartVersion = Number(getFromLS('cartVersion')) || 1;
@@ -105,7 +93,7 @@ class BasketController {
       btn.addEventListener('click', async (e) => {
         e.preventDefault();
         const parent = btn.closest('.buying__item');
-        const amount = parent!.querySelector('.quantity') as HTMLDivElement;
+        const amount = parent?.querySelector('.quantity') as HTMLDivElement;
         const id = btn.closest('.buying__item')?.id;
         const cartID = getFromLS('cartID') as string;
         const cartVersion = Number(getFromLS('cartVersion')) || 1;
