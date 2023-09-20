@@ -111,3 +111,8 @@ export type CatalogContent = {
   title: string;
   content: HTMLDivElement;
 };
+
+export type Action = {
+  action: 'removeLineItem';
+  lineItemId: string;
+};

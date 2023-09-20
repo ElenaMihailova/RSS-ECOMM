@@ -63,6 +63,10 @@ async function setupApiClient(isRefreshToken: boolean): Promise<Cart | Error | E
       setToLS('refreshToken', tokenInfo.refreshToken);
     }
 
+    if (!(cart instanceof Error) && !cart.lineItems.length) {
+      return { isEmpty: true };
+    }
+
     return cart;
   } catch (err) {
     if (err instanceof Error && 'statusCode' in err && err.statusCode === 404) {

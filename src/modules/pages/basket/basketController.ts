@@ -13,7 +13,6 @@ class BasketController {
 
   constructor(router: Router) {
     this.router = router;
-    this.setCartTotalCost();
     this.runHandlers();
   }
 
@@ -28,12 +27,18 @@ class BasketController {
     }
   }
 
-  public runHandlers(): void {
+  public async runHandlers(): Promise<void> {
     if (getFromLS('cartID')) {
-      this.clearCartBtnHandler();
-      this.clearItemHandler();
-      this.quantityBtnsHandler();
-      this.shoppingBtnHandler();
+      const activeCart = await getActiveCart(ApiClientBuilder.currentRoot);
+      if (!(activeCart instanceof Error) && activeCart.lineItems.length) {
+        this.clearCartBtnHandler();
+        this.clearItemHandler();
+        this.quantityBtnsHandler();
+        this.shoppingBtnHandler();
+        this.setCartTotalCost();
+      } else {
+        this.emptyBtnHandler();
+      }
     } else {
       this.emptyBtnHandler();
     }
