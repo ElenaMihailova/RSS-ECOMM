@@ -47,7 +47,10 @@ export const addCartItem = async (
       })
       .execute();
     const resData = await res.body;
-    setToLS('cartVersion', JSON.stringify(res.body.version));
+    if ('version' in resData) {
+      removeFromLS('cartVersion');
+      setToLS('cartVersion', JSON.stringify(resData.version));
+    }
     return resData;
   } catch (err) {
     console.error();

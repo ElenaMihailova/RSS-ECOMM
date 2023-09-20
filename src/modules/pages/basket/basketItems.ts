@@ -1,29 +1,6 @@
 import { Cart } from '@commercetools/platform-sdk';
 import { createElement } from '../../helpers/functions';
 
-const counterHandler = (minus: HTMLInputElement, num: HTMLInputElement, plus: HTMLInputElement): void => {
-  const number = num;
-
-  minus.addEventListener('click', () => {
-    const currentValue = parseInt(number.value, 10);
-    if (currentValue > 0) {
-      number.value = (currentValue - 1).toString();
-    }
-  });
-
-  plus.addEventListener('click', () => {
-    const currentValue = parseInt(number.value, 10);
-    number.value = (currentValue + 1).toString();
-  });
-
-  number.addEventListener('input', () => {
-    const val = parseInt(number.value, 10);
-    if (Number.isNaN(val) || val < 0) {
-      number.value = '0';
-    }
-  });
-};
-
 const basketItems = (cart: Cart): HTMLElement => {
   const container = createElement({
     tagName: 'div',
@@ -40,7 +17,7 @@ const basketItems = (cart: Cart): HTMLElement => {
     const li = createElement({
       tagName: 'li',
       classNames: ['buying__item'],
-      id: `${itemData.id}`,
+      attributes: [{ id: `${itemData.id}` }],
       parent: ul,
     });
 
@@ -86,28 +63,26 @@ const basketItems = (cart: Cart): HTMLElement => {
       parent: li,
     });
 
-    const minus = createElement({
+    createElement({
       tagName: 'input',
       classNames: ['minus'],
       attributes: [{ type: 'button' }, { value: '-' }],
       parent: quantity,
     });
 
-    const number = createElement({
-      tagName: 'input',
+    createElement({
+      tagName: 'div',
       classNames: ['quantity'],
-      attributes: [{ type: 'text' }, { value: `${itemData.quantity}` }],
+      text: `${itemData.quantity}`,
       parent: quantity,
     });
 
-    const plus = createElement({
+    createElement({
       tagName: 'input',
       classNames: ['plus'],
       attributes: [{ type: 'button' }, { value: '+' }],
       parent: quantity,
     });
-
-    counterHandler(minus, number, plus);
 
     createElement({
       tagName: 'p',
