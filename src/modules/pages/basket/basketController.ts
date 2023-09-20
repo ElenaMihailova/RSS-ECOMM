@@ -63,7 +63,8 @@ class BasketController {
       btn.addEventListener('click', async (e) => {
         e.preventDefault();
         const parent = btn.closest('.buying__item');
-        const amount = parent?.querySelector('.quantity') as HTMLDivElement;
+        const amount = parent!.querySelector('.quantity') as HTMLDivElement;
+        const sum = parent!.querySelector('.buying__sum') as HTMLParagraphElement;
         const id = btn.closest('.buying__item')?.id;
         const cartID = getFromLS('cartID') as string;
         const cartVersion = Number(getFromLS('cartVersion')) || 1;
@@ -83,6 +84,8 @@ class BasketController {
 
         if (!(response instanceof Error) && response !== null) {
           updateCartCommonQuantity(response);
+          const product = response.lineItems.filter((item) => item.id === id);
+          sum.textContent = `€${product[0].totalPrice.centAmount / 100}`;
         }
 
         amount.textContent = (currentAmount - 1).toString();
@@ -93,7 +96,8 @@ class BasketController {
       btn.addEventListener('click', async (e) => {
         e.preventDefault();
         const parent = btn.closest('.buying__item');
-        const amount = parent?.querySelector('.quantity') as HTMLDivElement;
+        const amount = parent!.querySelector('.quantity') as HTMLDivElement;
+        const sum = parent!.querySelector('.buying__sum') as HTMLParagraphElement;
         const id = btn.closest('.buying__item')?.id;
         const cartID = getFromLS('cartID') as string;
         const cartVersion = Number(getFromLS('cartVersion')) || 1;
@@ -105,7 +109,7 @@ class BasketController {
           return;
         }
 
-        const product = cart.lineItems.filter((item) => item.id === id);
+        let product = cart.lineItems.filter((item) => item.id === id);
         const idProduct = product[0].productId;
 
         let response = null;
@@ -116,6 +120,8 @@ class BasketController {
 
         if (!(response instanceof Error) && response !== null) {
           updateCartCommonQuantity(response);
+          product = response.lineItems.filter((item) => item.id === id);
+          sum.textContent = `€${product[0].totalPrice.centAmount / 100}`;
         }
 
         amount.textContent = (currentAmount + 1).toString();
