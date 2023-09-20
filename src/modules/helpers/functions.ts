@@ -266,13 +266,14 @@ export const disableQuantityButtons = async (productKey: string): Promise<void> 
   quantity.classList.add('disabled-text');
 };
 
+export const calculateQuantitySum = (quantities: number[]): number =>
+  quantities.reduce((accumulator, quantity) => accumulator + quantity, 0);
+
 export const updateCartCommonQuantity = (cart?: Cart): void => {
   const cartQuantityDesktop: HTMLSpanElement = getElement('.cart-quantity--desktop');
   const cartQuantityMobile: HTMLSpanElement = getElement('.cart-quantity--mobile');
 
-  const commonQuantity = cart
-    ? cart.lineItems.reduce((accumulator, currentItem) => accumulator + currentItem.quantity, 0)
-    : 0;
+  const commonQuantity = cart ? calculateQuantitySum(cart.lineItems.map((lineItem) => lineItem.quantity)) : 0;
 
   if (!commonQuantity) {
     cartQuantityDesktop.classList.add('visually-hidden');

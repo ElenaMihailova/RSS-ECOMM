@@ -4,7 +4,7 @@ import {
   getDateISOStringWithoutTime,
 } from '../src/modules/validation/validationHelpers';
 
-describe('validation checks functions', () => {
+describe('validation helpers functions', () => {
   const testDateString = '20.01.2001';
   const testDate = new Date('2001-01-20T00:00:00.000Z');
   const dateISOStringWithoutTime = '2001-01-20';
