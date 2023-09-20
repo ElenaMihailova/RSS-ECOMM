@@ -6,7 +6,7 @@ const basketSum = (): HTMLElement => {
     classNames: ['cart__sum', 'sum', 'container'],
   });
 
-  const orderTitle = createElement({
+  createElement({
     tagName: 'h3',
     classNames: ['sum__title', 'titleMonserrat--medium'],
     html: 'Order summery',
@@ -19,18 +19,16 @@ const basketSum = (): HTMLElement => {
     parent: order,
   });
 
-  const subtotal = createElement({
+  createElement({
     tagName: 'p',
     classNames: ['sum__subtotal'],
     html: 'Subtotal',
     parent: wrap,
   });
 
-  const amountValue = 3.9;
-  const amount = createElement({
+  createElement({
     tagName: 'p',
-    classNames: ['sum__amount'],
-    html: `€${amountValue.toFixed(2)}`,
+    classNames: ['sum__amount', 'subtotal__amount'],
     parent: wrap,
   });
 
@@ -40,22 +38,20 @@ const basketSum = (): HTMLElement => {
     parent: order,
   });
 
-  const subtotal2 = createElement({
+  createElement({
     tagName: 'p',
     classNames: ['sum__subtotal'],
     html: 'Delivery',
     parent: wrap2,
   });
 
-  const amount2Value = amountValue * 0.1;
-  const amount2 = createElement({
+  createElement({
     tagName: 'p',
-    classNames: ['sum__amount'],
-    html: `€${amount2Value.toFixed(2)}`,
+    classNames: ['sum__amount', 'delivery__amount'],
     parent: wrap2,
   });
 
-  const line = createElement({
+  createElement({
     tagName: 'div',
     classNames: ['sum__line'],
     parent: order,
@@ -67,29 +63,27 @@ const basketSum = (): HTMLElement => {
     parent: order,
   });
 
-  const subtotal3 = createElement({
+  createElement({
     tagName: 'p',
-    classNames: ['sum__subtotal'],
+    classNames: ['sum__total'],
     html: 'Total',
     parent: wrap3,
   });
 
-  const amount3Value = amountValue + amount2Value;
-  const amount3 = createElement({
+  createElement({
     tagName: 'p',
-    classNames: ['sum__amount'],
-    html: `€${amount3Value.toFixed(2)}`,
+    classNames: ['sum__amount', 'total__amount'],
     parent: wrap3,
   });
 
-  const text = createElement({
+  createElement({
     tagName: 'p',
     classNames: ['sum__text'],
     html: 'Estimated shipping time: 2 days',
     parent: order,
   });
 
-  const button = createElement({
+  createElement({
     tagName: 'button',
     classNames: ['sum__button', 'button', 'button--black'],
     text: 'Check out',

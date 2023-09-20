@@ -3,7 +3,7 @@ import { PopupMessages } from '../../../types/enums';
 import { getActiveCart, removeCart, removeItemFromCart } from '../../api';
 import ApiClientBuilder from '../../api/buildRoot';
 import { getFromLS, renderPopup, updateCartCommonQuantity } from '../../helpers/functions';
-import { setBasketEmptyState } from './basketHelpers';
+import { renderCartSumAmount, setBasketEmptyState } from './basketHelpers';
 
 export const clearBasket = async (): Promise<void> => {
   const activeCart = await getActiveCart(ApiClientBuilder.currentRoot);
@@ -69,4 +69,5 @@ export const removeBasketItem = async (item: HTMLLIElement, product: LineItem): 
   }
 
   updateCartCommonQuantity(responce);
+  renderCartSumAmount(responce);
 };
