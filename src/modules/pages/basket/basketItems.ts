@@ -1,5 +1,5 @@
 import { Cart } from '@commercetools/platform-sdk';
-import { createElement } from '../../helpers/functions';
+import { convertCentsToEuros, createElement, getEuroCurrencyString } from '../../helpers/functions';
 
 const basketItems = (cart: Cart): HTMLElement => {
   const container = createElement({
@@ -47,7 +47,20 @@ const basketItems = (cart: Cart): HTMLElement => {
       tagName: 'span',
       classNames: ['buying__weight'],
       parent: title,
-      text: '- 50 g',
+      text: '50g',
+    });
+
+    const itemCentAmount = itemData.price.discounted?.value.centAmount
+      ? itemData.price.discounted?.value.centAmount
+      : itemData.price.value.centAmount;
+
+    const itemPrice = getEuroCurrencyString(convertCentsToEuros(itemCentAmount));
+
+    createElement({
+      tagName: 'span',
+      classNames: ['buying__price'],
+      text: itemPrice,
+      parent: title,
     });
 
     createElement({

@@ -1,5 +1,5 @@
 import { Cart, LineItem } from '@commercetools/platform-sdk';
-import { getElement, getFromLS, updateCartCommonQuantity } from '../../helpers/functions';
+import { getElement, getFromLS, displayConfirmModal, updateCartCommonQuantity } from '../../helpers/functions';
 import Router from '../../router/router';
 import { removeItemFromCart, getActiveCart, addCartItem } from '../../api';
 import ApiClientBuilder from '../../api/buildRoot';
@@ -48,7 +48,10 @@ class BasketController {
     const clearCartBtn: HTMLButtonElement = getElement('.sum__clear');
 
     clearCartBtn.addEventListener('click', async () => {
-      await clearBasket();
+      const confirmation = await displayConfirmModal('Are you sure you want to clear the cart?');
+      if (confirmation) {
+        await clearBasket();
+      }
     });
   }
 

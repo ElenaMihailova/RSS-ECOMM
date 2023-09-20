@@ -68,6 +68,16 @@
   }
 }
 
+.buying__price,
+.buying__weight {
+  display: inline-block;
+  background-color: $color-background-variant;
+  padding: 1px 5px;
+  border-radius: 8px;
+  margin-bottom: 5px;
+  margin-left: 10px;
+}
+
 .buying__sum {
   font-family: $font-monserrat;
   font-size: 16px;

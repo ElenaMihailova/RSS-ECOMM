@@ -1,3 +1,5 @@
+@import '../../../style/sass/variables.scss';
+
 .about-us__wrapper {
   max-width: 768px;
   width: 100%;
@@ -20,7 +22,7 @@
   padding: 10px;
   display: flex;
   gap: 20px;
-  background-color: #fff;
+  background-color: $color-on-primary;
   border-radius: 5px;
 }
 
@@ -47,19 +49,19 @@
 
 .about-us__link {
   display: block;
-  color: #5398cf;
+  color: rgb(83, 152, 207);
   font-size: 0.8rem;
   text-decoration: none;
 
   &:visited,
   &:hover,
   &:active {
-    color: #5e6cda;
+    color: rgb(94, 108, 218);
   }
 }
 
 .rss-link:hover {
-  fill: #5e6cda;
+  fill: rgb(94, 108, 218);
 }
 
 .about-us__contribution-title {
@@ -69,14 +71,14 @@
 .about-us__contribution-item {
   display: inline-block;
   margin: 3px 20px 3px 0;
-  background-color: #eee7ae;
+  background-color: rgb(238, 231, 174);
   padding: 1px 5px;
   border-radius: 8px;
 }
 
 .about-us__role-name {
   display: inline-block;
-  background-color: #dacc5e;
+  background-color: rgb(218, 204, 94);
   padding: 1px 5px;
   border-radius: 8px;
   margin-bottom: 5px;
