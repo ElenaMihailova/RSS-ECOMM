@@ -43,8 +43,8 @@ class BasketController {
     const clearCartBtn: HTMLButtonElement = getElement('.sum__clear');
 
     clearCartBtn.addEventListener('click', async () => {
-      const confirm = await displayConfirmModal('Are you sure you want to clear the basket?');
-      if (confirm) {
+      const confirmation = await displayConfirmModal('Are you sure you want to clear the cart?');
+      if (confirmation) {
         await clearBasket();
       }
     });
