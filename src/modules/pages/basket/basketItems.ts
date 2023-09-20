@@ -40,6 +40,7 @@ const basketItems = (cart: Cart): HTMLElement => {
     const li = createElement({
       tagName: 'li',
       classNames: ['buying__item'],
+      id: `${itemData.id}`,
       parent: ul,
     });
 
@@ -58,25 +59,24 @@ const basketItems = (cart: Cart): HTMLElement => {
       parent: li,
     });
 
-    const name = createElement({
+    createElement({
       tagName: 'span',
       classNames: ['buying__name'],
       parent: title,
       text: `${itemData.name['en-US']}`,
     });
 
-    const weight = createElement({
+    createElement({
       tagName: 'span',
       classNames: ['buying__weight'],
       parent: title,
       text: '- 50 g',
     });
 
-    const button = createElement({
+    createElement({
       tagName: 'button',
       classNames: ['buying__button', 'button', 'button--text'],
       text: 'Remove',
-      attributes: [{ 'data-line-item-id': `${itemData.variant.id}` }],
       parent: li,
     });
 
@@ -109,7 +109,7 @@ const basketItems = (cart: Cart): HTMLElement => {
 
     counterHandler(minus, number, plus);
 
-    const sum = createElement({
+    createElement({
       tagName: 'p',
       classNames: ['buying__sum'],
       text: `€${itemData.totalPrice.centAmount / 100}`,

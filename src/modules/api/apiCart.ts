@@ -1,8 +1,6 @@
 import { Cart } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import Toastify from 'toastify-js';
-import { PopupMessages } from '../../types/enums';
-import { removeFromLS, renderPopup, setToLS, updateCartCommonQuantity } from '../helpers/functions';
+import { removeFromLS, setToLS } from '../helpers/functions';
 
 export const createCart = async (root: ByProjectKeyRequestBuilder): Promise<Cart | Error> => {
   try {
@@ -64,9 +62,35 @@ export const getActiveCart = async (root: ByProjectKeyRequestBuilder): Promise<C
     return resData;
   } catch (error) {
     if (typeof error === 'object' && error !== null && 'message' in error) {
-      console.log(error.message);
+      console.error(error.message);
     }
     console.error('Error fetching active cart:', error);
+    throw error;
+  }
+};
+
+export const removeCart = async (
+  root: ByProjectKeyRequestBuilder,
+  cartId: string,
+  cartVersion: number,
+): Promise<Cart | Error> => {
+  try {
+    const res = await root
+      .me()
+      .carts()
+      .withId({ ID: cartId })
+      .delete({
+        queryArgs: {
+          version: cartVersion,
+        },
+      })
+      .execute();
+    const resData = await res.body;
+    removeFromLS('cartVersion');
+    removeFromLS('cartID');
+    return resData;
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 };
