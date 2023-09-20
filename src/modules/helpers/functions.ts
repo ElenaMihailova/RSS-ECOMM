@@ -312,9 +312,46 @@ export const renderModal = (): HTMLElement => {
   createElement({
     tagName: 'div',
     classNames: ['modal-content'],
-    text: 'В последний момент внезапно возникла проблема с токенами, большая просьба дать день на ремонт (:',
     parent: modal,
   });
 
   return modal;
+};
+
+export const displayConfirmModal = async (message: string): Promise<boolean> => {
+  const modal = renderModal();
+
+  const modalContent: HTMLElement = getElement('.modal-content');
+  modalContent.textContent = message;
+
+  const modalButtons = createElement({
+    tagName: 'div',
+    classNames: ['modal-content__buttons', 'modal-buttons'],
+    parent: modalContent,
+  });
+
+  const buttonOK = createElement({
+    tagName: 'button',
+    classNames: ['modal-buttons__button', 'button'],
+    text: 'Ok',
+    parent: modalButtons,
+  });
+
+  const buttonCancel = createElement({
+    tagName: 'button',
+    classNames: ['modal-buttons__button', 'button'],
+    text: 'Cancel',
+    parent: modalButtons,
+  });
+
+  return new Promise((resolve) => {
+    buttonOK.addEventListener('click', () => {
+      resolve(true);
+      document.body.removeChild(modal);
+    });
+    buttonCancel.addEventListener('click', () => {
+      resolve(false);
+      document.body.removeChild(modal);
+    });
+  });
 };
