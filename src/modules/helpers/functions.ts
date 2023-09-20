@@ -296,6 +296,12 @@ export const clearCartQuantity = (): void => {
   cartQuantityMobile.classList.add('visually-hidden');
 };
 
+export const calculateTotalAmount = (subtotal: number, delivery: number): number => subtotal + delivery;
+
+export const convertCentsToEuros = (centAmount: number): number => centAmount / 100;
+
+export const getEuroCurrencyString = (amount: number): string => `€${amount}`;
+
 export const renderModal = (): HTMLElement => {
   const modal = createElement({
     tagName: 'div',

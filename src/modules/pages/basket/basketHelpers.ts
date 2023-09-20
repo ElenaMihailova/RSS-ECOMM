@@ -1,7 +1,7 @@
 import { Cart, LineItem } from '@commercetools/platform-sdk';
-import { getElement } from '../../helpers/functions';
-import { emptyBasket } from './basket';
+import { calculateTotalAmount, convertCentsToEuros, getElement, getEuroCurrencyString } from '../../helpers/functions';
 import getBasketContent from './basketContent';
+import { emptyBasket } from './basket';
 
 export const setBasketEmptyState = (): void => {
   const cartItems: HTMLDivElement = getElement('.cart__items');
@@ -18,12 +18,6 @@ export const rerenderBasketData = async (): Promise<void> => {
 };
 
 export const deliveryAmount = 300;
-
-const calculateTotalAmount = (subtotal: number, delivery: number): number => subtotal + delivery;
-
-const convertCentsToEuros = (centAmount: number): number => centAmount / 100;
-
-const getEuroCurrencyString = (amount: number): string => `€${amount}`;
 
 export const renderItemSumAmount = (cart: Cart, basketItem: HTMLElement, productID: string | undefined): void => {
   const itemSum = basketItem.querySelector('.buying__sum') as HTMLParagraphElement;
