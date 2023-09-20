@@ -140,3 +140,8 @@ export enum CheckboxTypes {
   DefaultAddress = 'default-address',
   AddressCategory = 'address-category',
 }
+
+export enum CartQuantityBtns {
+  Minus = 'minus',
+  Plus = 'plus',
+}

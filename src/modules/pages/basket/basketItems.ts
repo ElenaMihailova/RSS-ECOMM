@@ -1,29 +1,6 @@
 import { Cart } from '@commercetools/platform-sdk';
 import { createElement } from '../../helpers/functions';
 
-const counterHandler = (minus: HTMLInputElement, num: HTMLInputElement, plus: HTMLInputElement): void => {
-  const number = num;
-
-  minus.addEventListener('click', () => {
-    const currentValue = parseInt(number.value, 10);
-    if (currentValue > 0) {
-      number.value = (currentValue - 1).toString();
-    }
-  });
-
-  plus.addEventListener('click', () => {
-    const currentValue = parseInt(number.value, 10);
-    number.value = (currentValue + 1).toString();
-  });
-
-  number.addEventListener('input', () => {
-    const val = parseInt(number.value, 10);
-    if (Number.isNaN(val) || val < 0) {
-      number.value = '0';
-    }
-  });
-};
-
 const basketItems = (cart: Cart): HTMLElement => {
   const container = createElement({
     tagName: 'div',
@@ -40,6 +17,7 @@ const basketItems = (cart: Cart): HTMLElement => {
     const li = createElement({
       tagName: 'li',
       classNames: ['buying__item'],
+      attributes: [{ id: `${itemData.id}` }],
       parent: ul,
     });
 
@@ -58,21 +36,21 @@ const basketItems = (cart: Cart): HTMLElement => {
       parent: li,
     });
 
-    const name = createElement({
+    createElement({
       tagName: 'span',
       classNames: ['buying__name'],
       parent: title,
       text: `${itemData.name['en-US']}`,
     });
 
-    const weight = createElement({
+    createElement({
       tagName: 'span',
       classNames: ['buying__weight'],
       parent: title,
       text: '- 50 g',
     });
 
-    const button = createElement({
+    createElement({
       tagName: 'button',
       classNames: ['buying__button', 'button', 'button--text'],
       text: 'Remove',
@@ -85,30 +63,28 @@ const basketItems = (cart: Cart): HTMLElement => {
       parent: li,
     });
 
-    const minus = createElement({
+    createElement({
       tagName: 'input',
       classNames: ['minus'],
       attributes: [{ type: 'button' }, { value: '-' }],
       parent: quantity,
     });
 
-    const number = createElement({
-      tagName: 'input',
+    createElement({
+      tagName: 'div',
       classNames: ['quantity'],
-      attributes: [{ type: 'text' }, { value: `${itemData.quantity}` }],
+      text: `${itemData.quantity}`,
       parent: quantity,
     });
 
-    const plus = createElement({
+    createElement({
       tagName: 'input',
       classNames: ['plus'],
       attributes: [{ type: 'button' }, { value: '+' }],
       parent: quantity,
     });
 
-    counterHandler(minus, number, plus);
-
-    const sum = createElement({
+    createElement({
       tagName: 'p',
       classNames: ['buying__sum'],
       text: `€${itemData.totalPrice.centAmount / 100}`,

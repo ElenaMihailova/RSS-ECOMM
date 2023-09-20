@@ -1,7 +1,5 @@
-import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import { AnonymousAuthMiddlewareOptions, RefreshAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { Cart } from '@commercetools/platform-sdk';
-import { getActiveCart, getProductProjections, removeAllItemsFromCart } from '../../api';
+import { getActiveCart } from '../../api';
 import ApiClientBuilder, { scopes } from '../../api/buildRoot';
 import { createElement, getFromLS, setToLS } from '../../helpers/functions';
 import basketItems from './basketItems';
@@ -108,10 +106,10 @@ const basket = async (): Promise<HTMLElement> => {
     html: 'Subtotal',
     parent: wrapItem,
   });
-  createElement({ tagName: 'p', classNames: ['sum__amount'], html: `€3.90`, parent: wrapItem });
+  createElement({ tagName: 'p', classNames: ['sum__amount'], parent: wrapItem });
   createElement({
     tagName: 'a',
-    classNames: ['sum__link', 'button'],
+    classNames: ['sum__link', 'button', 'shopping-button'],
     text: 'Back to shopping',
     parent: items,
   });
