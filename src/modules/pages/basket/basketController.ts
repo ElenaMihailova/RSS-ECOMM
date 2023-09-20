@@ -34,6 +34,8 @@ class BasketController {
       this.clearItemHandler();
       this.quantityBtnsHandler();
       this.shoppingBtnHandler();
+    } else {
+      this.emptyBtnHandler();
     }
   }
 
@@ -144,6 +146,14 @@ class BasketController {
     const shoppingBtn: HTMLButtonElement = getElement('.shopping-button');
 
     shoppingBtn.addEventListener('click', async () => {
+      this.router.navigateFromButton(PageUrls.CatalogPageUrl);
+    });
+  }
+
+  private emptyBtnHandler(): void {
+    const emptyBtn: HTMLButtonElement = getElement('.empty-button');
+
+    emptyBtn.addEventListener('click', async () => {
       this.router.navigateFromButton(PageUrls.CatalogPageUrl);
     });
   }

@@ -16,8 +16,7 @@ export const emptyBasket = (): HTMLElement => {
   createElement({
     tagName: 'a',
     text: 'Tea collections',
-    classNames: ['button'],
-    attributes: [{ href: 'catalog' }],
+    classNames: ['empty-button', 'button'],
     parent: items,
   });
 
