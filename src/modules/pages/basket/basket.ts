@@ -106,10 +106,10 @@ const basket = async (): Promise<HTMLElement> => {
     html: 'Subtotal',
     parent: wrapItem,
   });
-  createElement({ tagName: 'p', classNames: ['sum__amount'], html: `€3.90`, parent: wrapItem });
+  createElement({ tagName: 'p', classNames: ['sum__amount'], parent: wrapItem });
   createElement({
     tagName: 'a',
-    classNames: ['sum__link', 'button'],
+    classNames: ['sum__link', 'button', 'shopping-button'],
     text: 'Back to shopping',
     parent: items,
   });

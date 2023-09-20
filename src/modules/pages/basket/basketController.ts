@@ -1,23 +1,39 @@
-import { LineItem } from '@commercetools/platform-sdk';
+import { Cart, LineItem } from '@commercetools/platform-sdk';
 import { getElement, getFromLS, updateCartCommonQuantity } from '../../helpers/functions';
 import Router from '../../router/router';
 import { removeItemFromCart, getActiveCart, addCartItem } from '../../api';
 import ApiClientBuilder from '../../api/buildRoot';
 import { clearBasket, removeBasketItem } from './basketActions';
+import { getProductFromCart, renderCartSumAmount, renderDeliveryAmount, renderItemSumAmount } from './basketHelpers';
+import { CartQuantityBtns } from '../../../types/enums';
+import { PageUrls } from '../../../assets/data/constants';
 
 class BasketController {
   private router: Router;
 
   constructor(router: Router) {
     this.router = router;
+    this.setCartTotalCost();
     this.runHandlers();
+  }
+
+  public async setCartTotalCost(): Promise<void> {
+    if (!getFromLS('cartID')) {
+      return;
+    }
+    const activeCart = await getActiveCart(ApiClientBuilder.currentRoot);
+    if (!(activeCart instanceof Error)) {
+      renderCartSumAmount(activeCart);
+      renderDeliveryAmount();
+    }
   }
 
   public runHandlers(): void {
     if (getFromLS('cartID')) {
       this.clearCartBtnHandler();
       this.clearItemHandler();
-      this.modifyQuantity();
+      this.quantityBtnsHandler();
+      this.shoppingBtnHandler();
     }
   }
 
@@ -55,77 +71,80 @@ class BasketController {
     });
   }
 
-  private async modifyQuantity(): Promise<void> {
+  private async quantityBtnsHandler(): Promise<void> {
     const minusBtns: NodeListOf<HTMLInputElement> = document.querySelectorAll('.minus');
     const plusBtns: NodeListOf<HTMLInputElement> = document.querySelectorAll('.plus');
 
     minusBtns.forEach((btn) => {
       btn.addEventListener('click', async (e) => {
         e.preventDefault();
-        const parent = btn.closest('.buying__item');
-        const amount = parent!.querySelector('.quantity') as HTMLDivElement;
-        const sum = parent!.querySelector('.buying__sum') as HTMLParagraphElement;
-        const id = btn.closest('.buying__item')?.id;
-        const cartID = getFromLS('cartID') as string;
-        const cartVersion = Number(getFromLS('cartVersion')) || 1;
-        const deleteAmount = 1;
-        const currentAmount = Number(amount.textContent);
-
-        if (currentAmount === 1) {
-          btn.setAttribute('disable', 'disable');
-          return;
-        }
-
-        let response = null;
-
-        if (id) {
-          response = await removeItemFromCart(ApiClientBuilder.currentRoot, cartID, cartVersion, id, deleteAmount);
-        }
-
-        if (!(response instanceof Error) && response !== null) {
-          updateCartCommonQuantity(response);
-          const product = response.lineItems.filter((item) => item.id === id);
-          sum.textContent = `€${product[0].totalPrice.centAmount / 100}`;
-        }
-
-        amount.textContent = (currentAmount - 1).toString();
+        this.modifyQuantity(btn, CartQuantityBtns.Minus);
       });
     });
 
     plusBtns.forEach((btn) => {
       btn.addEventListener('click', async (e) => {
         e.preventDefault();
-        const parent = btn.closest('.buying__item');
-        const amount = parent!.querySelector('.quantity') as HTMLDivElement;
-        const sum = parent!.querySelector('.buying__sum') as HTMLParagraphElement;
-        const id = btn.closest('.buying__item')?.id;
-        const cartID = getFromLS('cartID') as string;
-        const cartVersion = Number(getFromLS('cartVersion')) || 1;
-        const addAmount = 1;
-        const cart = await getActiveCart(ApiClientBuilder.currentRoot);
-        const currentAmount = Number(amount.textContent);
+        this.modifyQuantity(btn, CartQuantityBtns.Plus);
+      });
+    });
+  }
+
+  private async modifyQuantity(btn: HTMLInputElement, action: string): Promise<void> {
+    const parent = btn.closest('.buying__item');
+    const amount = parent?.querySelector('.quantity') as HTMLDivElement;
+    const currentAmount = Number(amount.textContent);
+
+    const id = btn.closest('.buying__item')?.id;
+
+    const cartID = getFromLS('cartID') as string;
+    const cartVersion = Number(getFromLS('cartVersion')) || 1;
+    let cart: Cart | Error;
+    let productID: string | undefined;
+
+    let response = null;
+
+    switch (action) {
+      case CartQuantityBtns.Minus:
+        if (currentAmount === 1) {
+          btn.setAttribute('disable', 'disable');
+          return;
+        }
+        if (id) {
+          response = await removeItemFromCart(ApiClientBuilder.currentRoot, cartID, cartVersion, id, 1);
+        }
+        break;
+      case CartQuantityBtns.Plus:
+        cart = await getActiveCart(ApiClientBuilder.currentRoot);
 
         if (cart instanceof Error) {
           return;
         }
 
-        let product = cart.lineItems.filter((item) => item.id === id);
-        const idProduct = product[0].productId;
+        productID = getProductFromCart(cart, id)?.productId;
 
-        let response = null;
-
-        if (idProduct) {
-          response = await addCartItem(ApiClientBuilder.currentRoot, cartID, cartVersion, idProduct, addAmount);
+        if (productID) {
+          response = await addCartItem(ApiClientBuilder.currentRoot, cartID, cartVersion, productID, 1);
         }
+        break;
+      default:
+    }
 
-        if (!(response instanceof Error) && response !== null) {
-          updateCartCommonQuantity(response);
-          product = response.lineItems.filter((item) => item.id === id);
-          sum.textContent = `€${product[0].totalPrice.centAmount / 100}`;
-        }
+    if (!(response instanceof Error) && response !== null) {
+      updateCartCommonQuantity(response);
+      renderItemSumAmount(response, parent as HTMLElement, id);
+      renderCartSumAmount(response);
+    }
 
-        amount.textContent = (currentAmount + 1).toString();
-      });
+    const resultAmount = action === 'minus' ? currentAmount - 1 : currentAmount + 1;
+    amount.textContent = resultAmount.toString();
+  }
+
+  private shoppingBtnHandler(): void {
+    const shoppingBtn: HTMLButtonElement = getElement('.shopping-button');
+
+    shoppingBtn.addEventListener('click', async () => {
+      this.router.navigateFromButton(PageUrls.CatalogPageUrl);
     });
   }
 }
