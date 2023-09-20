@@ -47,17 +47,19 @@
 
 .about-us__link {
   display: block;
-  color: #5398CF;
+  color: #5398cf;
   font-size: 0.8rem;
   text-decoration: none;
 
-  &:visited, &:hover, &:active {
-    color: #5E6CDA;
+  &:visited,
+  &:hover,
+  &:active {
+    color: #5e6cda;
   }
 }
 
 .rss-link:hover {
-  fill: #5E6CDA;
+  fill: #5e6cda;
 }
 
 .about-us__contribution-title {
@@ -67,14 +69,14 @@
 .about-us__contribution-item {
   display: inline-block;
   margin: 3px 20px 3px 0;
-  background-color: #EEE7AE;
+  background-color: #eee7ae;
   padding: 1px 5px;
   border-radius: 8px;
 }
 
 .about-us__role-name {
   display: inline-block;
-  background-color: #DACC5E;
+  background-color: #dacc5e;
   padding: 1px 5px;
   border-radius: 8px;
   margin-bottom: 5px;
