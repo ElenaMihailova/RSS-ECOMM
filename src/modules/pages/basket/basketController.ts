@@ -51,6 +51,7 @@ class BasketController {
       const confirmation = await displayConfirmModal('Are you sure you want to clear the cart?');
       if (confirmation) {
         await clearBasket();
+        this.emptyBtnHandler();
       }
     });
   }
@@ -76,7 +77,10 @@ class BasketController {
           return;
         }
 
-        await removeBasketItem(item, product);
+        const isEmptyBasket = await removeBasketItem(item, product);
+        if (isEmptyBasket) {
+          this.emptyBtnHandler();
+        }
       });
     });
   }
@@ -160,10 +164,11 @@ class BasketController {
 
   private emptyBtnHandler(): void {
     const emptyBtn: HTMLButtonElement = getElement('.empty-button');
+    emptyBtn.addEventListener('click', this.redirectToCatalogPage.bind(this));
+  }
 
-    emptyBtn.addEventListener('click', async () => {
-      this.router.navigateFromButton(PageUrls.CatalogPageUrl);
-    });
+  private redirectToCatalogPage(): void {
+    this.router.navigateFromButton(PageUrls.CatalogPageUrl);
   }
 }
 

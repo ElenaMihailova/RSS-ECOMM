@@ -31,7 +31,8 @@ export const clearBasket = async (): Promise<void> => {
   updateCartCommonQuantity();
 };
 
-export const removeBasketItem = async (item: HTMLLIElement, product: LineItem): Promise<void> => {
+export const removeBasketItem = async (item: HTMLLIElement, product: LineItem): Promise<boolean> => {
+  let isEmptyBasket = false;
   const cartID = getFromLS('cartID') as string;
   const cartVersion = Number(getFromLS('cartVersion')) || 1;
   const productID = product.id;
@@ -47,14 +48,16 @@ export const removeBasketItem = async (item: HTMLLIElement, product: LineItem): 
 
   if (response instanceof Error) {
     renderPopup(false, response.message);
-    return;
+    return isEmptyBasket;
   }
 
   renderPopup(true, PopupMessages.SuccesfullyRemovedFromCart);
 
   if (!response.lineItems.length) {
     setBasketEmptyState();
-    return;
+    updateCartCommonQuantity();
+    isEmptyBasket = true;
+    return isEmptyBasket;
   }
 
   const container = item.closest('.buying__list');
@@ -64,4 +67,6 @@ export const removeBasketItem = async (item: HTMLLIElement, product: LineItem): 
 
   updateCartCommonQuantity(response);
   renderCartSumAmount(response);
+
+  return isEmptyBasket;
 };
