@@ -1,16 +1,19 @@
 import {
+  AnonymousCartSignInMode,
   Customer,
   CustomerChangePassword,
-  CustomerSignInResult,
+  CustomerSignin,
   CustomerUpdate,
   MyCustomerDraft,
 } from '@commercetools/platform-sdk';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import Toastify from 'toastify-js';
 import { CustomerData } from '../../types/interfaces';
-import { apiProjectRoot } from './buildRoot';
 
-export const createCustomer = async (data: MyCustomerDraft): Promise<MyCustomerDraft | Error> => {
+export const createCustomer = async (
+  apiProjectRoot: ByProjectKeyRequestBuilder,
+  data: MyCustomerDraft,
+): Promise<MyCustomerDraft | Error> => {
   try {
     const res = await apiProjectRoot
       .me()
@@ -27,7 +30,10 @@ export const createCustomer = async (data: MyCustomerDraft): Promise<MyCustomerD
   }
 };
 
-export const changePassword = async (body: CustomerChangePassword): Promise<Customer | Error> => {
+export const changePassword = async (
+  apiProjectRoot: ByProjectKeyRequestBuilder,
+  body: CustomerChangePassword,
+): Promise<Customer | Error> => {
   try {
     const res = await apiProjectRoot
       .customers()
@@ -44,7 +50,10 @@ export const changePassword = async (body: CustomerChangePassword): Promise<Cust
   }
 };
 
-export const getCustomerByID = async (ID: string): Promise<MyCustomerDraft | object> => {
+export const getCustomerByID = async (
+  apiProjectRoot: ByProjectKeyRequestBuilder,
+  ID: string,
+): Promise<MyCustomerDraft | object> => {
   try {
     const res = await apiProjectRoot.customers().withId({ ID }).get().execute();
     const resData = await res.body;
@@ -55,7 +64,11 @@ export const getCustomerByID = async (ID: string): Promise<MyCustomerDraft | obj
   return {};
 };
 
-export const updateCustomer = async (customerId: string, body: CustomerUpdate): Promise<Customer | Error> => {
+export const updateCustomer = async (
+  apiProjectRoot: ByProjectKeyRequestBuilder,
+  customerId: string,
+  body: CustomerUpdate,
+): Promise<Customer | Error> => {
   try {
     const res = await apiProjectRoot
       .customers()
@@ -72,14 +85,20 @@ export const updateCustomer = async (customerId: string, body: CustomerUpdate): 
   }
 };
 
-export const getUpdatedCustomer = async (customerID: string): Promise<Customer> => {
-  const updatedCustomersData: MyCustomerDraft | object = await getCustomerByID(customerID);
+export const getUpdatedCustomer = async (
+  apiProjectRoot: ByProjectKeyRequestBuilder,
+  customerID: string,
+): Promise<Customer> => {
+  const updatedCustomersData: MyCustomerDraft | object = await getCustomerByID(apiProjectRoot, customerID);
   const data = updatedCustomersData as Customer;
   return data;
 };
 
-export const getUpdatedVersion = async (customerID: string): Promise<number | undefined> => {
-  const updatedCustomersData: CustomerData | object = await getCustomerByID(customerID);
+export const getUpdatedVersion = async (
+  apiProjectRoot: ByProjectKeyRequestBuilder,
+  customerID: string,
+): Promise<number | undefined> => {
+  const updatedCustomersData: CustomerData | object = await getCustomerByID(apiProjectRoot, customerID);
   const data = updatedCustomersData as CustomerData;
   const { version } = data;
 
@@ -94,7 +113,9 @@ export const loginUser = async (
   root: ByProjectKeyRequestBuilder,
   email: string,
   password: string,
-): Promise<CustomerSignInResult | object> => {
+  activeCartSignInMode: AnonymousCartSignInMode,
+  updateProductData: boolean,
+): Promise<CustomerSignin | object> => {
   let resData = {};
   await root
     .login()
@@ -102,6 +123,8 @@ export const loginUser = async (
       body: {
         email,
         password,
+        anonymousCartSignInMode: 'MergeWithExistingCustomerCart',
+        updateProductData: true,
       },
     })
     .execute()

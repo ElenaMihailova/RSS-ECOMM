@@ -7,4 +7,6 @@ export interface ProductCardData {
   description: string;
   weight?: string;
   key: string;
+  inCart?: boolean;
+  quantity?: number;
 }

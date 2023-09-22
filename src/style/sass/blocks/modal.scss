@@ -24,6 +24,7 @@
   font-size: 24px;
   text-align: center;
   white-space: normal;
+  max-width: 700px;
 }
 
 @keyframes fadeIn {
@@ -55,4 +56,10 @@
 .no-scroll {
   overflow: hidden;
   height: 100%;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
 }

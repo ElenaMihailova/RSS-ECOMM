@@ -107,6 +107,8 @@ export enum PopupMessages {
   NewPasswordsNoMatch = "New password fields don't match",
   PasswordChanged = 'Your password has been successfully updated',
   ProfileCorrectData = 'Please enter the correct data!',
+  SuccesfullyRemovedFromCart = 'Product has been removed from cart',
+  SuccesfullyCartEmptied = 'Cart has been emptied',
 }
 
 export enum FieldNames {
@@ -137,4 +139,9 @@ export enum CheckboxNames {
 export enum CheckboxTypes {
   DefaultAddress = 'default-address',
   AddressCategory = 'address-category',
+}
+
+export enum CartQuantityBtns {
+  Minus = 'minus',
+  Plus = 'plus',
 }

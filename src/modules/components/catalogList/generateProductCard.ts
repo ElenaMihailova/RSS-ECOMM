@@ -1,8 +1,8 @@
 import { ProductCardData } from './productTypes';
-import { createElement } from '../../helpers/functions';
+import { createElement, createSvg } from '../../helpers/functions';
 
 export default function generateProductCard(productData: ProductCardData): HTMLElement {
-  const { link, imageUrl, title, price, description, key, discount } = productData;
+  const { link, imageUrl, title, price, description, key, discount, inCart, quantity } = productData;
 
   const productCard = createElement({
     tagName: 'a',
@@ -11,21 +11,21 @@ export default function generateProductCard(productData: ProductCardData): HTMLE
     href: link,
   });
 
-  const imageCard = createElement({
+  createElement({
     tagName: 'img',
     classNames: ['card__image'],
     attributes: [{ alt: title }, { src: imageUrl }],
     parent: productCard,
   });
 
-  const nameCard = createElement({
+  createElement({
     tagName: 'h2',
     classNames: ['card__name'],
     text: title,
     parent: productCard,
   });
 
-  const descriptionCard = createElement({
+  createElement({
     tagName: 'p',
     classNames: ['card__description'],
     text: description,
@@ -38,29 +38,92 @@ export default function generateProductCard(productData: ProductCardData): HTMLE
     parent: productCard,
   });
 
-  const weightCard = createElement({
+  createElement({
     tagName: 'p',
     classNames: ['card__weight'],
     text: '50 g',
     parent: priceWrap,
   });
 
-  const priceCard = createElement({
+  createElement({
     tagName: 'p',
     classNames: ['card__price'],
     text: `€${price}`,
     parent: priceWrap,
   });
 
-  let discountCard;
-
   if (typeof discount !== 'undefined' && price !== discount) {
-    discountCard = createElement({
+    createElement({
       tagName: 'p',
       classNames: ['card__discount'],
       text: `€${discount}`,
       parent: priceWrap,
     });
+  }
+
+  const cartWrap = createElement({
+    tagName: 'div',
+    classNames: ['card__cart-wrap', 'cart-wrap'],
+    parent: productCard,
+  });
+
+  const quantityContainer = createElement({
+    tagName: 'div',
+    classNames: ['cart-wrap__quantity-container', 'quantity-container'],
+    parent: cartWrap,
+  });
+
+  const minusBtn = createElement({
+    tagName: 'button',
+    classNames: ['quantity-container__button', 'minus-button'],
+    attributes: [{ disabled: 'true' }],
+    text: '-',
+    parent: quantityContainer,
+  });
+
+  const quantityElement = createElement({
+    tagName: 'div',
+    classNames: ['quantity-container__quantity'],
+    text: quantity?.toString() || '1',
+    parent: quantityContainer,
+  });
+
+  const plusBtn = createElement({
+    tagName: 'button',
+    classNames: ['quantity-container__button', 'plus-button'],
+    text: '+',
+    parent: quantityContainer,
+  });
+
+  const addToCartBtn = createElement({
+    tagName: 'button',
+    classNames: ['cart-wrap__add-to-cart-button', 'add-to-cart-button'],
+    parent: cartWrap,
+  });
+
+  const svg = createSvg({
+    tagName: 'svg',
+    attributes: {
+      width: '24',
+      height: '24',
+      viewBox: '0 0 24 24',
+      'aria-hidden': 'false',
+      fill: '#000000',
+    },
+    parent: addToCartBtn,
+  });
+
+  createSvg({
+    tagName: 'use',
+    attributes: { href: '../image/sprite.svg#cart' },
+    parent: svg,
+  });
+
+  if (inCart) {
+    minusBtn.disabled = true;
+    plusBtn.disabled = true;
+    addToCartBtn.disabled = true;
+    quantityElement.classList.add('disabled-text');
   }
 
   return productCard;

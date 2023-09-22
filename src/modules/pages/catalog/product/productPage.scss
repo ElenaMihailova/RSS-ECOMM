@@ -1,4 +1,4 @@
-@import '../../../style/sass/variables.scss';
+@import '../../../../style/sass/variables.scss';
 
 .product-page__container {
   max-width: 1000px;
@@ -124,8 +124,45 @@
   padding: 5px;
 }
 
-.product-description__button {
-  margin: 0 auto;
+.product-description__cart {
+  display: flex;
+  justify-content: start;
+  gap: 30px;
+}
+
+.product-description__amount {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  gap: 10px;
+  font-family: Montseratt;
+  font-feature-settings: 'tnum';
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.product-description__minus-button,
+.product-description__plus-button {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.product-description__add-button {
+  padding: 10px 5px;
+  font-size: 0.8rem;
+}
+
+.product-description__remove-button {
+  padding: 10px 18px;
+}
+
+.product-description__amount-number {
+  cursor: pointer;
 }
 
 .price-container {
@@ -224,4 +261,12 @@
   font-weight: 400;
   line-height: 44px;
   color: $color-secondary;
+}
+
+.inactive-amount {
+  opacity: 0.5;
+}
+
+.cursor-default {
+  cursor: default;
 }

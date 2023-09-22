@@ -3,6 +3,7 @@ export const ButtonsNamesAndUrls: { [key: string]: string } = {
   Login: 'login',
   Registration: 'registration',
   Catalog: 'catalog',
+  Basket: 'basket',
 };
 
 export const enum PageUrls {
@@ -15,6 +16,8 @@ export const enum PageUrls {
   ErrorPageUrl = 'not-found',
   CatalogPageUrl = 'catalog',
   ProductPageUrl = 'product',
+  BasketPageUrl = 'basket',
+  AboutUsPageUrl = 'about-us',
 }
 
 export const Origins = ['China', 'India', 'Morocco', 'Kenya', 'Japan'];
@@ -33,6 +36,53 @@ export const ProductUrls = [
   'tibetan-wild-berry-infusion',
   'japanese-cherry-blossom-serenity',
   'mystical-lavender-eucalyptus-soothe',
+  'talis-masala-chai-tea',
+  'caramelized-pear-tea',
+  'eisais-choice-sencha-tea',
+  'huntington-rose-tea',
+  'silver-needle-tea',
+  'earl-grey-crme-tea',
+  'jasmine-pearls',
+  'pumpkin-pie-tea',
+  'lemon-herbal-tea',
+  'rosemary-tea',
+  'pacific-coast-mint-tea',
 ];
 
 export const ProductUrl = '{link}';
+
+export const LenaContributions = [
+  'repository setup',
+  'task board managing',
+  'app styling',
+  'header',
+  'main page',
+  'basket page',
+  'catalog display',
+  'interaction with API',
+];
+
+export const NastyaContributions = [
+  'development environment configuration',
+  'development scripts',
+  'registration page',
+  'validation',
+  'product page',
+  'slider',
+  'profile page',
+  'catalog page pagination',
+  'interaction with API',
+];
+
+export const NikitaContributions = [
+  'commerce tools project setup',
+  'routing',
+  'login page',
+  'authentication',
+  'catalog navigation',
+  'products filters',
+  'products sorting',
+  'products searching',
+  'about us page',
+  'interaction with API',
+];

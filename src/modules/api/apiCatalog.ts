@@ -1,8 +1,11 @@
 import { ProductProjection } from '@commercetools/platform-sdk';
-import { apiProjectRoot } from './buildRoot';
+import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { QueryArgs } from '../../types/interfaces';
 
-export const getProductByProductKey = async (key: string): Promise<ProductProjection | null> => {
+export const getProductByProductKey = async (
+  apiProjectRoot: ByProjectKeyRequestBuilder,
+  key: string,
+): Promise<ProductProjection | null> => {
   try {
     const res = await apiProjectRoot.productProjections().withKey({ key }).get().execute();
     const resData = await res.body;
@@ -13,7 +16,10 @@ export const getProductByProductKey = async (key: string): Promise<ProductProjec
   return null;
 };
 
-export const getProductByProductUrl = async (url: string): Promise<ProductProjection | object> => {
+export const getProductByProductUrl = async (
+  apiProjectRoot: ByProjectKeyRequestBuilder,
+  url: string,
+): Promise<ProductProjection | object> => {
   let resData = {};
   await apiProjectRoot
     .productProjections()
@@ -32,11 +38,19 @@ export const getProductByProductUrl = async (url: string): Promise<ProductProjec
   return resData;
 };
 
-export const getProductProjections = async (): Promise<ProductProjection[]> => {
+export const getProductProjections = async (
+  apiProjectRoot: ByProjectKeyRequestBuilder,
+  queryArgs?: QueryArgs,
+): Promise<ProductProjection[]> => {
+  const query = queryArgs || {
+    withTotal: true,
+  };
   let resData: ProductProjection[] = [];
   await apiProjectRoot
     .productProjections()
-    .get()
+    .get({
+      queryArgs: query,
+    })
     .execute()
     .then((r) => {
       resData = r.body.results;
@@ -48,7 +62,7 @@ export const getProductProjections = async (): Promise<ProductProjection[]> => {
   return resData;
 };
 
-export const getCategoryId = async (name: string): Promise<string> => {
+export const getCategoryId = async (apiProjectRoot: ByProjectKeyRequestBuilder, name: string): Promise<string> => {
   let resData = '';
   await apiProjectRoot
     .categories()
@@ -67,28 +81,10 @@ export const getCategoryId = async (name: string): Promise<string> => {
   return resData;
 };
 
-export const getProductsByCategory = async (id: string): Promise<ProductProjection[]> => {
-  let resData: ProductProjection[] = [];
-  await apiProjectRoot
-    .productProjections()
-    .search()
-    .get({
-      queryArgs: {
-        filter: [`categories.id:"${id}"`],
-      },
-    })
-    .execute()
-    .then((r) => {
-      resData = r.body.results;
-    })
-    .catch((e) => {
-      console.error(e.message);
-    });
-
-  return resData;
-};
-
-export const filterProducts = async (queryArgs: QueryArgs): Promise<ProductProjection[]> => {
+export const filterProducts = async (
+  apiProjectRoot: ByProjectKeyRequestBuilder,
+  queryArgs: QueryArgs,
+): Promise<ProductProjection[]> => {
   let resData: ProductProjection[] = [];
   await apiProjectRoot
     .productProjections()
@@ -107,7 +103,7 @@ export const filterProducts = async (queryArgs: QueryArgs): Promise<ProductProje
   return resData;
 };
 
-export const getCategoryName = async (id: string): Promise<string> => {
+export const getCategoryName = async (apiProjectRoot: ByProjectKeyRequestBuilder, id: string): Promise<string> => {
   let resData = '';
   await apiProjectRoot
     .categories()

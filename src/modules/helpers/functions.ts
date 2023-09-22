@@ -1,4 +1,5 @@
 import Toastify from 'toastify-js';
+import { Cart } from '@commercetools/platform-sdk';
 import { AttrSet } from '../../types/types';
 import { Countries, CountryCodes } from '../../types/enums';
 import Router from '../router/router';
@@ -14,8 +15,9 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
   href?: string;
   router?: Router;
   src?: string;
+  id?: string;
 }): HTMLElementTagNameMap[T] => {
-  const { tagName, classNames, attributes, text, parent, parentPrepend, html, href, router, src } = elData;
+  const { tagName, classNames, attributes, text, parent, parentPrepend, html, href, router, src, id } = elData;
 
   const element: HTMLElementTagNameMap[T] = document.createElement(tagName);
 
@@ -57,6 +59,10 @@ export const createElement = <T extends keyof HTMLElementTagNameMap>(elData: {
       e.preventDefault();
       router.navigateToLink(href);
     });
+  }
+
+  if (id) {
+    element.setAttribute('id', id);
   }
 
   return element;
@@ -119,8 +125,8 @@ export const parseLS = (item: string): number[] | null => {
   }
 };
 
-export const createSvgElement = (className: string, id: string): string => {
-  return `<svg class=${className} width='24' height='24' viewBox='0 0 24 24'><use href="../image/sprite.svg#${id}" /></svg>`;
+export const createSvgElement = (className: string, id: string, width: string, height: string): string => {
+  return `<svg class=${className} width='${width}' height='${height}' ><use href="../image/sprite.svg#${id}" /></svg>`;
 };
 
 export const renderPopup = (succes: boolean, message: string): void => {
@@ -188,7 +194,7 @@ export const createSvg = <T extends keyof SVGElementTagNameMap>(elData: {
 }): SVGElementTagNameMap[T] => {
   const { tagName, classNames, attributes, parent } = elData;
 
-  const ns = 'http://www.w3.org/2000/svg'; // SVG namespace
+  const ns = 'http://www.w3.org/2000/svg';
   const element: SVGElementTagNameMap[T] = document.createElementNS(ns, tagName);
 
   if (classNames) {
@@ -213,7 +219,7 @@ export const createSvg = <T extends keyof SVGElementTagNameMap>(elData: {
 };
 
 export const setMenuBtnsView = (): void => {
-  const token = getFromLS('token');
+  const user = getFromLS('userID');
   const loginSvg = getElement('.login svg');
   const logoutSvg = getElement('.logout-svg');
   const loginDesktopBtn = getElement('.login--desktop svg:nth-child(1)');
@@ -225,7 +231,7 @@ export const setMenuBtnsView = (): void => {
   const profileMobileContainer = getElement('.profile--mobile').closest('a');
   const tooltip = getElement('.tooltip--login');
 
-  if (token) {
+  if (user) {
     loginSvg.classList.add('visually-hidden');
     logoutSvg.classList.remove('visually-hidden');
     loginDesktopBtn.classList.add('visually-hidden');
@@ -248,4 +254,104 @@ export const setMenuBtnsView = (): void => {
     profileContainer?.classList.add('visually-hidden');
     tooltip.textContent = 'LOG IN';
   }
+};
+
+export const disableQuantityButtons = async (productKey: string): Promise<void> => {
+  const minusBtn: HTMLButtonElement = getElement(`[product-key=${productKey}] .minus-button`);
+  const plusBtn: HTMLButtonElement = getElement(`[product-key=${productKey}] .plus-button`);
+  const quantity: HTMLButtonElement = getElement(`[product-key=${productKey}] .quantity-container__quantity`);
+
+  minusBtn.disabled = true;
+  plusBtn.disabled = true;
+  quantity.classList.add('disabled-text');
+};
+
+export const updateCartCommonQuantity = (cart?: Cart): void => {
+  const cartQuantityDesktop: HTMLSpanElement = getElement('.cart-quantity--desktop');
+  const cartQuantityMobile: HTMLSpanElement = getElement('.cart-quantity--mobile');
+
+  const commonQuantity = cart
+    ? cart.lineItems.reduce((accumulator, currentItem) => accumulator + currentItem.quantity, 0)
+    : 0;
+
+  if (!commonQuantity) {
+    cartQuantityDesktop.classList.add('visually-hidden');
+    return;
+  }
+
+  if (cartQuantityDesktop.classList.contains('visually-hidden')) {
+    cartQuantityDesktop.classList.remove('visually-hidden');
+  }
+
+  cartQuantityDesktop.innerHTML = commonQuantity.toString();
+
+  cartQuantityMobile.innerHTML = commonQuantity.toString();
+};
+
+export const clearCartQuantity = (): void => {
+  const cartQuantityDesktop: HTMLSpanElement = getElement('.cart-quantity--desktop');
+  const cartQuantityMobile: HTMLSpanElement = getElement('.cart-quantity--mobile');
+
+  cartQuantityDesktop.classList.add('visually-hidden');
+  cartQuantityMobile.classList.add('visually-hidden');
+};
+
+export const calculateTotalAmount = (subtotal: number, delivery: number): number => subtotal + delivery;
+
+export const convertCentsToEuros = (centAmount: number): number => centAmount / 100;
+
+export const getEuroCurrencyString = (amount: number): string => `€${amount}`;
+
+export const renderModal = (): HTMLElement => {
+  const modal = createElement({
+    tagName: 'div',
+    classNames: ['maintenance-modal'],
+    parent: document.body,
+  });
+
+  createElement({
+    tagName: 'div',
+    classNames: ['modal-content'],
+    parent: modal,
+  });
+
+  return modal;
+};
+
+export const displayConfirmModal = async (message: string): Promise<boolean> => {
+  const modal = renderModal();
+
+  const modalContent: HTMLElement = getElement('.modal-content');
+  modalContent.textContent = message;
+
+  const modalButtons = createElement({
+    tagName: 'div',
+    classNames: ['modal-content__buttons', 'modal-buttons'],
+    parent: modalContent,
+  });
+
+  const buttonOK = createElement({
+    tagName: 'button',
+    classNames: ['modal-buttons__button', 'button'],
+    text: 'Ok',
+    parent: modalButtons,
+  });
+
+  const buttonCancel = createElement({
+    tagName: 'button',
+    classNames: ['modal-buttons__button', 'button'],
+    text: 'Cancel',
+    parent: modalButtons,
+  });
+
+  return new Promise((resolve) => {
+    buttonOK.addEventListener('click', () => {
+      resolve(true);
+      document.body.removeChild(modal);
+    });
+    buttonCancel.addEventListener('click', () => {
+      resolve(false);
+      document.body.removeChild(modal);
+    });
+  });
 };

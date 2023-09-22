@@ -1,3 +1,5 @@
+import { Cart } from '@commercetools/platform-sdk';
+import { RefreshAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { PageUrls, ProductUrl } from '../../assets/data/constants';
 import { RouteAction } from '../../types/types';
 import Router from '../router/router';
@@ -7,7 +9,16 @@ import RegistrationView from '../pages/registration/registrationPageView';
 import LoginView from '../pages/login/loginPageView';
 import ErrorView from '../pages/error/errorPageView';
 import LoginController from '../pages/login/loginPageController';
-import { getElement, getFromLS, removeFromLS, setMenuBtnsView } from '../helpers/functions';
+import {
+  clearCartQuantity,
+  getElement,
+  getElementCollection,
+  getFromLS,
+  removeFromLS,
+  setMenuBtnsView,
+  setToLS,
+  updateCartCommonQuantity,
+} from '../helpers/functions';
 import { FooterLinks, NavLink } from '../components/layout/nav.types';
 import createLayout from '../components/layout/createLayout';
 import { headerLinks, footerLinks } from '../../assets/data/navigationData';
@@ -17,9 +28,17 @@ import RegistrationController from '../pages/registration/registrationPageContro
 import ProfileController from '../pages/profile/profilePageController';
 import ProfileView from '../pages/profile/profilePageView';
 import CatalogView from '../pages/catalog/catalogPageView';
-import catalogContent from '../templates/CatalogTemplate';
 import CatalogController from '../pages/catalog/catalogPageController';
-import ProductView from '../pages/catalog/productPageView';
+import ProductView from '../pages/catalog/product/productPageView';
+import createCatalogContent from '../templates/CatalogTemplate';
+import BasketView from '../pages/basket/basketPageView';
+import AboutUsView from '../pages/about/aboutUsPageView';
+import AboutController from '../pages/about/aboutUsPageController';
+import ApiClientBuilder from '../api/buildRoot';
+import { getActiveCart } from '../api';
+import MyTokenCache from '../api/myTokenCache';
+import getBasketContent from '../pages/basket/basketContent';
+import BasketController from '../pages/basket/basketController';
 
 class App {
   private static container: HTMLElement = document.body;
@@ -44,28 +63,70 @@ class App {
 
   private profilePage: ProfileView | null;
 
+  private aboutController: AboutController | null;
+
+  private basketController: BasketController | null;
+
   constructor() {
     this.main = null;
+    this.profilePage = null;
+    this.basketController = null;
+    const routes = this.createRoutes();
+    this.router = new Router(routes);
+    this.createView();
     this.loginController = null;
     this.registrationController = null;
     this.catalogController = null;
     this.profileController = null;
-    this.profilePage = null;
-    const routes = this.createRoutes();
-    this.router = new Router(routes);
-    this.createView();
+    this.aboutController = null;
     this.indexBtnHandler();
+    this.navCatalogLinksHandler();
+    this.navAboutUsLinksHandler();
+    this.cartBtnsHandlers();
     this.loginBtnsHandlers();
     this.registrationBtnsHandlers();
     this.profileBtnsHandlers();
     this.router.navigate();
-    this.disableHeaderBtns();
   }
 
   private createView(): void {
     const layout = createLayout(this.headerData, this.footerData, this.router);
 
     App.container.append(layout.header, layout.footer);
+
+    if (getFromLS('cartID')) {
+      const tokenCache = new MyTokenCache();
+
+      const options: RefreshAuthMiddlewareOptions = {
+        host: process.env.CTP_AUTH_URL as string,
+        projectKey: process.env.CTP_PROJECT_KEY as string,
+        credentials: {
+          clientId: process.env.CTP_CLIENT_ID as string,
+          clientSecret: process.env.CTP_CLIENT_SECRET as string,
+        },
+        refreshToken: getFromLS('refreshToken') as string,
+        tokenCache,
+        fetch,
+      };
+
+      ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithRefreshFlow(options);
+
+      const response = getActiveCart(ApiClientBuilder.currentRoot);
+
+      response.then((cart: Cart | Error) => {
+        if (cart instanceof Error) {
+          return;
+        }
+
+        updateCartCommonQuantity(cart);
+      });
+
+      const tokenInfo = tokenCache.get();
+
+      if (tokenInfo.token) {
+        setToLS('token', tokenInfo.token);
+      }
+    }
 
     setMenuBtnsView();
 
@@ -99,8 +160,9 @@ class App {
       },
       {
         path: `${PageUrls.CatalogPageUrl}`,
-        callback: (): void => {
+        callback: async (): Promise<void> => {
           if (this.main) {
+            const catalogContent = await createCatalogContent();
             this.main.clearContent();
             this.main.setContent(new CatalogView(catalogContent).render());
             this.catalogController = new CatalogController(this.router);
@@ -118,12 +180,23 @@ class App {
         },
       },
       {
+        path: `${PageUrls.AboutUsPageUrl}`,
+        callback: (): void => {
+          if (this.main) {
+            this.main.clearContent();
+            const aboutUsView = new AboutUsView();
+            this.main.setViewContent(aboutUsView);
+            this.aboutController = new AboutController(this.router);
+          }
+        },
+      },
+      {
         path: `${PageUrls.RegistrationPageUrl}`,
         callback: (): void => {
           if (this.main) {
             this.main.clearContent();
 
-            if (getFromLS('token')) {
+            if (getFromLS('userID')) {
               this.router.navigateFromButton(PageUrls.IndexPageUrl);
               return;
             }
@@ -140,7 +213,7 @@ class App {
           if (this.main) {
             this.main.clearContent();
 
-            if (getFromLS('token')) {
+            if (getFromLS('userID')) {
               this.router.navigateFromButton(PageUrls.IndexPageUrl);
               return;
             }
@@ -163,6 +236,17 @@ class App {
         callback: this.redirectToProfile.bind(this),
       },
       {
+        path: `${PageUrls.BasketPageUrl}`,
+        callback: async (): Promise<void> => {
+          if (this.main) {
+            this.main.clearContent();
+            const content = await getBasketContent();
+            this.main.setContent(new BasketView(content).render());
+            this.basketController = new BasketController(this.router);
+          }
+        },
+      },
+      {
         path: `${PageUrls.ErrorPageUrl}`,
         callback: (): void => {
           if (this.main) {
@@ -176,6 +260,19 @@ class App {
     ];
   }
 
+  private cartBtnsHandlers(): void {
+    const cartBtn = getElement('.cart--desktop');
+    const cartMobileBtn = getElement('.cart--mobile');
+
+    cartBtn.addEventListener('click', this.btnMoveToBasketHandler.bind(this));
+    cartMobileBtn.addEventListener('click', this.btnMoveToBasketHandler.bind(this));
+  }
+
+  private btnMoveToBasketHandler(e: Event): void {
+    e.preventDefault();
+    this.router.navigateFromButton(PageUrls.BasketPageUrl);
+  }
+
   private loginBtnsHandlers(): void {
     const loginBtn = getElement('.login--desktop');
     const loginMobileBtn = getElement('.login--mobile');
@@ -186,11 +283,15 @@ class App {
 
   private btnMoveToLoginHandler(e: Event): void {
     e.preventDefault();
-    if (getFromLS('token')) {
+    if (getFromLS('userID')) {
       removeFromLS('token');
+      removeFromLS('refreshToken');
+      removeFromLS('cartID');
+      removeFromLS('cartVersion');
       removeFromLS('userID');
       removeFromLS('version');
       setMenuBtnsView();
+      clearCartQuantity();
       this.logoutRedirect();
     } else {
       this.router.navigateFromButton(PageUrls.LoginPageUrl);
@@ -207,7 +308,7 @@ class App {
 
   private btnMoveToRegistrationHandler(e: Event): void {
     e.preventDefault();
-    const url = getFromLS('token') ? PageUrls.IndexPageUrl : PageUrls.RegistrationPageUrl;
+    const url = getFromLS('userID') ? PageUrls.IndexPageUrl : PageUrls.RegistrationPageUrl;
     this.router.navigateFromButton(url);
   }
 
@@ -221,7 +322,7 @@ class App {
 
   private btnMoveToProfileHandler(e: Event): void {
     e.preventDefault();
-    const url = getFromLS('token') ? PageUrls.ProfilePageUrl : PageUrls.IndexPageUrl;
+    const url = getFromLS('userID') ? PageUrls.ProfilePageUrl : PageUrls.IndexPageUrl;
     this.router.navigateFromButton(url);
   }
 
@@ -235,6 +336,28 @@ class App {
     homeBtn.addEventListener('click', this.btnMoveToIndexHandler.bind(this));
   }
 
+  private navCatalogLinksHandler(): void {
+    const navCatalogLinks = getElementCollection('.menu__nav--tc');
+    navCatalogLinks.forEach((element) => {
+      const catalogLink = element as HTMLAnchorElement;
+      catalogLink.addEventListener('click', (e: Event) => {
+        e.preventDefault();
+        this.router.navigateFromButton(PageUrls.CatalogPageUrl);
+      });
+    });
+  }
+
+  private navAboutUsLinksHandler(): void {
+    const navAboutUsLinks = getElementCollection('.menu__nav--about');
+    navAboutUsLinks.forEach((element) => {
+      const aboutUsLink = element as HTMLAnchorElement;
+      aboutUsLink.addEventListener('click', (e: Event) => {
+        e.preventDefault();
+        this.router.navigateFromButton(PageUrls.AboutUsPageUrl);
+      });
+    });
+  }
+
   private btnMoveToIndexHandler(e: Event): void {
     e.preventDefault();
     this.router.navigateFromButton(PageUrls.IndexPageUrl);
@@ -244,7 +367,7 @@ class App {
     if (this.main) {
       this.main.clearContent();
 
-      if (!getFromLS('token')) {
+      if (!getFromLS('passwordToken')) {
         this.router.navigateFromButton(PageUrls.LoginPageUrl);
         return;
       }
@@ -254,8 +377,10 @@ class App {
     }
   }
 
-  private logoutRedirect(): void {
+  private async logoutRedirect(): Promise<void> {
     switch (window.location.pathname.slice(1)) {
+      case PageUrls.BasketPageUrl:
+      case PageUrls.CatalogPageUrl:
       case PageUrls.ProfilePageUrl:
       case `${PageUrls.ProfilePageUrl}/${PageUrls.AddressesPageUrl}`:
       case `${PageUrls.ProfilePageUrl}/${PageUrls.ChangePasswordPageUrl}`:
@@ -263,19 +388,6 @@ class App {
         break;
       default:
     }
-  }
-
-  private disableHeaderBtns(): void {
-    const searchBtn = getElement('.search-header--desktop');
-    const cardBtn = getElement('.card-header--desktop');
-
-    searchBtn.addEventListener('click', (e: Event) => {
-      e.preventDefault();
-    });
-
-    cardBtn.addEventListener('click', (e: Event) => {
-      e.preventDefault();
-    });
   }
 }
 

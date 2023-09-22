@@ -1,0 +1,85 @@
+@import '../../../style/sass/variables.scss';
+
+.about-us__wrapper {
+  max-width: 768px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+  padding: 20px 0;
+}
+
+.about-us__persons {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.about-us__person {
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  gap: 20px;
+  background-color: $color-on-primary;
+  border-radius: 5px;
+}
+
+.about-us__photo {
+  border-radius: 50%;
+  margin-left: 1rem;
+  max-width: 200px;
+  max-height: 200px;
+  height: 100%;
+  width: 100%;
+}
+
+.about-us__info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.about-us__logo {
+  width: 121px;
+  height: 45px;
+  cursor: pointer;
+}
+
+.about-us__link {
+  display: block;
+  color: rgb(83, 152, 207);
+  font-size: 0.8rem;
+  text-decoration: none;
+
+  &:visited,
+  &:hover,
+  &:active {
+    color: rgb(94, 108, 218);
+  }
+}
+
+.rss-link:hover {
+  fill: rgb(94, 108, 218);
+}
+
+.about-us__contribution-title {
+  padding-bottom: 3px;
+}
+
+.about-us__contribution-item {
+  display: inline-block;
+  margin: 3px 20px 3px 0;
+  background-color: rgb(238, 231, 174);
+  padding: 1px 5px;
+  border-radius: 8px;
+}
+
+.about-us__role-name {
+  display: inline-block;
+  background-color: rgb(218, 204, 94);
+  padding: 1px 5px;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}

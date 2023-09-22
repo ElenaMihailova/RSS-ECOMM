@@ -33,7 +33,7 @@ const footerTemplate = (collectionHtml: string, learnHtml: string, customerServi
             <svg width="24" height="24" viewBox="0 0 24 25" aria-label="location">
               <use xlink:href="../image/sprite.svg#location"></use>
             </svg>
-            пр. Независимости 28, Минск 220040, Беларусь</a
+            Nezavisimosti 28, Minsk 220040, Belarus</a
           >
         </li>
         <li>

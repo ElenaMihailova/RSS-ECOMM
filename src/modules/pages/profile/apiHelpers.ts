@@ -28,6 +28,7 @@ import {
 } from './profileHelpers';
 import { BaseAddress } from '../../../types/interfaces';
 import { clearInputFields, rerenderAddressDetails } from './rerenderProfileHelpers';
+import ApiClientBuilder from '../../api/buildRoot';
 
 const validator = new Validator();
 
@@ -47,7 +48,7 @@ export const updateCustomerData = async (
     actions,
   };
 
-  const response = await updateCustomer(customerID, updateRequestBody as CustomerUpdate);
+  const response = await updateCustomer(ApiClientBuilder.currentRoot, customerID, updateRequestBody as CustomerUpdate);
 
   if (response instanceof Error) {
     if (!withoutErrorMessages) {
@@ -67,7 +68,7 @@ export const updateAddressCategories = async (addressID: string): Promise<void> 
     return;
   }
 
-  const data = await getUpdatedCustomer(customerID);
+  const data = await getUpdatedCustomer(ApiClientBuilder.currentRoot, customerID);
 
   const { defaultShippingAddressId, defaultBillingAddressId, shippingAddressIds, billingAddressIds } = data;
 
@@ -132,7 +133,7 @@ export const updateAddressCategories = async (addressID: string): Promise<void> 
     ];
 
     await updateCustomerData(actions as UpdateAction[], true);
-    setToLS('version', JSON.stringify(await getUpdatedVersion(customerID)));
+    setToLS('version', JSON.stringify(await getUpdatedVersion(ApiClientBuilder.currentRoot, customerID)));
   }
 };
 
@@ -234,7 +235,7 @@ export const updatePersonalData = async (formELements: NodeListOf<Element>): Pro
     }
 
     await updateCustomerData(actions as UpdateAction[]);
-    setToLS('version', JSON.stringify(await getUpdatedVersion(customerID)));
+    setToLS('version', JSON.stringify(await getUpdatedVersion(ApiClientBuilder.currentRoot, customerID)));
   }
 };
 
@@ -259,7 +260,7 @@ export const updateData = async (
       break;
     default:
   }
-  setToLS('version', JSON.stringify(await getUpdatedVersion(customerID)));
+  setToLS('version', JSON.stringify(await getUpdatedVersion(ApiClientBuilder.currentRoot, customerID)));
 };
 
 export const updatePassword = async (
@@ -298,7 +299,7 @@ export const updatePassword = async (
     newPassword: passwordData.newPassword as string,
   };
 
-  const response = await changePassword(customerChangePassword);
+  const response = await changePassword(ApiClientBuilder.currentRoot, customerChangePassword);
 
   if (response instanceof Error) {
     renderErrorResponsePopup(ProfileDataCategories.Password, response);

@@ -4,15 +4,9 @@ const createMenuUser = (): HTMLElement => {
   const menuItems = [
     {
       href: '',
-      classNames: ['search-header--desktop'],
-      svgHref: '../image/sprite.svg#search',
-      text: 'Search',
-    },
-    {
-      href: '',
-      classNames: ['card-header--desktop'],
-      svgHref: '../image/sprite.svg#card',
-      text: 'Card',
+      classNames: ['cart', 'cart--desktop'],
+      svgHref: '../image/sprite.svg#cart',
+      text: 'Cart',
     },
     {
       href: 'registration',
@@ -87,6 +81,15 @@ const createMenuUser = (): HTMLElement => {
         tagName: 'use',
         attributes: { xlinkHref: item.extraSvgHref },
         parent: extraSvg,
+      });
+    }
+
+    if (a.classList.contains('cart--desktop')) {
+      createElement({
+        tagName: 'span',
+        classNames: ['cart-quantity--desktop', 'visually-hidden'],
+        text: '0',
+        parent: a,
       });
     }
 

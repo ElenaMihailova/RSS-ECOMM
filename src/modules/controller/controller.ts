@@ -1,14 +1,20 @@
-import { CustomerSignInResult } from '@commercetools/platform-sdk';
+import { AnonymousCartSignInMode, CustomerSignInResult } from '@commercetools/platform-sdk';
 import { PasswordAuthMiddlewareOptions } from '@commercetools/sdk-client-v2';
 import { PageUrls } from '../../assets/data/constants';
-import { getUpdatedVersion, loginUser } from '../api';
-import { createApiRootWithPasswordFlow } from '../api/buildRoot';
+import { getActiveCart, getUpdatedVersion, loginUser } from '../api';
+import ApiClientBuilder from '../api/buildRoot';
 import MyTokenCache from '../api/myTokenCache';
-import { setMenuBtnsView, setToLS } from '../helpers/functions';
+import { getFromLS, removeFromLS, setMenuBtnsView, setToLS, updateCartCommonQuantity } from '../helpers/functions';
 import Router from '../router/router';
 
 class Controller {
-  public static async loginAction(email: string, password: string, router: Router): Promise<void> {
+  public static async loginAction(
+    email: string,
+    password: string,
+    activeCartSignInMode: AnonymousCartSignInMode,
+    updateProductData: boolean,
+    router: Router,
+  ): Promise<void> {
     const tokenCache = new MyTokenCache();
     const options: PasswordAuthMiddlewareOptions = {
       host: process.env.CTP_AUTH_URL as string,
@@ -26,16 +32,45 @@ class Controller {
       fetch,
     };
 
-    const apiRoot = createApiRootWithPasswordFlow(options);
-    const login = await loginUser(apiRoot, email, password);
+    ApiClientBuilder.currentRoot = ApiClientBuilder.createApiRootWithPasswordFlow(options);
+    const login = await loginUser(
+      ApiClientBuilder.currentRoot,
+      email,
+      password,
+      activeCartSignInMode,
+      updateProductData,
+    );
+
+    const cart = await getActiveCart(ApiClientBuilder.currentRoot);
+
+    if (getFromLS('cartVersion') && getFromLS('cartID')) {
+      removeFromLS('cartVersion');
+      removeFromLS('cartID');
+    }
+
+    if (!(cart instanceof Error)) {
+      setToLS('cartID', cart.id);
+      setToLS('cartVersion', cart.version.toString());
+      updateCartCommonQuantity(cart);
+    }
 
     if (Object.keys(login).length) {
+      removeFromLS('token');
+      removeFromLS('refreshToken');
+
       const loginData = login as CustomerSignInResult;
       setToLS('userID', loginData.customer.id);
+
       const tokenInfo = tokenCache.get();
       setToLS('token', tokenInfo.token);
-      const version = await getUpdatedVersion(loginData.customer.id);
+
+      if (tokenInfo.refreshToken) {
+        setToLS('refreshToken', tokenInfo.refreshToken);
+      }
+
+      const version = await getUpdatedVersion(ApiClientBuilder.currentRoot, loginData.customer.id);
       setToLS('version', JSON.stringify(version));
+
       router.navigateFromButton(PageUrls.IndexPageUrl);
 
       setMenuBtnsView();
